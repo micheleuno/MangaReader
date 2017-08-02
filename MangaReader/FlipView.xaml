@@ -1,0 +1,58 @@
+﻿<Page
+    x:Class="MangaReader.FlipView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="Gridp" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="InFullScreen">
+                    <VisualState.StateTriggers>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="IsFullScreenText.Text" Value="In full screen mode" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <FlipView  x:Name="flipView"  SelectionChanged="flipView_SelectionChanged" Tapped="flipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" >
+            <FlipView.ItemTemplate>
+
+                <DataTemplate>
+                    <ScrollViewer  MinZoomFactor="0.8" 
+                                   DoubleTapped="scrollViewer_DoubleTapped"
+                                    Name="ScrollViewerMain"
+                                    HorizontalScrollBarVisibility="Auto"
+                                    VerticalScrollBarVisibility="Auto"
+                                    ZoomMode="Enabled"
+                                   
+                                  >
+
+
+                        <Image  x:Name="image" 
+                                Source="{Binding}" 
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center" 
+                              
+                                MaxHeight="{Binding Path=ViewportHeight, ElementName=ScrollViewerMain}" />
+
+                    </ScrollViewer>
+
+
+                </DataTemplate>
+
+            </FlipView.ItemTemplate>
+
+
+        </FlipView>
+
+        <Button x:Name="BtnClose" Content="Cerrar" Height="50" Width="120"  Background="Black" Click="BtnClose_Click" HorizontalAlignment="Left"/>
+        <Button  x:Name="BtnNext" Content="Siguiente" Height="50" Width="120"  HorizontalAlignment="Right" Click="BtnNext_Click" Background="Black" />
+        <Button x:Name="BtnFullScreen" Content="Pantalla Completa" HorizontalAlignment="Center"  VerticalAlignment="Top" Click="Fullscren" Background="Black"/>
+        <ProgressRing x:Name="loading" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="75" Height="75" />
+    </Grid>
+</Page>

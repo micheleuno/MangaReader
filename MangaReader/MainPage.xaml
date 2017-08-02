@@ -1,0 +1,94 @@
+﻿<Page
+    x:Class="MangaReader.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="using:System"
+    mc:Ignorable="d" 
+     Loaded="Window_Loaded"
+    >
+    <Page.Resources>
+      
+        <Style TargetType="Button">            
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="MinWidth" Value="130"></Setter>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="MinWidth" Value="80"></Setter>
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        </Style>
+        <Style TargetType="ToggleSwitch">
+            <Setter Property="HorizontalAlignment" Value="Center"></Setter>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+        </Style>
+    </Page.Resources>
+
+
+    <Grid  x:Name="Gridp" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="InFullScreen">
+                    <VisualState.StateTriggers>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="IsFullScreenText.Text" Value="In full screen mode" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+       
+        
+        
+       
+        <ProgressRing x:Name="loading" Grid.Column="1" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center"  Width="100" Height="100" />
+      
+      
+        <StackPanel HorizontalAlignment="Center"   Grid.Row="0" VerticalAlignment="Center" >
+            <Button x:Name="BtnOpenFIle" Content="Agregar Manga"   Click="BtnOpenFile" Margin="5" />
+            <TextBlock HorizontalAlignment="center"  TextWrapping="Wrap" Text="Nombre Manga" VerticalAlignment="Top" Margin="5"/>
+            <ComboBox x:Name="ComboBoxManga"  Width="auto" SelectionChanged="ComboBoxManga_SelectionChanged" Margin="7"/>
+            <TextBlock TextWrapping="Wrap" Text="Episodio"  Margin="5" />
+            <ComboBox x:Name="ComboBoxEpisode"   Width="auto" Margin="5"/>
+            <Button Content="Ver Episodio"   Click="ButtonView_Click" Margin="7"/>
+            <TextBlock x:Name="contEpisode"  TextWrapping="Wrap" Text="de"   Margin="5"/>
+            <Button x:Name="BtnContinue" Content="Continuar"  Click="BtnNext_Click"  Margin="5"/>
+           
+        </StackPanel>
+        
+        
+        <StackPanel HorizontalAlignment="Center"   Grid.Row="2" VerticalAlignment="Center" >
+          
+            <ToggleSwitch  x:Name="toggleSwitch" Grid.Column="2" Header="Dirección Lectura"  OnContent="Der A Izq"  OffContent="Izq a Der" Margin="5" />
+            <ToggleSwitch x:Name="fullScreen" Grid.Column="2" Header="Pantalla Completa"     OnContent="Si"  OffContent="No" Toggled="fullScreen_Toggled" Margin="5" />
+            <Button x:Name="button" Content="Eliminar Manga" Grid.Column="1" Grid.Row="1" Click="BtnEliminar"  Margin="20"  />
+            <Button Content="Estadisticas" Click="Button_Click">
+                <Button.Flyout>
+                    <Flyout Placement="Right">
+                        <TextBlock Name="FLyout" Text="This is a flyout!"/>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </StackPanel>
+        <Image x:Name="image" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center"  Margin="40" />
+
+    </Grid>
+
+
+</Page>
