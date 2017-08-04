@@ -63,7 +63,6 @@ namespace MangaReader
                 MakeVisible();
                 if (mangaG.GetActual() < mangaG.GetEpisodes().Count() && mangaG.GetActual() >= mangaG.GetUltimoEpisodioLeido() && mangaG.GetUltimoEpisodioLeido() < mangaG.GetEpisodes().Count())
                 {
-
                     mangaG.GetEpisodes().ElementAt<Episode>(mangaG.GetActual()).SetRead(true);
                     mangaG.SetUltimoEpisodioLeido(mangaG.GetActual() + 1);
                     mangaG.SetActual(mangaG.GetActual() + 1);

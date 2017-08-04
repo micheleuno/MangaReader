@@ -86,7 +86,7 @@
                 </Button.Flyout>
             </Button>
         </StackPanel>
-        <Image x:Name="image" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center"  Margin="40" />
+        <Image x:Name="image" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0,20,20,0" />
 
     </Grid>
 

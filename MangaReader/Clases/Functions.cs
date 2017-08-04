@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace MangaReader.Clases
@@ -45,18 +46,28 @@ namespace MangaReader.Clases
             episode.SetDirectory(info.Name);
             return episode;
         }
+        public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
 
         public static async Task<List<BitmapImage>> LoadEpisodeImageAsync(List<String> Completeurl)
         {
-            List<BitmapImage> images = new List<BitmapImage>();
+            
+             List<BitmapImage> images = new List<BitmapImage>();
             BitmapImage image;
             foreach (String value in Completeurl)
             {
-                StorageFile file = await StorageFile.GetFileFromPathAsync((value));
-                IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                image = new BitmapImage();
-                await image.SetSourceAsync(fileStream);
-                images.Add(image);
+                if (ImageExtensions.Contains(Path.GetExtension(value).ToUpperInvariant()))
+                {
+                    StorageFile file = await StorageFile.GetFileFromPathAsync((value));
+                    IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                    image = new BitmapImage();
+                    await image.SetSourceAsync(fileStream);
+                    images.Add(image);
+                }
+                else
+                {
+                    var dialog = new MessageDialog("Ocurrión un error al leer el archivo: "+value);
+                    await dialog.ShowAsync();
+                }
             }
             return images;
         }

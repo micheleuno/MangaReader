@@ -52,8 +52,6 @@ namespace MangaReader
                 String[] lines = await Clases.XmlIO.Readfile();
                 if (lines != null)
                 {
-                    
-
                         int i = 0;
                         loading.IsActive = true;
                         while (i + 1 < lines.Length)
@@ -74,8 +72,6 @@ namespace MangaReader
                         UpdateItems();
                         loading.IsActive = false;
                         loaded = true;
-                    
-                 
                     
                 }
             }
@@ -262,11 +258,12 @@ namespace MangaReader
             
             if ((Mangas.ElementAt(0).GetDirección())==1)
             {
-                toggleSwitch.IsOn = false;
+                toggleSwitch.IsOn = true;
+               
             }
             else
             {
-                toggleSwitch.IsOn = true;
+                toggleSwitch.IsOn = false;
             }
         }
 
