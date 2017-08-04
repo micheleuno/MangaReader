@@ -73,6 +73,7 @@ namespace MangaReader
         {
             return this.Direccion;
         }
+      
 
 
 

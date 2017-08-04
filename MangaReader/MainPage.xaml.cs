@@ -19,7 +19,6 @@ namespace MangaReader
     public sealed partial class MainPage : Page
     {
         private static List<Manga> Mangas = new List<Manga>();
-        private bool loaded = false;
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -63,23 +62,19 @@ namespace MangaReader
                             Windows.Storage.StorageFolder folder = await OpenFolder(lines[i + 1]); //segunda linea
                             if (folder != null)
                             {
-                                 Manga1 = Clases.Functions.LoadAll(folder, folder.Path, folder.Name, lines[i], lines[i + 2]);
+                                 Manga1 = Clases.Functions.LoadAll(folder, folder.Path, folder.Name, lines[i], lines[i + 3]);
                                 if (Manga1 != null)
                                 {
                                     Mangas.Add(Manga1);
                                 }                                                    
                             }
                             i = i + 4;
-
                         }
                         PopulateCBoxManga();
                         UpdateItems();
-                        loading.IsActive = false;
-                        loaded = true;
-                    
+                        loading.IsActive = false;                      
                 }
             }
-
         }
 
         private async Task <Windows.Storage.StorageFolder> OpenFolder(String directorio)
@@ -89,19 +84,11 @@ namespace MangaReader
                 Windows.Storage.StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
                 return (folder);
             }           
-            catch (FileNotFoundException)
+            catch (Exception)
             {
-                var dialog = new MessageDialog("Ha ocurrido un error en la lectura de: " +directorio.Split('\\').Last()+"\nVerifique el directorio");
-                await dialog.ShowAsync();
+                await Clases.Functions.CreateMessageAsync("Ha ocurrido un error en la lectura de: " + directorio.Split('\\').Last() + "\nVerifique el directorio");               
                 return null;
-            }
-            catch (UnauthorizedAccessException)
-            {
-                var dialog = new MessageDialog("Ha ocurrido un error en la lectura de: " + directorio.Split('\\').Last() + "\nVerifique el directorio");
-                await dialog.ShowAsync();
-                return null;
-            }
-           
+            } 
         }
 
         private async void BtnOpenFile(object sender, RoutedEventArgs e)
@@ -115,11 +102,9 @@ namespace MangaReader
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Downloads;
             picker.SettingsIdentifier = "asd";
-            picker.FileTypeFilter.Add("*");
-            String mensaje = "";
+            picker.FileTypeFilter.Add("*");           
             Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();
-            Boolean flag = false;
-            Debug.WriteLine(Path.GetFullPath(folder.Path).Split(Path.DirectorySeparatorChar).Length);
+            Boolean flag = false;           
             if (folder != null)
             {
                 loading.IsActive = true;
@@ -136,11 +121,11 @@ namespace MangaReader
                     if (Manga1 != null)
                     {
                         Mangas.Add(Manga1);
-                        mensaje = "Se ha agregado existosamente: " + folder.Name;
+                        await Clases.Functions.CreateMessageAsync("Se ha agregado existosamente: " + folder.Name);
                     }
                     else
                     {
-                        mensaje = "Ha ocurrido un error al agregar: " + folder.Name;
+                        await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al agregar: " + folder.Name);
                     }
                     loading.IsActive = false;
                     SaveData();
@@ -149,16 +134,11 @@ namespace MangaReader
                 }
                 else
                 {
-                    mensaje ="Ya existe un manga con ese nombre";
-                 
-                }
-                var dialog = new MessageDialog(mensaje);
-                await dialog.ShowAsync();
-            }
-
-           
-
+                    await Clases.Functions.CreateMessageAsync("Ya existe un manga con ese nombre");               
+                }              
+            }         
         }
+
         private void PopulateCBoxManga()
         {
             ComboBoxManga.Items.Clear();
@@ -176,8 +156,8 @@ namespace MangaReader
                 try
                 {
                     List<Episode> Episodes = new List<Episode>();
-                    Episodes = Mangas.ElementAt<Manga>(ComboBoxManga.SelectedIndex).GetEpisodes();
-                    Mangas.ElementAt<Manga>(0).SetMangaActual(ComboBoxManga.SelectedIndex);
+                    Episodes = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes();
+                    Mangas.ElementAt(0).SetMangaActual(ComboBoxManga.SelectedIndex);
                     int i = 1;
                     ComboBoxEpisode.Items.Clear();
                     foreach (Episode value in Episodes)
@@ -225,8 +205,7 @@ namespace MangaReader
             {
                 if (ComboBoxEpisode.SelectedIndex< Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido())
                 {
-                    var dialog = new MessageDialog("No se actualizará el ultimo episodio leído");
-                    await dialog.ShowAsync();
+                    await Clases.Functions.CreateMessageAsync("No se actualizará el ultimo episodio leído");
                 }
                 guardarDireccion();
                 Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(ComboBoxEpisode.SelectedIndex);
@@ -234,8 +213,7 @@ namespace MangaReader
             }
             else
             {
-                var dialog = new MessageDialog("Debe agregar un manga primero");
-                await dialog.ShowAsync();
+                await Clases.Functions.CreateMessageAsync("Debe agregar un manga primero");                
             }        
 
         }
@@ -254,13 +232,13 @@ namespace MangaReader
 
                 try
                 {
-                    var dialog = new MessageDialog("No hay más episodios, episodio actual: " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
-                    await dialog.ShowAsync();
+                    await Clases.Functions.CreateMessageAsync("No hay más episodios, episodio actual: " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
+                   
                 }
                 catch (ArgumentOutOfRangeException)
                 {
-                    var dialog = new MessageDialog("Debe agregar un manga primero");
-                    await dialog.ShowAsync();
+                    await Clases.Functions.CreateMessageAsync("Debe agregar un manga primero");
+                  
                 }
             }
         }
@@ -276,11 +254,12 @@ namespace MangaReader
             
             if ((Mangas.ElementAt(0).GetDirección())==1)
             {
+                Debug.WriteLine("Entro: " + (Mangas.ElementAt(0).GetDirección()));
                 toggleSwitch.IsOn = true;
-               
             }
             else
             {
+                Debug.WriteLine("Entro1: " + (Mangas.ElementAt(0).GetDirección()));
                 toggleSwitch.IsOn = false;
             }
         }

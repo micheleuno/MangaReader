@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace MangaReader.Clases
     {
         public static Manga LoadAll(Windows.Storage.StorageFolder folder, String path, String name, String Actual,String direccion)
         {
-           
+            Debug.WriteLine("direccion:" + direccion);
             string[] folders = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);
             if (folders.Count() > 0)
             {
@@ -55,6 +56,7 @@ namespace MangaReader.Clases
             episode.SetDirectory(info.Name);
             return episode;
         }
+
         public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
 
         public static async Task<List<BitmapImage>> LoadEpisodeImageAsync(List<String> Completeurl)
@@ -74,11 +76,19 @@ namespace MangaReader.Clases
                 }
                 else
                 {
-                    var dialog = new MessageDialog("Ocurrión un error al leer el archivo: "+value);
-                    await dialog.ShowAsync();
+                    await CreateMessageAsync("Ocurrión un error al leer el archivo: " +value);
+                 
                 }
             }
             return images;
         }
+
+        public static async Task CreateMessageAsync(String mensaje)
+        {
+            var dialog = new MessageDialog(mensaje);
+            await dialog.ShowAsync();
+        }
+     
     }
+   
 }
