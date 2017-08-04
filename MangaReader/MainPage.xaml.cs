@@ -48,7 +48,7 @@ namespace MangaReader
             if (Mangas.Count == 0)
             {
                 Mangas = new List<Manga>();
-
+                Manga Manga1 = new Manga();
                 String[] lines = await Clases.XmlIO.Readfile();
                 if (lines != null)
                 {
@@ -63,7 +63,11 @@ namespace MangaReader
                             Windows.Storage.StorageFolder folder = await OpenFolder(lines[i + 1]); //segunda linea
                             if (folder != null)
                             {
-                                Mangas.Add(Clases.Functions.LoadAll(folder, folder.Path, folder.Name, lines[i], lines[i + 2]));//primera                               
+                                 Manga1 = Clases.Functions.LoadAll(folder, folder.Path, folder.Name, lines[i], lines[i + 2]);
+                                if (Manga1 != null)
+                                {
+                                    Mangas.Add(Manga1);
+                                }                                                    
                             }
                             i = i + 4;
 
@@ -106,14 +110,16 @@ namespace MangaReader
             {
                 Mangas = new List<Manga>();
             }
+            Manga Manga1 = new Manga();
             var picker = new Windows.Storage.Pickers.FolderPicker();
             picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
             picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Downloads;
             picker.SettingsIdentifier = "asd";
             picker.FileTypeFilter.Add("*");
+            String mensaje = "";
             Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();
             Boolean flag = false;
-            
+            Debug.WriteLine(Path.GetFullPath(folder.Path).Split(Path.DirectorySeparatorChar).Length);
             if (folder != null)
             {
                 loading.IsActive = true;
@@ -126,20 +132,28 @@ namespace MangaReader
                 if (!flag)
                 {
                     StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);
-                    Mangas.Add(Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));
+                    Manga1 = (Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));
+                    if (Manga1 != null)
+                    {
+                        Mangas.Add(Manga1);
+                        mensaje = "Se ha agregado existosamente: " + folder.Name;
+                    }
+                    else
+                    {
+                        mensaje = "Ha ocurrido un error al agregar: " + folder.Name;
+                    }
                     loading.IsActive = false;
-                    var dialog = new MessageDialog("Se ha agregado existosamente: " + folder.Name);
-                    await dialog.ShowAsync();
                     SaveData();
                     PopulateCBoxManga();
                     UpdateItems();
                 }
                 else
                 {
-                    var dialog = new MessageDialog("Ya existe un manga con ese nombre");
-                    await dialog.ShowAsync();
+                    mensaje ="Ya existe un manga con ese nombre";
+                 
                 }
-               
+                var dialog = new MessageDialog(mensaje);
+                await dialog.ShowAsync();
             }
 
            
@@ -189,15 +203,19 @@ namespace MangaReader
             List<String> Pages = new List<String>();
             Episode episode = new Episode();
             String Url;
-            episode = Clases.Functions.LoadEpisode(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().ElementAt(0).GetDirectory());
-            Pages = episode.GetPages();
-            Url = (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory() + @"\" + episode.GetDirectory() +@"\"+ episode.GetPages().ElementAt(0));
-            BitmapImage image1 = new BitmapImage();
-            StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
-            IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-            image1 = new BitmapImage();
-            await image1.SetSourceAsync(fileStream);
-            image.Source = image1;
+            if (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count>0)
+            {
+                episode = Clases.Functions.LoadEpisode(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().ElementAt(0).GetDirectory());
+                Pages = episode.GetPages();
+                Url = (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory() + @"\" + episode.GetDirectory() + @"\" + episode.GetPages().ElementAt(0));
+                BitmapImage image1 = new BitmapImage();
+                StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
+                IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                image1 = new BitmapImage();
+                await image1.SetSourceAsync(fileStream);
+                image.Source = image1;
+            }
+           
 
         }
 

@@ -14,22 +14,31 @@ namespace MangaReader.Clases
     {
         public static Manga LoadAll(Windows.Storage.StorageFolder folder, String path, String name, String Actual,String direccion)
         {
+           
             string[] folders = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);
-            Manga manga = new Manga();
-            int result;
-            manga.SetDirectory(path);
-            manga.SetName(name);
-            Int32.TryParse(Actual, out result);
-            manga.SetUltimoEpisodioLeido(result);
-            Int32.TryParse(direccion, out result);
-            manga.SetDirección(result);
-            for (int i = 0; i < folders.Length; i++)
+            if (folders.Count() > 0)
             {
-                Episode episode = new Episode();
-                episode.SetDirectory(folders[i]);
-                manga.SetEpisode(episode);
+                Manga manga = new Manga();
+                int result;
+                manga.SetDirectory(path);
+                manga.SetName(name);
+                Int32.TryParse(Actual, out result);
+                manga.SetUltimoEpisodioLeido(result);
+                Int32.TryParse(direccion, out result);
+                manga.SetDirección(result);
+                for (int i = 0; i < folders.Length; i++)
+                {
+                    Episode episode = new Episode();
+                    episode.SetDirectory(folders[i]);
+                    manga.SetEpisode(episode);
+                }
+                return manga;
             }
-            return manga;
+            else
+            {
+                return null;
+            }
+               
         }
 
         public static Episode LoadEpisode(String path)

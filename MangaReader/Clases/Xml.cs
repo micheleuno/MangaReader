@@ -57,7 +57,6 @@ namespace MangaReader.Clases
          //   Manga manga = new Manga();
           //  manga = Mangas.ElementAt<Manga>(0);
             String data=null;
-            Debug.WriteLine("asd" + Mangas.Count);
             foreach (Manga value in Mangas)
             {
                 data = data + value.GetUltimoEpisodioLeido().ToString() + "\n" + value.GetDirectory().ToString() + "\n" + value.GetName().ToString() + "\n" + value.GetDirección().ToString() + "\n";
