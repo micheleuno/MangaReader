@@ -113,6 +113,7 @@ namespace MangaReader
                     Debug.WriteLine("actual: " + mangaG.GetActual() + "ultimo leido: " + mangaG.GetUltimoEpisodioLeido());
                     flagepisodio = true;
                     LoadFlipView();
+                    MakeInvisible();
                 }
                 catch (ArgumentOutOfRangeException e3)
                 {
