@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -162,6 +164,46 @@ namespace MangaReader.Clases
                 await writer.WriteAsync(encodedText, 0, encodedText.Length);
                 writer.Dispose();
             }
+        }
+        public static async Task WriteJsonAsync(List<Manga> Mangas)
+        {
+            List<String> directorios = new List<string>();
+            foreach (Manga value1 in Mangas)
+            {
+                try
+                {
+                    foreach (Episode value in value1.GetEpisodes())
+                    {
+                        directorios.Add(value.GetDirectory());
+                    }
+                    string json = JsonConvert.SerializeObject(directorios);
+
+                    var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(value1.GetName() + ".json", CreationCollisionOption.FailIfExists);
+                    await FileIO.WriteTextAsync(file, json);
+                }
+                catch (Exception)
+                {
+
+                    
+                }
+                directorios = new List<string>();
+            }
+
+        }
+        public static  List<String>ReadJson(String Nombre)
+        {
+            if (File.Exists(ApplicationData.Current.LocalFolder.Path +@"\"+ Nombre + ".json"))
+            {
+                using (StreamReader r = File.OpenText((ApplicationData.Current.LocalFolder.Path + @"\" + Nombre + ".json")))
+                {
+                    string json = r.ReadToEnd();
+                    List<String> items = JsonConvert.DeserializeObject<List<String>>(json);
+                    return items;
+                }
+            }
+            Debug.WriteLine((ApplicationData.Current.LocalFolder.Path + Nombre + ".json"));
+            return null;
+               
         }
     }
 }

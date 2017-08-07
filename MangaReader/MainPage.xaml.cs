@@ -49,11 +49,13 @@ namespace MangaReader
                 Mangas = new List<Manga>();
                 Manga Manga1 = new Manga();
                 String[] lines = await Clases.XmlIO.Readfile();
+             
                 if (lines != null)
                 {
                         int i = 0;
                         loading.IsActive = true;
-                        while (i + 1 < lines.Length)
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
+                    while (i + 1 < lines.Length)
                         {
                             foreach (String value in lines) {
                                 //  Debug.WriteLine(value);
@@ -70,10 +72,14 @@ namespace MangaReader
                             }
                             i = i + 4;
                         }
-                        PopulateCBoxManga();
+                    watch.Stop();
+                    Debug.WriteLine("Tiempo lectura: "+ watch.ElapsedMilliseconds);
+                    PopulateCBoxManga();
                         UpdateItems();
+                  await  Clases.XmlIO.WriteJsonAsync(Mangas);
                         loading.IsActive = false;                      
                 }
+               
             }
         }
 
@@ -129,6 +135,7 @@ namespace MangaReader
                     }
                     loading.IsActive = false;
                     SaveData();
+                    await Clases.XmlIO.WriteJsonAsync(Mangas);
                     PopulateCBoxManga();
                     UpdateItems();
                 }
@@ -251,22 +258,25 @@ namespace MangaReader
         }
         private void UpdateItems()
         {
-          
+            if (Mangas.Count > 0)
+            {
                 ComboBoxManga.SelectedIndex = Mangas.ElementAt(0).GetMangaActual();
                 ComboBoxEpisode.SelectedIndex = 0;
-            
-           
-            contEpisode.Text = Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetUltimoEpisodioLeido().ToString()+" de "
-                + Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetEpisodes().Count().ToString();
-            
-            if ((Mangas.ElementAt(0).GetDirección())==1)
-            {               
-                toggleSwitch.IsOn = true;
+
+
+                contEpisode.Text = Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetUltimoEpisodioLeido().ToString() + " de "
+                    + Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetEpisodes().Count().ToString();
+
+                if ((Mangas.ElementAt(0).GetDirección()) == 1)
+                {
+                    toggleSwitch.IsOn = true;
+                }
+                else
+                {
+                    toggleSwitch.IsOn = false;
+                }
             }
-            else
-            {              
-                toggleSwitch.IsOn = false;
-            }
+             
         }
 
         private void SaveData()

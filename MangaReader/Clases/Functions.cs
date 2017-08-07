@@ -16,9 +16,11 @@ namespace MangaReader.Clases
         public static Manga LoadAll(Windows.Storage.StorageFolder folder, String path, String name, String Actual,String direccion)
         {
             Debug.WriteLine("direccion:" + direccion);
-            string[] folders = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);
-            if (folders.Count() > 0)
-            {
+             
+           
+            List<String> folders = Clases.XmlIO.ReadJson(name);
+            if (folders!=null)
+            {               
                 Manga manga = new Manga();
                 int result;
                 manga.SetDirectory(path);
@@ -27,19 +29,38 @@ namespace MangaReader.Clases
                 manga.SetUltimoEpisodioLeido(result);
                 Int32.TryParse(direccion, out result);
                 manga.SetDirección(result);
-                for (int i = 0; i < folders.Length; i++)
+                for (int i = 0; i < folders.Count; i++)
                 {
                     Episode episode = new Episode();
-                    episode.SetDirectory(folders[i]);
+                    episode.SetDirectory(folders.ElementAt(i));
                     manga.SetEpisode(episode);
                 }
                 return manga;
             }
             else
-            {
-                return null;
+            {               
+                string[] folders1 = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);
+                if (folders1.Count() > 0)
+                {
+                    Manga manga = new Manga();
+                    int result;
+                    manga.SetDirectory(path);
+                    manga.SetName(name);
+                    Int32.TryParse(Actual, out result);
+                    manga.SetUltimoEpisodioLeido(result);
+                    Int32.TryParse(direccion, out result);
+                    manga.SetDirección(result);
+                    for (int i = 0; i < folders1.Count(); i++)
+                    {
+                        Episode episode = new Episode();
+                        episode.SetDirectory(folders1.ElementAt(i));
+                        manga.SetEpisode(episode);
+                    }
+                    return manga;
+                }
+                
             }
-               
+            return null;
         }
 
         public static Episode LoadEpisode(String path)

@@ -113,6 +113,7 @@ namespace MangaReader
                     Debug.WriteLine("actual: " + mangaG.GetActual() + "ultimo leido: " + mangaG.GetUltimoEpisodioLeido());
                     flagepisodio = true;
                     LoadFlipView();
+                    flipView.SelectedIndex += 1;
                     MakeInvisible();
                 }
                 catch (ArgumentOutOfRangeException e3)
@@ -152,12 +153,11 @@ namespace MangaReader
             foreach (BitmapImage value in episodeIm)
             {
                 cont++;
-                flipView.Items.Add(value);
-                if (cont == 5 && flipView.Items.Count > 5)
-                    flipView.SelectedIndex += 1;
+                flipView.Items.Add(value);              
+                  
             }
-         
-          
+            
+
         }
         private async Task cargarBitmap (int capitulo)
         {
