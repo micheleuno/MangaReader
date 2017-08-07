@@ -22,8 +22,9 @@ namespace MangaReader
     {
         List<Manga> MangasG = new List<Manga>();
         Manga mangaG;
-        Boolean flag = false, flagepisodio = true;
+        Boolean flag = false, flagepisodio = true, cargaBitmap = false;
         Stopwatch sw = new Stopwatch();
+        List<BitmapImage> episodeIm;
         int paginasaux = 0, paginas = 0, episodios = 0, mangasterminados = 0;
 
         public FlipView()
@@ -49,11 +50,14 @@ namespace MangaReader
             }
             mangaG = manga;
             MangasG = Mangas;
-            await LoadFlipView();
+            loading.IsActive = true;
+            await cargarBitmap(mangaG.GetActual());
+            LoadFlipView();
+            loading.IsActive = false;
             sw.Start();
         }
 
-        private void flipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void  flipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //  Debug.WriteLine("Index " + flipView.SelectedIndex +" todos "+ " contador " + flipView.Items.Count);
             if (flipView.SelectedIndex + 1 == flipView.Items.Count && flipView.Items.Count > 2 && flagepisodio)
@@ -74,6 +78,14 @@ namespace MangaReader
                 }
                 flagepisodio = false;
             }
+            if (cargaBitmap == false)
+            {
+                cargaBitmap = true;
+               await cargarBitmap(mangaG.GetActual() + 1);
+
+            }
+
+
         }
 
         private void flipView_SingleTapped(object sender, TappedRoutedEventArgs e)
@@ -91,21 +103,23 @@ namespace MangaReader
             }
         }
 
-        private async void BtnNext_Click(object sender, RoutedEventArgs e)
+        private  void BtnNext_Click(object sender, RoutedEventArgs e)
         {
             if (mangaG.GetActual() < mangaG.GetEpisodes().Count)
             {
+                cargaBitmap = false;
                 try
                 {
                     Debug.WriteLine("actual: " + mangaG.GetActual() + "ultimo leido: " + mangaG.GetUltimoEpisodioLeido());
                     flagepisodio = true;
-                    await LoadFlipView();
+                    LoadFlipView();
                 }
                 catch (ArgumentOutOfRangeException e3)
                 {
                     Debug.WriteLine(e3);
                     throw;
                 }
+               
             }
             else
             {
@@ -127,28 +141,10 @@ namespace MangaReader
             }
         }
 
-        private async Task LoadFlipView()
+        private void LoadFlipView()
         {
-            loading.IsActive = true;
-            List<String> Pages = new List<String>();
-            Episode episode = new Episode();
-            String Url, Url2;
-            episode = Clases.Functions.LoadEpisode(mangaG.GetEpisodes().ElementAt<Episode>(mangaG.GetActual()).GetDirectory());
             int cont = 0;
-            Pages = episode.GetPages();
-            paginasaux = Pages.Count;
-            Url = mangaG.GetDirectory() + @"\" + episode.GetDirectory();
-            List<String> Completeurl = new List<string>();
-            foreach (String value in Pages)
-            {
-                //  Debug.Write("Episodes " + value);
-                Url2 = Url;
-                Url2 = Url + @"\" + value;
-
-                Completeurl.Add(Url2);
-            }
-            MakeInvisible();
-            List<BitmapImage> episodeIm = await Clases.Functions.LoadEpisodeImageAsync(Completeurl);
+           
             for (int i = 0; i < flipView.Items.Count - 1; i++)
                 flipView.Items.RemoveAt(i);
 
@@ -159,8 +155,33 @@ namespace MangaReader
                 if (cont == 5 && flipView.Items.Count > 5)
                     flipView.SelectedIndex += 1;
             }
-            loading.IsActive = false;
+         
+          
         }
+        private async Task cargarBitmap (int capitulo)
+        {
+            Debug.WriteLine("Cargando episodio: " + capitulo);
+            episodeIm = new List<BitmapImage>();          
+            List<String> Pages = new List<String>();
+            Episode episode = new Episode();
+            String Url, Url2;
+            episode = Clases.Functions.LoadEpisode(mangaG.GetEpisodes().ElementAt(capitulo).GetDirectory());          
+            Pages = episode.GetPages();
+            paginasaux = Pages.Count;
+            Url = mangaG.GetDirectory() + @"\" + episode.GetDirectory();
+            List<String> Completeurl = new List<string>();
+
+            foreach (String value in Pages)
+            {
+                //  Debug.Write("Episodes " + value);
+                Url2 = Url;
+                Url2 = Url + @"\" + value;
+                Completeurl.Add(Url2);
+            }
+
+            episodeIm = await Clases.Functions.LoadEpisodeImageAsync(Completeurl);
+        }
+
 
         private void BtnClose_Click(object sender, RoutedEventArgs e)
         {

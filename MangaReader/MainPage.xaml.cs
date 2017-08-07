@@ -185,15 +185,22 @@ namespace MangaReader
             String Url;
             if (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count>0)
             {
-                episode = Clases.Functions.LoadEpisode(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().ElementAt(0).GetDirectory());
-                Pages = episode.GetPages();
-                Url = (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory() + @"\" + episode.GetDirectory() + @"\" + episode.GetPages().ElementAt(0));
-                BitmapImage image1 = new BitmapImage();
-                StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
-                IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                image1 = new BitmapImage();
-                await image1.SetSourceAsync(fileStream);
-                image.Source = image1;
+                try
+                {
+                    episode = Clases.Functions.LoadEpisode(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().ElementAt(0).GetDirectory());
+                    Pages = episode.GetPages();
+                    Url = (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory() + @"\" + episode.GetDirectory() + @"\" + episode.GetPages().ElementAt(0));
+                    BitmapImage image1 = new BitmapImage();
+                    StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
+                    IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                    image1 = new BitmapImage();
+                    await image1.SetSourceAsync(fileStream);
+                    image.Source = image1;
+                }
+                catch (FileNotFoundException)
+                {
+                    
+                }
             }
            
 
@@ -253,13 +260,11 @@ namespace MangaReader
                 + Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetEpisodes().Count().ToString();
             
             if ((Mangas.ElementAt(0).GetDirección())==1)
-            {
-                Debug.WriteLine("Entro: " + (Mangas.ElementAt(0).GetDirección()));
+            {               
                 toggleSwitch.IsOn = true;
             }
             else
-            {
-                Debug.WriteLine("Entro1: " + (Mangas.ElementAt(0).GetDirección()));
+            {              
                 toggleSwitch.IsOn = false;
             }
         }
