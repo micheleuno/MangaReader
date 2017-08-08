@@ -130,14 +130,11 @@ namespace MangaReader.Clases
             String[] previousdata = await ReadStatistics();
             if (previousdata!=null)
             {
-                int paginas1;
-                Int32.TryParse(previousdata[0], out paginas1);
+                Int32.TryParse(previousdata[0], out int paginas1);
                 paginas = paginas + paginas1;
-                int episodios1;
-                Int32.TryParse(previousdata[1], out episodios1);
+                Int32.TryParse(previousdata[1], out int episodios1);
                 episodios = episodios + episodios1;
-                int mangasterminados1;
-                Int32.TryParse(previousdata[3], out mangasterminados1);
+                Int32.TryParse(previousdata[3], out int mangasterminados1);
                 mangasterminados = mangasterminados + mangasterminados1;
                 tiempo = sw.Elapsed.Add(TimeSpan.Parse(previousdata[2]));
             }

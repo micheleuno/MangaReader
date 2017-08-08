@@ -22,10 +22,9 @@ namespace MangaReader.Clases
             if (folders!=null)
             {               
                 Manga manga = new Manga();
-                int result;
                 manga.SetDirectory(path);
                 manga.SetName(name);
-                Int32.TryParse(Actual, out result);
+                Int32.TryParse(Actual, out int result);
                 manga.SetUltimoEpisodioLeido(result);
                 Int32.TryParse(direccion, out result);
                 manga.SetDirección(result);
@@ -43,10 +42,9 @@ namespace MangaReader.Clases
                 if (folders1.Count() > 0)
                 {
                     Manga manga = new Manga();
-                    int result;
                     manga.SetDirectory(path);
                     manga.SetName(name);
-                    Int32.TryParse(Actual, out result);
+                    Int32.TryParse(Actual, out int result);
                     manga.SetUltimoEpisodioLeido(result);
                     Int32.TryParse(direccion, out result);
                     manga.SetDirección(result);

@@ -24,8 +24,7 @@ namespace MangaReader
         {
             if (e != null)
             {
-                List<Manga> MangasParameter = e.Parameter as List<Manga>;
-                if (MangasParameter != null && Mangas != null)
+                if (e.Parameter is List<Manga> MangasParameter && Mangas != null)
                 {
                     PopulateCBoxManga();
                     UpdateItems();
@@ -104,10 +103,12 @@ namespace MangaReader
                 Mangas = new List<Manga>();
             }
             Manga Manga1 = new Manga();
-            var picker = new Windows.Storage.Pickers.FolderPicker();
-            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Downloads;
-            picker.SettingsIdentifier = "asd";
+            var picker = new Windows.Storage.Pickers.FolderPicker()
+            {
+                ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
+                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Downloads,
+                SettingsIdentifier = "asd"
+            };
             picker.FileTypeFilter.Add("*");           
             Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();
             Boolean flag = false;           
@@ -181,11 +182,11 @@ namespace MangaReader
 
                 }
 
-                loadImage();
+                LoadImage();
             }
            
         }      
-        private async void loadImage()
+        private async void LoadImage()
         {
             List<String> Pages = new List<String>();
             Episode episode = new Episode();
@@ -221,7 +222,7 @@ namespace MangaReader
                 {
                     await Clases.Functions.CreateMessageAsync("No se actualizará el ultimo episodio leído");
                 }
-                guardarDireccion();
+                GuardarDireccion();
                 Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(ComboBoxEpisode.SelectedIndex);
                 Frame.Navigate(typeof(FlipView), Mangas);
             }
@@ -249,7 +250,7 @@ namespace MangaReader
             {
                 if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count)
                 {
-                    guardarDireccion();
+                    GuardarDireccion();
                     Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
                     Frame.Navigate(typeof(FlipView), Mangas);
                 }
@@ -329,7 +330,7 @@ namespace MangaReader
 
         }
 
-        private void guardarDireccion()
+        private void GuardarDireccion()
         {
             if (toggleSwitch.IsOn == true)
             {
@@ -342,7 +343,7 @@ namespace MangaReader
             var t = Task.Run(() => Clases.XmlIO.Writefile(Mangas));
         }
 
-        private void fullScreen_Toggled(object sender, RoutedEventArgs e)
+        private void FullScreen_Toggled(object sender, RoutedEventArgs e)
         {
             ApplicationView view = ApplicationView.GetForCurrentView();
             bool isInFullScreenMode = view.IsFullScreenMode;
