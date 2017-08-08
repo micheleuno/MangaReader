@@ -78,14 +78,12 @@ namespace MangaReader
                 }
                 flagepisodio = false;
             }
-            if (cargaBitmap == false)
-            {
-                cargaBitmap = true;
+            if (cargaBitmap == false&& flipView.SelectedIndex  >(flipView.Items.Count)/2)
+            {             
+               cargaBitmap = true;
                await cargarBitmap(mangaG.GetActual() + 1);
-
             }
-
-
+            EpisodeConter.Content = (flipView.SelectedIndex).ToString() + " de " + flipView.Items.Count.ToString();
         }
 
         private void flipView_SingleTapped(object sender, TappedRoutedEventArgs e)
@@ -93,7 +91,9 @@ namespace MangaReader
             if (flag == false)
             {
                 BtnFullScreen.Visibility = Visibility.Visible;
-                BtnClose.Visibility = Visibility.Visible;
+                BtnClose.Visibility = Visibility.Visible;              
+                EpisodeConter.Visibility = Visibility.Visible;
+                EpisodeConter.Content = (flipView.SelectedIndex).ToString() + " de " + flipView.Items.Count.ToString();
                 flag = true;
             }
             else
@@ -113,7 +113,14 @@ namespace MangaReader
                     Debug.WriteLine("actual: " + mangaG.GetActual() + "ultimo leido: " + mangaG.GetUltimoEpisodioLeido());
                     flagepisodio = true;
                     LoadFlipView();
-                    flipView.SelectedIndex += 1;
+                    if (flipView.Items.Count>0)
+                    {
+                        flipView.SelectedIndex += 1;
+                    }
+
+                     
+
+                  
                     MakeInvisible();
                 }
                 catch (ArgumentOutOfRangeException e3)
@@ -145,19 +152,19 @@ namespace MangaReader
 
         private void LoadFlipView()
         {
-            int cont = 0;
-           
-            for (int i = 0; i < flipView.Items.Count - 1; i++)
-                flipView.Items.RemoveAt(i);
-
+            int cont = 0;         
+            flipView.Items.Clear();
+            Debug.WriteLine("Cantidad inicial: " + flipView.Items.Count);
             foreach (BitmapImage value in episodeIm)
             {
                 cont++;
                 flipView.Items.Add(value);              
                   
             }
-            
-
+            episodeIm = new List<BitmapImage>();
+            System.GC.Collect();
+            System.GC.WaitForPendingFinalizers();
+            Debug.WriteLine("Cantidad final: " + flipView.Items.Count);
         }
         private async Task cargarBitmap (int capitulo)
         {
@@ -212,6 +219,7 @@ namespace MangaReader
             BtnFullScreen.Visibility = Visibility.Collapsed;
             BtnNext.Visibility = Visibility.Collapsed;
             BtnClose.Visibility = Visibility.Collapsed;
+            EpisodeConter.Visibility = Visibility.Collapsed;
         }
 
         private void Fullscren(object sender, RoutedEventArgs e)

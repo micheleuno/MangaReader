@@ -85,6 +85,7 @@ namespace MangaReader.Clases
             
              List<BitmapImage> images = new List<BitmapImage>();
             BitmapImage image;
+            
             foreach (String value in Completeurl)
             {
                 if (ImageExtensions.Contains(Path.GetExtension(value).ToUpperInvariant()))
@@ -100,7 +101,7 @@ namespace MangaReader.Clases
                     await CreateMessageAsync("Ocurrión un error al leer el archivo: " +value);
                  
                 }
-            }
+            }          
             return images;
         }
 
