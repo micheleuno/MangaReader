@@ -216,7 +216,7 @@ namespace MangaReader
 
         private async void  ButtonView_Click(object sender, RoutedEventArgs e)
         {
-            if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1)
+            if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.Count > 0)
             {
                 if (ComboBoxEpisode.SelectedIndex< Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido())
                 {
@@ -246,7 +246,7 @@ namespace MangaReader
             showDialog.DefaultCommandIndex = 0;
             showDialog.CancelCommandIndex = 1;
             var result = await showDialog.ShowAsync();
-            if ((int)result.Id == 0 && ComboBoxManga.SelectedIndex != -1)
+            if ((int)result.Id == 0 && ComboBoxManga.SelectedIndex != -1&&Mangas.Count>0)
             {
                 if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count)
                 {
