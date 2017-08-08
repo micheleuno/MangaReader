@@ -232,30 +232,47 @@ namespace MangaReader
 
         }
 
-        private async void BtnNext_Click(object sender, RoutedEventArgs e)
+        private void BtnNext_Click(object sender, RoutedEventArgs e)
         {
-            if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido()< Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count)
+            ContinuarLectura();
+        }
+        private async void ContinuarLectura()
+        {
+            MessageDialog showDialog = new MessageDialog("¿Desea continuar con el capítulo " + (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() + 1) + " de " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + "?");
+            showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
+            showDialog.Commands.Add(new UICommand("No") { Id = 1 });
+            showDialog.DefaultCommandIndex = 0;
+            showDialog.CancelCommandIndex = 1;
+            var result = await showDialog.ShowAsync();
+            if ((int)result.Id == 0 && ComboBoxManga.SelectedIndex != -1)
             {
-              // Debug.WriteLine("actual "+ Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetActual()+"capitulos " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count);
-                guardarDireccion();
-                Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
-                Frame.Navigate(typeof(FlipView), Mangas);
-            }
-            else
-            {
-
-                try
+                if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count)
                 {
-                    await Clases.Functions.CreateMessageAsync("No hay más episodios, episodio actual: " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
-                   
+                    guardarDireccion();
+                    Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
+                    Frame.Navigate(typeof(FlipView), Mangas);
                 }
-                catch (ArgumentOutOfRangeException)
+                else
                 {
-                    await Clases.Functions.CreateMessageAsync("Debe agregar un manga primero");
-                  
+
+                    try
+                    {
+                        await Clases.Functions.CreateMessageAsync("No hay más episodios, episodio actual: " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
+
+                    }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        await Clases.Functions.CreateMessageAsync("Debe agregar un manga primero");
+
+                    }
                 }
             }
         }
+        private   void ImageTapped(object sender, RoutedEventArgs e)
+        { 
+                ContinuarLectura();
+        }
+
         private void UpdateItems()
         {
             if (Mangas.Count > 0)
