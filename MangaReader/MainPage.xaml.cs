@@ -239,6 +239,7 @@ namespace MangaReader
         private async void ContinuarLectura()
         {
             MessageDialog showDialog = new MessageDialog("¿Desea continuar con el capítulo " + (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() + 1) + " de " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + "?");
+            
             showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
             showDialog.Commands.Add(new UICommand("No") { Id = 1 });
             showDialog.DefaultCommandIndex = 0;
