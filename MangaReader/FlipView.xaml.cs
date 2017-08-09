@@ -78,7 +78,7 @@ namespace MangaReader
                 }
                 flagepisodio = false;
             }
-            if (cargaBitmap == false && flipView.SelectedIndex > (flipView.Items.Count) / 2)
+            if (cargaBitmap == false && flipView.SelectedIndex > (flipView.Items.Count) / 2&& mangaG.GetActual()<(mangaG.GetEpisodes().Count-1))
             {
                 cargaBitmap = true;
                 await CargarBitmap(mangaG.GetActual() + 1);
