@@ -77,6 +77,10 @@ namespace MangaReader
                         }
                     watch.Stop();
                     Debug.WriteLine("Tiempo lectura: "+ watch.ElapsedMilliseconds);
+                   if(localSettings.Values["readingDirection"] == null)
+                    {
+                        localSettings.Values["readingDirection"] = 1;
+                    }
                     PopulateCBoxManga();
                         UpdateItems();
                   
