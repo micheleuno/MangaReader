@@ -22,11 +22,9 @@ namespace MangaReader.Clases
                 if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Project1\data.txt"))
                 {
                     var path = @"\Project1\data.txt";
-                    var folder = ApplicationData.Current.LocalFolder;
-                   // Debug.WriteLine(folder.Path);
+                    var folder = ApplicationData.Current.LocalFolder;                 
                     String data2;
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    // acquire file
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();                   
                     StorageFile file = await folder.GetFileAsync(path);
                     var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read); using
 
@@ -34,10 +32,7 @@ namespace MangaReader.Clases
                     {
                         data2 = reader.ReadToEnd().ToString();
                     }
-                    String[] lines = data2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-                    /* Debug.Write("1 " + lines[0]);
-                     Debug.Write("2 " + lines[1]);
-                     Debug.Write("3 " + lines[2]);*/
+                    String[] lines = data2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);                 
                     stream.Dispose();
                     return lines;
                 }
@@ -56,30 +51,39 @@ namespace MangaReader.Clases
     
         public static async Task Writefile( List<Manga> Mangas)
         {
-         //   Manga manga = new Manga();
-          //  manga = Mangas.ElementAt<Manga>(0);
-            String data=null;
-            foreach (Manga value in Mangas)
+            //   Manga manga = new Manga();
+            //  manga = Mangas.ElementAt<Manga>(0);
+            if (Mangas.Count > 0)
             {
-                data = data + value.GetUltimoEpisodioLeido().ToString() + "\n" + value.GetDirectory().ToString() + "\n" + value.GetName().ToString() + "\n" + value.GetDirección().ToString() + "\n";
+                String data = null;
+                foreach (Manga value in Mangas)
+                {
+                    data = data + value.GetUltimoEpisodioLeido().ToString() + "\n" + value.GetDirectory().ToString() + "\n" + value.GetName().ToString() + "\n" + value.GetDirección().ToString() + "\n";
+                }
+
+                byte[] encodedText = Encoding.ASCII.GetBytes(data);
+                StorageFile sampleFile = await CrearSampleFileAsync();
+                using (var writer = await sampleFile.OpenStreamForWriteAsync())
+                {
+                    await writer.WriteAsync(encodedText, 0, encodedText.Length);
+                    writer.Dispose();
+                }
             }
-          
-            byte[] encodedText = Encoding.ASCII.GetBytes(data);
+
+            if (Mangas.Count == 0)
+            {
+                StorageFile sampleFile = await CrearSampleFileAsync();
+                await sampleFile.DeleteAsync();
+            }
+        }
+        public static async Task<StorageFile> CrearSampleFileAsync()
+        {
             StorageFolder rootFolder = ApplicationData.Current.LocalFolder;
             var projectFolderName = "Project1";
             StorageFolder projectFolder = await rootFolder.CreateFolderAsync(projectFolderName, CreationCollisionOption.OpenIfExists);
             Debug.WriteLine(projectFolder.Path);
-            StorageFile sampleFile = await projectFolder.CreateFileAsync("data.txt",CreationCollisionOption.ReplaceExisting);
-            using (var writer = await sampleFile.OpenStreamForWriteAsync())
-            {
-                await writer.WriteAsync(encodedText, 0, encodedText.Length);
-                writer.Dispose();
-            }
-           
-            if (Mangas.Count == 0)
-            {
-               await sampleFile.DeleteAsync();
-            }
+            StorageFile sampleFile = await projectFolder.CreateFileAsync("data.txt", CreationCollisionOption.ReplaceExisting);
+            return sampleFile;
         }
 
         public static async Task<String[]> ReadStatistics()
@@ -143,8 +147,6 @@ namespace MangaReader.Clases
                 tiempo = sw.Elapsed;
               
             }
-           
-
             String data = null;
 
             
@@ -180,7 +182,6 @@ namespace MangaReader.Clases
                 }
                 catch (Exception)
                 {
-
                     
                 }
                 directorios = new List<string>();
@@ -200,7 +201,6 @@ namespace MangaReader.Clases
             }
             Debug.WriteLine((ApplicationData.Current.LocalFolder.Path + Nombre + ".json"));
             return null;
-               
         }
     }
 }

@@ -76,7 +76,7 @@
         <StackPanel HorizontalAlignment="Center"   Grid.Row="2" VerticalAlignment="Center" >
           
             <ToggleSwitch  x:Name="toggleSwitch" Grid.Column="2" Header="Dirección Lectura"  OnContent="Der A Izq"  OffContent="Izq a Der" Margin="5" />
-            <ToggleSwitch x:Name="fullScreen" Grid.Column="2" Header="Pantalla Completa"     OnContent="Si"  OffContent="No" Toggled="fullScreen_Toggled" Margin="5" />
+            <ToggleSwitch x:Name="fullScreen" Grid.Column="2" Header="Pantalla Completa"     OnContent="Si"  OffContent="No" Toggled="FullScreen_Toggled" Margin="5" />
             <Button x:Name="button" Content="Eliminar Manga" Grid.Column="1" Grid.Row="1" Click="BtnEliminar"  Margin="20"  />
             <Button Content="Estadisticas" Click="Button_Click">
                 <Button.Flyout>

@@ -20,6 +20,10 @@ namespace MangaReader
 
     public sealed partial class FlipView : Page
     {
+        Windows.Storage.ApplicationDataContainer localSettings =
+         Windows.Storage.ApplicationData.Current.LocalSettings;
+        Windows.Storage.StorageFolder localFolder =
+            Windows.Storage.ApplicationData.Current.LocalFolder;
         List<Manga> MangasG = new List<Manga>();
         Manga mangaG;
         Boolean flag = false, flagepisodio = true, cargaBitmap = false;
@@ -38,7 +42,9 @@ namespace MangaReader
             MakeInvisible();
             List<Manga> Mangas = e.Parameter as List<Manga>;
             Manga manga = Mangas.ElementAt<Manga>(Mangas.ElementAt<Manga>(0).GetMangaActual());
-            if (Mangas.ElementAt<Manga>(0).GetDirección() == 1)
+            // if (Mangas.ElementAt<Manga>(0).GetDirección() == 1)
+               
+            if (localSettings.Values["readingDirection"].ToString()=="1")
             {
                 flipView.FlowDirection = FlowDirection.RightToLeft;
                 BtnClose.HorizontalAlignment = HorizontalAlignment.Right;
