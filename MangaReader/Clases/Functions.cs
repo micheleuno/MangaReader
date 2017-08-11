@@ -15,8 +15,7 @@ namespace MangaReader.Clases
     {
         public static Manga LoadAll(Windows.Storage.StorageFolder folder, String path, String name, String Actual,String direccion)
         {
-            Debug.WriteLine("direccion:" + direccion);
-             
+           // Debug.WriteLine("direccion:" + direccion);            
            
             List<String> folders = Clases.XmlIO.ReadJson(name);
             if (folders!=null)
@@ -92,7 +91,7 @@ namespace MangaReader.Clases
                     IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
                     image = new BitmapImage();
                     await image.SetSourceAsync(fileStream);
-                    images.Add(image);
+                    images.Add(image);  
                 }
                 else
                 {

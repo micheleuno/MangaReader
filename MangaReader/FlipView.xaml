@@ -19,16 +19,17 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
 
-        <FlipView  x:Name="flipView"  SelectionChanged="flipView_SelectionChanged" Tapped="flipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" >
+        <FlipView  x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" >
             <FlipView.ItemTemplate>
 
                 <DataTemplate>
                     <ScrollViewer  MinZoomFactor="0.8" 
-                                   DoubleTapped="scrollViewer_DoubleTapped"
-                                    Name="ScrollViewerMain"
+                                   DoubleTapped="ScrollViewer_DoubleTapped"
+                                   x:Name="ScrollViewerMain"
                                     HorizontalScrollBarVisibility="Auto"
                                     VerticalScrollBarVisibility="Auto"
                                     ZoomMode="Enabled"
+                                   AutomationProperties.AccessibilityView="Raw"
                                    
                                   >
 
@@ -36,8 +37,7 @@
                         <Image  x:Name="image" 
                                 Source="{Binding}" 
                                 VerticalAlignment="Center"
-                                HorizontalAlignment="Center" 
-                              
+                                HorizontalAlignment="Center"                               
                                 MaxHeight="{Binding Path=ViewportHeight, ElementName=ScrollViewerMain}" />
 
                     </ScrollViewer>

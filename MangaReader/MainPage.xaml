@@ -19,6 +19,7 @@
             <Setter Property="HorizontalAlignment" Value="Center"></Setter>
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
             <Setter Property="MinWidth" Value="80"></Setter>
+            <Setter Property="AutomationProperties.AccessibilityView" Value="Raw"></Setter>
         </Style>
         <Style TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Center"></Setter>
@@ -63,9 +64,9 @@
         <StackPanel HorizontalAlignment="Center"   Grid.Row="0" VerticalAlignment="Center" >
             <Button x:Name="BtnOpenFIle" Content="Agregar Manga"   Click="BtnOpenFile" Margin="5" />
             <TextBlock HorizontalAlignment="center"  TextWrapping="Wrap" Text="Nombre Manga" VerticalAlignment="Top" Margin="5"/>
-            <ComboBox x:Name="ComboBoxManga"  Width="auto" SelectionChanged="ComboBoxManga_SelectionChanged" Margin="7"/>
+            <ComboBox x:Name="ComboBoxManga"  Width="auto" SelectionChanged="ComboBoxManga_SelectionChanged" Margin="7" />
             <TextBlock TextWrapping="Wrap" Text="Episodio"  Margin="5" />
-            <ComboBox x:Name="ComboBoxEpisode"   Width="auto" Margin="5"/>
+            <ComboBox x:Name="ComboBoxEpisode"  Width="auto" Margin="5"/>
             <Button Content="Ver Episodio"   Click="ButtonView_Click" Margin="7"/>
             <TextBlock x:Name="contEpisode"  TextWrapping="Wrap" Text="de"   Margin="5"/>
             <Button x:Name="BtnContinue" Content="Continuar"  Click="BtnNext_Click"  Margin="5"/>

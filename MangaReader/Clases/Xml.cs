@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -199,7 +198,7 @@ namespace MangaReader.Clases
                     return items;
                 }
             }
-            Debug.WriteLine((ApplicationData.Current.LocalFolder.Path + Nombre + ".json"));
+           // Debug.WriteLine((ApplicationData.Current.LocalFolder.Path + Nombre + ".json"));
             return null;
         }
     }

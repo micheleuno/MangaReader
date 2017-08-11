@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -43,6 +44,7 @@ namespace MangaReader
         public MainPage()
         {
             this.InitializeComponent();
+
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -76,7 +78,7 @@ namespace MangaReader
                             i = i + 4;
                         }
                     watch.Stop();
-                    Debug.WriteLine("Tiempo lectura: "+ watch.ElapsedMilliseconds);
+                  ///  Debug.WriteLine("Tiempo lectura: "+ watch.ElapsedMilliseconds);
                    if(localSettings.Values["readingDirection"] == null)
                     {
                         localSettings.Values["readingDirection"] = 1;
@@ -86,11 +88,44 @@ namespace MangaReader
                   
                    
                    await  Clases.XmlIO.WriteJsonAsync(Mangas);
-                        loading.IsActive = false;                      
+                        loading.IsActive = false;
+                  //  ReadData();
+                  //  SaveData1();
+
                 }
                
             }
         }
+
+        private async void SaveData1()
+        {
+            List<String> Directorios = new List<string>();
+            var helper = new LocalObjectStorageHelper();
+            foreach (Manga value in Mangas)
+            {
+                Directorios.Add(value.GetDirectory());
+            }
+         
+            await helper.SaveFileAsync("Directorios", Directorios);
+
+        }
+        private async void ReadData()
+        {
+         
+            List<String> DirectoriosR = new List<string>();
+            var helper = new LocalObjectStorageHelper();
+            if (await helper.FileExistsAsync("Directorios"))
+            {
+                foreach (String value in helper.Read<List<String>>("Directorios"))
+                {
+                   // Debug.WriteLine("Directorios almacenados: " + value);
+                }
+
+            }
+           
+
+        }
+
 
         private async Task <Windows.Storage.StorageFolder> OpenFolder(String directorio)
         {
@@ -188,8 +223,8 @@ namespace MangaReader
                     ComboBoxEpisode.SelectedIndex = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido();
                 }
                 catch(ArgumentException)
-                {
-
+                {                   
+                    ComboBoxEpisode.SelectedIndex = 0;
                 }
 
                 LoadImage();

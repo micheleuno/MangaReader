@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -116,14 +117,14 @@ namespace MangaReader
                 cargaBitmap = false;
                 try
                 {
-                    Debug.WriteLine("actual: " + mangaG.GetActual() + "ultimo leido: " + mangaG.GetUltimoEpisodioLeido());
+                  //  Debug.WriteLine("actual: " + mangaG.GetActual() + "ultimo leido: " + mangaG.GetUltimoEpisodioLeido());
                     flagepisodio = true;
                     LoadFlipView();
                     MakeInvisible();
                 }
-                catch (ArgumentOutOfRangeException e3)
+                catch (ArgumentOutOfRangeException)
                 {
-                    Debug.WriteLine(e3);
+                  //  Debug.WriteLine(e3);
                     throw;
                 }
             }
@@ -163,7 +164,7 @@ namespace MangaReader
         }
         private async Task CargarBitmap(int capitulo)
         {
-            Debug.WriteLine("Cargando episodio: " + capitulo);
+           // Debug.WriteLine("Cargando episodio: " + capitulo);
             episodeIm = new List<BitmapImage>();
             List<String> Pages = new List<String>();
             Episode episode = new Episode();
@@ -186,14 +187,31 @@ namespace MangaReader
         }
 
 
-        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        private async void BtnClose_Click(object sender, RoutedEventArgs e)
         {
             sw.Stop();
+            if ((mangaG.GetActual() + 1) > mangaG.GetEpisodes().Count())
+            {
+                MessageDialog showDialog = new MessageDialog("Marcar " + mangaG.GetName() + " como terminado?");
 
-            var t = Task.Run(() => Clases.XmlIO.WriteStatistics(paginas, episodios, sw, mangasterminados));
+                showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
+                showDialog.Commands.Add(new UICommand("No") { Id = 1 });
+                showDialog.DefaultCommandIndex = 0;
+                showDialog.CancelCommandIndex = 1;
+                var result = await showDialog.ShowAsync();
+                if ((int)result.Id == 0)
+                {
+                    mangasterminados++;
+                }
+            }
+
+
+
+
+                var t = Task.Run(() => Clases.XmlIO.WriteStatistics(paginas, episodios, sw, mangasterminados));
             Frame.Navigate(typeof(MainPage), MangasG);
         }
-        private void MakeVisible()
+        private  void MakeVisible()
         {
             BtnNext.Visibility = Visibility.Visible;
             BtnClose.Visibility = Visibility.Visible;
@@ -203,8 +221,7 @@ namespace MangaReader
             }
             else
             {
-                mangasterminados++;
-                BtnNext.Content = "Fin";
+                   BtnNext.Content = "Fin";
             }
 
         }
