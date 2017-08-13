@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="c465b132-823a-434d-be3d-d094079c5d4c" Publisher="CN=Michele De Conti" Version="1.0.37.0" />
+  <Identity Name="c465b132-823a-434d-be3d-d094079c5d4c" Publisher="CN=Michele De Conti" Version="1.0.38.0" />
   <mp:PhoneIdentity PhoneProductId="c465b132-823a-434d-be3d-d094079c5d4c" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>MangaReader</DisplayName>
@@ -21,14 +21,6 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
-        <uap:Extension Category="windows.fileOpenPicker">
-          <uap:FileOpenPicker>
-            <uap:SupportedFileTypes>
-              <uap:FileType>.png</uap:FileType>
-              <uap:FileType>.jpg</uap:FileType>
-            </uap:SupportedFileTypes>
-          </uap:FileOpenPicker>
-        </uap:Extension>
         <uap:Extension Category="windows.fileSavePicker">
           <uap:FileSavePicker>
             <uap:SupportedFileTypes>
@@ -36,6 +28,14 @@
               <uap:FileType>.png</uap:FileType>
             </uap:SupportedFileTypes>
           </uap:FileSavePicker>
+        </uap:Extension>
+        <uap:Extension Category="windows.fileOpenPicker">
+          <uap:FileOpenPicker>
+            <uap:SupportedFileTypes>
+              <uap:FileType>.png</uap:FileType>
+              <uap:FileType>.jpg</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileOpenPicker>
         </uap:Extension>
       </Extensions>
     </Application>

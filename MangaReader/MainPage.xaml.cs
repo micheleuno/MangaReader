@@ -83,6 +83,7 @@ namespace MangaReader
                     {
                         localSettings.Values["readingDirection"] = 1;
                     }
+                   
                     PopulateCBoxManga();
                         UpdateItems();
                   
@@ -299,6 +300,10 @@ namespace MangaReader
                         localSettings.Values["MangaActual"] = ComboBoxManga.SelectedIndex;
                         GuardarDireccion();
                         Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
+                        if (localSettings.Values[Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName()] == null)
+                        {
+                            localSettings.Values[Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName()] = 0;
+                        }
                         Frame.Navigate(typeof(FlipView), Mangas);
                     }
                     else
