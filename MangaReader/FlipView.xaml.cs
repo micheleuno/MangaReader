@@ -236,7 +236,8 @@ namespace MangaReader
             {
                 localSettings.Values[mangaG.GetName()] = 0;
             }
-          
+            episodeIm = new List<BitmapImage>();
+            flipView.Items.Clear();
             var t = Task.Run(() => Clases.XmlIO.WriteStatistics(paginas, episodios, sw, mangasterminados));
             Frame.Navigate(typeof(MainPage), MangasG);
         }
