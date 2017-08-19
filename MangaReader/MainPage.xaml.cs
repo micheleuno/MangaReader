@@ -422,9 +422,13 @@ namespace MangaReader
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             String[] previousdata = await Clases.XmlIO.ReadStatistics();
+            TimeSpan tiempo;
+            tiempo = TimeSpan.Parse(previousdata[2]);
+          
+
             if (previousdata != null)
             {
-                FLyout.Text = "Páginas leidas: " + previousdata[0] + "\nCapítulos leídos: " + previousdata[1] +"\nMangas terminados: " + previousdata[3] + "\nTiempo total: " + previousdata[2].Split('.').First();
+                FLyout.Text = "Páginas leidas: " + previousdata[0] + "\nCapítulos leídos: " + previousdata[1] +"\nMangas terminados: " + previousdata[3] + "\nTiempo total: " + tiempo.ToString(@"d\:hh\:mm");
             }
             else
             {

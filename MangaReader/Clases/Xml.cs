@@ -106,10 +106,18 @@ namespace MangaReader.Clases
                         data2 = reader.ReadToEnd().ToString();
                     }
                     String[] lines = data2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-                    /* Debug.Write("1 " + lines[0]);
+                   /*  Debug.Write("1 " + lines[0]);
                      Debug.Write("2 " + lines[1]);
                      Debug.Write("3 " + lines[2]);*/
                     stream.Dispose();
+
+                    /* return string.Format("{0}hr {1}mn {2}sec",
+                     (int)span.TotalHours,
+                     span.Minutes,
+                     span.Seconds);*/
+                  
+                   
+
                     return lines;
                 }
                 else
@@ -124,6 +132,7 @@ namespace MangaReader.Clases
                 throw;
             }
         }
+       
 
         public static async Task WriteStatistics(int paginas, int episodios, Stopwatch sw, int mangasterminados)
         {

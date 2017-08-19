@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Media.Imaging;
@@ -82,23 +83,37 @@ namespace MangaReader.Clases
             
              List<BitmapImage> images = new List<BitmapImage>();
             BitmapImage image;
-            
-            foreach (String value in Completeurl)
+            //   Stopwatch sw = new Stopwatch();          
+            //sw.Start();
+            try
             {
-                if (ImageExtensions.Contains(Path.GetExtension(value).ToUpperInvariant()))
+                foreach (String value in Completeurl)
                 {
-                    StorageFile file = await StorageFile.GetFileFromPathAsync((value));
-                    IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                    image = new BitmapImage();
-                    await image.SetSourceAsync(fileStream);
-                    images.Add(image);  
-                }
-                else
-                {
-                    await CreateMessageAsync("Ocurrión un error al leer el archivo: " +value);
+
+                    if (ImageExtensions.Contains(Path.GetExtension(value).ToUpperInvariant()))
+                    {
+                        StorageFile file = await StorageFile.GetFileFromPathAsync((value));
+                        IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                        image = new BitmapImage();
+                        await image.SetSourceAsync(fileStream);
                  
+
+                        images.Add(image);
+                    }
+                    else
+                    {
+                        await CreateMessageAsync("Ocurrión un error al leer el archivo: " + value);
+
+                    }
+                    // sw.Stop();
+                    // Debug.WriteLine("TIempo lectura imagenes: " + sw.Elapsed);
                 }
-            }          
+            }
+            catch (Exception)
+            {
+
+                await CreateMessageAsync("Ocurrión un error al leer el archivo:");
+            }        
             return images;
         }
 
