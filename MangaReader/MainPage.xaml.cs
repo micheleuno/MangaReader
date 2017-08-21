@@ -80,7 +80,7 @@ namespace MangaReader
                             i = i + 4;
                         }
                     watch.Stop();
-                  ///  Debug.WriteLine("Tiempo lectura: "+ watch.ElapsedMilliseconds);
+                   Debug.WriteLine("Tiempo lectura: "+ watch.ElapsedMilliseconds);
                    if(localSettings.Values["readingDirection"] == null)
                     {
                         localSettings.Values["readingDirection"] = 1;
