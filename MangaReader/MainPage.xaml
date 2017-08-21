@@ -59,8 +59,8 @@
         
        
         <ProgressRing x:Name="loading" Grid.Column="1" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center"  Width="100" Height="100" />
-      
-      
+        <ProgressRing x:Name="loadingLoadManga" Grid.Column="1" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center"  Width="100" Height="100" />
+
         <StackPanel HorizontalAlignment="Center"   Grid.Row="0" VerticalAlignment="Center" >
             <Button x:Name="BtnOpenFIle" Content="Agregar Manga"   Click="BtnOpenFile" Margin="5" />
             <TextBlock HorizontalAlignment="center"  TextWrapping="Wrap" Text="Nombre Manga" VerticalAlignment="Top" Margin="5"/>

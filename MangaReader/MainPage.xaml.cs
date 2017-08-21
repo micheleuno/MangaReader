@@ -171,33 +171,32 @@ namespace MangaReader
             };
             picker.FileTypeFilter.Add("*");           
             Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();
-            Boolean flag = false;           
+            Boolean flag = false;
+            loadingLoadManga.IsActive = true;
             if (folder != null)
-            {
-               
-                loading.IsActive = true;
-                await Task.Yield();
-                loading.Visibility = Visibility.Visible;
+            {     
                 foreach (Manga value in Mangas)
                 {
                     if (value.GetName().Equals(folder.Name))
                         flag = true;
                 }
-                loading.IsActive = false;
+                //loadingLoadManga.IsActive = false;
                 if (!flag)
                 {
                     StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);
                     Manga1 = (Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));
                     if (Manga1 != null)
                     {
+                        loadingLoadManga.IsActive = false;
                         Mangas.Add(Manga1);
                         await Clases.Functions.CreateMessageAsync("Se ha agregado existosamente: " + folder.Name);
                     }
                     else
                     {
+                        loadingLoadManga.IsActive = false;
                         await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al agregar: " + folder.Name);
                     }
-                    loading.IsActive = false;
+                   
                     SaveData();
                     await Clases.XmlIO.WriteJsonAsync(Mangas);
                     PopulateCBoxManga();
@@ -207,7 +206,8 @@ namespace MangaReader
                 {
                     await Clases.Functions.CreateMessageAsync("Ya existe un manga con ese nombre");               
                 }              
-            }         
+            }
+            loadingLoadManga.IsActive = false;
         }
 
         private void PopulateCBoxManga()
