@@ -39,8 +39,9 @@ namespace MangaReader
             {
                 Mangas = new List<Manga>();
             }
-
+          
         }
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -51,6 +52,7 @@ namespace MangaReader
         {
             if (Mangas.Count == 0)
             {
+                
                 Mangas = new List<Manga>();
                 Manga Manga1 = new Manga();
                 String[] lines = await Clases.XmlIO.Readfile();
@@ -96,6 +98,18 @@ namespace MangaReader
                 }
                
             }
+            FullScreen_loaded();
+        }
+
+        private void FullScreen_loaded()
+        {
+            var ts = fullScreen;
+            ApplicationView view = ApplicationView.GetForCurrentView();
+            bool syncStatus = view.IsFullScreenMode;
+            DataContext = this;
+            ts.IsOn = syncStatus;
+            ts.Toggled += FullScreen_Toggled;
+
         }
 
         private async void SaveData1()
@@ -123,8 +137,6 @@ namespace MangaReader
                 }
 
             }
-           
-
         }
 
 
@@ -286,31 +298,30 @@ namespace MangaReader
         {
             try
             {
-                MessageDialog showDialog = new MessageDialog("¿Desea continuar con el capítulo " + (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() + 1) + " de " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + "?");
-            
-                showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
-                showDialog.Commands.Add(new UICommand("No") { Id = 1 });
-                showDialog.DefaultCommandIndex = 0;
-                showDialog.CancelCommandIndex = 1;
-                var result = await showDialog.ShowAsync();
-                if ((int)result.Id == 0 && ComboBoxManga.SelectedIndex != -1&&Mangas.Count>0)
+                if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count)
                 {
-                    if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count)
+                    MessageDialog showDialog = new MessageDialog("¿Desea continuar con el capítulo " + (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() + 1) + " de " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + "?");
+                    showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
+                    showDialog.Commands.Add(new UICommand("No") { Id = 1 });
+                    showDialog.DefaultCommandIndex = 0;
+                    showDialog.CancelCommandIndex = 1;
+                    var result = await showDialog.ShowAsync();
+                    if ((int)result.Id == 0 && ComboBoxManga.SelectedIndex != -1&&Mangas.Count>0)
                     {
-                        localSettings.Values["MangaActual"] = ComboBoxManga.SelectedIndex;
-                        GuardarDireccion();
-                        Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
-                        if (localSettings.Values[Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName()] == null)
-                        {
-                            localSettings.Values[Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName()] = 0;
-                        }
-                        Frame.Navigate(typeof(FlipView), Mangas);
-                    }
-                    else
-                    {
-                        await Clases.Functions.CreateMessageAsync("No hay más episodios, episodio actual: " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
                    
+                            localSettings.Values["MangaActual"] = ComboBoxManga.SelectedIndex;
+                            GuardarDireccion();
+                            Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
+                            if (localSettings.Values[Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName()] == null)
+                            {
+                                localSettings.Values[Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName()] = 0;
+                            }
+                            Frame.Navigate(typeof(FlipView), Mangas);                   
                     }
+                }
+                else
+                {
+                    await Clases.Functions.CreateMessageAsync("No hay más episodios, episodio actual: " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
                 }
             }
             catch (ArgumentOutOfRangeException)
@@ -361,11 +372,8 @@ namespace MangaReader
 
         private void SaveData()
         {
-          
                 var t = Task.Run(() => Clases.XmlIO.Writefile(Mangas));
                 t.Wait();
-            
-           
         }
 
         private async void BtnEliminar(object sender, RoutedEventArgs e)
@@ -384,9 +392,8 @@ namespace MangaReader
                 SaveData();
                 PopulateCBoxManga();
                 if(ComboBoxManga.Items.Count > 0)
-                    ComboBoxManga.SelectedIndex = 0;
-            }
-          
+                ComboBoxManga.SelectedIndex = 0;
+            }          
 
         }
 
@@ -423,8 +430,7 @@ namespace MangaReader
         {
             String[] previousdata = await Clases.XmlIO.ReadStatistics();
             TimeSpan tiempo;
-            tiempo = TimeSpan.Parse(previousdata[2]);
-          
+            tiempo = TimeSpan.Parse(previousdata[2]);        
 
             if (previousdata != null)
             {
@@ -433,8 +439,7 @@ namespace MangaReader
             else
             {
                 FLyout.Text = "No ha leído nada aun :)";
-            }
-          
+            }          
         }
     }
 }
