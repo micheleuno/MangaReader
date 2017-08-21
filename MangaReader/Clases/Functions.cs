@@ -61,19 +61,27 @@ namespace MangaReader.Clases
             return null;
         }
 
-        public static Episode LoadEpisode(String path)
+        public static async Task<Episode> LoadEpisodeAsync(String path)
         {
-            Episode episode = new Episode();
-            string[] pages = System.IO.Directory.GetFiles(path).Select(Path.GetFileName).ToArray();
-            string[] extensions = new[] { ".png", ".jpg", ".tiff" };
-            DirectoryInfo dInfo = new DirectoryInfo(path);
-            for (int i = 0; i < pages.Length; i++)
+            try
             {
-                episode.AddPage(pages[i]);
+                Episode episode = new Episode();
+                string[] pages = System.IO.Directory.GetFiles(path).Select(Path.GetFileName).ToArray();
+                string[] extensions = new[] { ".png", ".jpg", ".tiff" };
+                DirectoryInfo dInfo = new DirectoryInfo(path);
+                for (int i = 0; i < pages.Length; i++)
+                {
+                    episode.AddPage(pages[i]);
+                }
+                DirectoryInfo info = new DirectoryInfo(path);
+                episode.SetDirectory(info.Name);
+                return episode;
             }
-            DirectoryInfo info = new DirectoryInfo(path);
-            episode.SetDirectory(info.Name);
-            return episode;
+            catch (DirectoryNotFoundException)
+            {
+                await CreateMessageAsync("Ocurrión un error al leer el archivo: "+path);
+                return null;
+            }
         }
 
         public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
@@ -111,7 +119,6 @@ namespace MangaReader.Clases
             }
             catch (Exception)
             {
-
                 await CreateMessageAsync("Ocurrión un error al leer el archivo:");
             }        
             return images;

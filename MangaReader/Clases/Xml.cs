@@ -12,7 +12,7 @@ namespace MangaReader.Clases
 {
 
     class XmlIO
-    {      
+    {
         public static async Task<String[]> Readfile()
         {
             // settings
@@ -21,9 +21,9 @@ namespace MangaReader.Clases
                 if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Project1\data.txt"))
                 {
                     var path = @"\Project1\data.txt";
-                    var folder = ApplicationData.Current.LocalFolder;                 
+                    var folder = ApplicationData.Current.LocalFolder;
                     String data2;
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();                   
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
                     StorageFile file = await folder.GetFileAsync(path);
                     var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read); using
 
@@ -31,7 +31,7 @@ namespace MangaReader.Clases
                     {
                         data2 = reader.ReadToEnd().ToString();
                     }
-                    String[] lines = data2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);                 
+                    String[] lines = data2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
                     stream.Dispose();
                     return lines;
                 }
@@ -47,8 +47,8 @@ namespace MangaReader.Clases
                 throw;
             }
         }
-    
-        public static async Task Writefile( List<Manga> Mangas)
+
+        public static async Task Writefile(List<Manga> Mangas)
         {
             //   Manga manga = new Manga();
             //  manga = Mangas.ElementAt<Manga>(0);
@@ -106,17 +106,17 @@ namespace MangaReader.Clases
                         data2 = reader.ReadToEnd().ToString();
                     }
                     String[] lines = data2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-                   /*  Debug.Write("1 " + lines[0]);
-                     Debug.Write("2 " + lines[1]);
-                     Debug.Write("3 " + lines[2]);*/
+                    /*  Debug.Write("1 " + lines[0]);
+                      Debug.Write("2 " + lines[1]);
+                      Debug.Write("3 " + lines[2]);*/
                     stream.Dispose();
 
                     /* return string.Format("{0}hr {1}mn {2}sec",
                      (int)span.TotalHours,
                      span.Minutes,
                      span.Seconds);*/
-                  
-                   
+
+
 
                     return lines;
                 }
@@ -132,7 +132,7 @@ namespace MangaReader.Clases
                 throw;
             }
         }
-       
+
 
         public static async Task WriteStatistics(int paginas, int episodios, Stopwatch sw, int mangasterminados)
         {
@@ -140,7 +140,7 @@ namespace MangaReader.Clases
             //  manga = Mangas.ElementAt<Manga>(0);
             TimeSpan tiempo;
             String[] previousdata = await ReadStatistics();
-            if (previousdata!=null)
+            if (previousdata != null)
             {
                 Int32.TryParse(previousdata[0], out int paginas1);
                 paginas = paginas + paginas1;
@@ -153,18 +153,18 @@ namespace MangaReader.Clases
             else
             {
                 tiempo = sw.Elapsed;
-              
+
             }
             String data = null;
 
-            
-                data = data + paginas.ToString() + "\n" +episodios.ToString() + "\n" +tiempo+"\n"+mangasterminados.ToString();
-            
+
+            data = data + paginas.ToString() + "\n" + episodios.ToString() + "\n" + tiempo + "\n" + mangasterminados.ToString();
+
             byte[] encodedText = Encoding.ASCII.GetBytes(data);
             StorageFolder rootFolder = ApplicationData.Current.LocalFolder;
             var projectFolderName = "Project1";
             StorageFolder projectFolder = await rootFolder.CreateFolderAsync(projectFolderName, CreationCollisionOption.OpenIfExists);
-           // Debug.WriteLine(projectFolder.Path);
+            // Debug.WriteLine(projectFolder.Path);
             StorageFile sampleFile = await projectFolder.CreateFileAsync("statistics.txt", CreationCollisionOption.ReplaceExisting);
             using (var writer = await sampleFile.OpenStreamForWriteAsync())
             {
@@ -190,15 +190,15 @@ namespace MangaReader.Clases
                 }
                 catch (Exception)
                 {
-                    
+
                 }
                 directorios = new List<string>();
             }
 
         }
-        public static  List<String>ReadJson(String Nombre)
+        public static List<String> ReadJson(String Nombre)
         {
-            if (File.Exists(ApplicationData.Current.LocalFolder.Path +@"\"+ Nombre + ".json"))
+            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + Nombre + ".json"))
             {
                 using (StreamReader r = File.OpenText((ApplicationData.Current.LocalFolder.Path + @"\" + Nombre + ".json")))
                 {
@@ -207,8 +207,18 @@ namespace MangaReader.Clases
                     return items;
                 }
             }
-           // Debug.WriteLine((ApplicationData.Current.LocalFolder.Path + Nombre + ".json"));
+            // Debug.WriteLine((ApplicationData.Current.LocalFolder.Path + Nombre + ".json"));
             return null;
+        }
+
+        public static void DeleteJson(String Nombre)
+        {
+            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + Nombre + ".json"))
+            {
+                File.Delete((ApplicationData.Current.LocalFolder.Path + @"\" + Nombre + ".json"));
+               
+            }
+
         }
     }
 }

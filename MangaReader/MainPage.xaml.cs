@@ -149,7 +149,9 @@ namespace MangaReader
             }           
             catch (Exception)
             {
-                await Clases.Functions.CreateMessageAsync("Ha ocurrido un error en la lectura de: " + directorio.Split('\\').Last() + "\nVerifique el directorio");               
+                await Clases.Functions.CreateMessageAsync("Ha ocurrido un error en la lectura de: " + directorio.Split('\\').Last() + "\nVerifique el directorio");
+                SaveData();
+                Clases.XmlIO.DeleteJson(directorio.Split('\\').Last());
                 return null;
             } 
         }
@@ -172,7 +174,10 @@ namespace MangaReader
             Boolean flag = false;           
             if (folder != null)
             {
+               
                 loading.IsActive = true;
+                await Task.Yield();
+                loading.Visibility = Visibility.Visible;
                 foreach (Manga value in Mangas)
                 {
                     if (value.GetName().Equals(folder.Name))
@@ -253,15 +258,19 @@ namespace MangaReader
             {
                 try
                 {
-                    episode = Clases.Functions.LoadEpisode(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().ElementAt(0).GetDirectory());
-                    Pages = episode.GetPages();
-                    Url = (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory() + @"\" + episode.GetDirectory() + @"\" + episode.GetPages().ElementAt(0));
-                    BitmapImage image1 = new BitmapImage();
-                    StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
-                    IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                    image1 = new BitmapImage();
-                    await image1.SetSourceAsync(fileStream);
-                    image.Source = image1;
+                    episode = await Clases.Functions.LoadEpisodeAsync(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().ElementAt(0).GetDirectory());
+                    if (episode != null)
+                    {
+                        Pages = episode.GetPages();
+                        Url = (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory() + @"\" + episode.GetDirectory() + @"\" + episode.GetPages().ElementAt(0));
+                        BitmapImage image1 = new BitmapImage();
+                        StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
+                        IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                        image1 = new BitmapImage();
+                        await image1.SetSourceAsync(fileStream);
+                        image.Source = image1;
+                    }
+                  
                 }
                 catch (FileNotFoundException)
                 {
@@ -387,7 +396,7 @@ namespace MangaReader
 
             if ((int)result.Id == 0&& ComboBoxManga.SelectedIndex != -1)
             {
-               
+                Clases.XmlIO.DeleteJson(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName());
                 Mangas.RemoveAt(ComboBoxManga.SelectedIndex);
                 SaveData();
                 PopulateCBoxManga();

@@ -192,7 +192,7 @@ namespace MangaReader
             List<String> Pages = new List<String>();
             Episode episode = new Episode();
             String Url, Url2;
-            episode = Clases.Functions.LoadEpisode(mangaG.GetEpisodes().ElementAt(capitulo).GetDirectory());
+            episode = await Clases.Functions.LoadEpisodeAsync(mangaG.GetEpisodes().ElementAt(capitulo).GetDirectory());
             Pages = episode.GetPages();
             paginasaux = Pages.Count;
             Url = mangaG.GetDirectory() + @"\" + episode.GetDirectory();
