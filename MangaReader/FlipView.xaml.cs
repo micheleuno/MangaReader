@@ -71,6 +71,7 @@ namespace MangaReader
         private async void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //  Debug.WriteLine("Index " + flipView.SelectedIndex +" todos "+ " contador " + flipView.Items.Count);
+            EpisodeConter.Content = (flipView.SelectedIndex).ToString() + " de " + flipView.Items.Count.ToString();
             if (flipView.Items.Count > 2 &&  flipView.SelectedIndex + 1 == flipView.Items.Count)
             {
               
@@ -100,7 +101,7 @@ namespace MangaReader
                 cargaBitmap = true;
                 await CargarBitmap(mangaG.GetActual() + 1);
             }
-            EpisodeConter.Content = (flipView.SelectedIndex).ToString() + " de " + flipView.Items.Count.ToString();
+           
         }
 
         private async void MoverPagina()
@@ -170,6 +171,8 @@ namespace MangaReader
                 scrollViewer.ChangeView(doubleTapPoint.X, doubleTapPoint.Y, 2);
             }
         }
+
+      
 
         private void LoadFlipView()
         {
