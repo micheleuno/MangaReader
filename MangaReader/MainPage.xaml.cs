@@ -81,10 +81,7 @@ namespace MangaReader
                         }
                     watch.Stop();
                    Debug.WriteLine("Tiempo lectura: "+ watch.ElapsedMilliseconds);
-                   if(localSettings.Values["readingDirection"] == null)
-                    {
-                        localSettings.Values["readingDirection"] = 1;
-                    }
+                  
                    
                     PopulateCBoxManga();
                         UpdateItems();
@@ -97,6 +94,10 @@ namespace MangaReader
 
                 }
                
+            }
+            if (localSettings.Values["readingDirection"] == null)
+            {
+                localSettings.Values["readingDirection"] = 1;
             }
             FullScreen_loaded();
         }
@@ -158,21 +159,25 @@ namespace MangaReader
 
         private async void BtnOpenFile(object sender, RoutedEventArgs e)
         {
+            
             if (Mangas == null)
             {
                 Mangas = new List<Manga>();
             }
             Manga Manga1 = new Manga();
+            loadingLoadManga.IsActive = true;
             var picker = new Windows.Storage.Pickers.FolderPicker()
             {
                 ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
                 SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Downloads,
                 SettingsIdentifier = "asd"
             };
+           
             picker.FileTypeFilter.Add("*");           
             Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();
+           
             Boolean flag = false;
-            loadingLoadManga.IsActive = true;
+            
             if (folder != null)
             {     
                 foreach (Manga value in Mangas)
