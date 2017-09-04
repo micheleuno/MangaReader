@@ -25,20 +25,19 @@
                 <DataTemplate>
                     <ScrollViewer  MinZoomFactor="0.8" 
                                    DoubleTapped="ScrollViewer_DoubleTapped"
-                                   x:Name="ScrollViewerMain"
+                                   x:Name="ScrollViewerMain"                                   
                                     HorizontalScrollBarVisibility="Auto"
                                     VerticalScrollBarVisibility="Auto"
                                     ZoomMode="Enabled"
-                                   AutomationProperties.AccessibilityView="Raw"
-                                   
+                                   AutomationProperties.AccessibilityView="Raw"                
                                   >
 
 
                         <Image  x:Name="image" 
                                 Source="{Binding}" 
-                                VerticalAlignment="Center"
-                                HorizontalAlignment="Center"                               
-                                MaxHeight="{Binding Path=ViewportHeight, ElementName=ScrollViewerMain}" />
+                                MaxHeight="{Binding Path=ViewportHeight, ElementName=ScrollViewerMain}"                             
+                                />
+                                
 
                     </ScrollViewer>
 

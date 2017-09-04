@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.UI.Composition;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -31,10 +33,10 @@ namespace MangaReader
         Stopwatch sw = new Stopwatch();
         List<BitmapImage> episodeIm;
         int paginasaux = 0, paginas = 0, episodios = 0, mangasterminados = 0;
-
         public FlipView()
         {
             this.InitializeComponent();
+           
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -49,12 +51,13 @@ namespace MangaReader
             {
                 flipView.FlowDirection = FlowDirection.RightToLeft;
                 BtnClose.HorizontalAlignment = HorizontalAlignment.Right;
-                BtnNext.HorizontalAlignment = HorizontalAlignment.Left;
+                BtnNext.HorizontalAlignment = HorizontalAlignment.Left;               
             }
             else
             {
                 flipView.FlowDirection = FlowDirection.LeftToRight;
             }
+
             mangaG = manga;
             MangasG = Mangas;
             loading.IsActive = true;
@@ -68,10 +71,33 @@ namespace MangaReader
             sw.Start();
         }
 
+        
+        private static childItem FindVisualChild<childItem>(DependencyObject obj)
+                where childItem : DependencyObject
+
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                if (child != null && child is childItem)
+                    return (childItem)child;
+                else
+                {
+                    childItem childOfChild = FindVisualChild<childItem>(child);
+                    if (childOfChild != null)
+                        return childOfChild;
+                }
+            }
+            return null;
+        }
+
+
         private async void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //  Debug.WriteLine("Index " + flipView.SelectedIndex +" todos "+ " contador " + flipView.Items.Count);
-            EpisodeConter.Content = (flipView.SelectedIndex).ToString() + " de " + flipView.Items.Count.ToString();
+            EpisodeConter.Content = (flipView.SelectedIndex).ToString() + " de " + flipView.Items.Count.ToString();   
+
+
             if (flipView.Items.Count > 2 &&  flipView.SelectedIndex + 1 == flipView.Items.Count)
             {
               

@@ -103,15 +103,12 @@ namespace MangaReader.Clases
                         StorageFile file = await StorageFile.GetFileFromPathAsync((value));
                         IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
                         image = new BitmapImage();
-                        await image.SetSourceAsync(fileStream);
-                 
-
+                        await image.SetSourceAsync(fileStream);  
                         images.Add(image);
                     }
                     else
                     {
                         await CreateMessageAsync("Ocurrión un error al leer el archivo: " + value);
-
                     }
                     // sw.Stop();
                     // Debug.WriteLine("TIempo lectura imagenes: " + sw.Elapsed);

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
@@ -52,7 +53,8 @@ namespace MangaReader
         {
             if (Mangas.Count == 0)
             {
-                
+                ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
+
                 Mangas = new List<Manga>();
                 Manga Manga1 = new Manga();
                 String[] lines = await Clases.XmlIO.Readfile();
@@ -358,8 +360,17 @@ namespace MangaReader
 
                 if (localSettings.Values["MangaActual"] != null)
                 {
-                    Int32.TryParse(localSettings.Values["MangaActual"].ToString(), out mangaactual);
-                    ComboBoxManga.SelectedIndex = mangaactual;
+                    try
+                    {
+                        Int32.TryParse(localSettings.Values["MangaActual"].ToString(), out mangaactual);
+                        ComboBoxManga.SelectedIndex = mangaactual;
+                    }
+                    catch (Exception)
+                    {
+                        ComboBoxManga.SelectedIndex = 0;
+                        Mangas.ElementAt(0).SetActual(0);
+                        mangaactual = Mangas.ElementAt(0).GetMangaActual();
+                    }
                 }
                 else
                 {
@@ -407,6 +418,7 @@ namespace MangaReader
                 PopulateCBoxManga();
                 if(ComboBoxManga.Items.Count > 0)
                 ComboBoxManga.SelectedIndex = 0;
+                Mangas.ElementAt(0).SetMangaActual(0);
             }          
 
         }
