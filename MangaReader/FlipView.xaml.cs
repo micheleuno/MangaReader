@@ -33,6 +33,7 @@ namespace MangaReader
         Stopwatch sw = new Stopwatch();
         List<BitmapImage> episodeIm;
         int paginasaux = 0, paginas = 0, episodios = 0, mangasterminados = 0;
+
         public FlipView()
         {
             this.InitializeComponent();
@@ -70,27 +71,6 @@ namespace MangaReader
             loading.IsActive = false;
             sw.Start();
         }
-
-        
-        private static childItem FindVisualChild<childItem>(DependencyObject obj)
-                where childItem : DependencyObject
-
-        {
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-            {
-                DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                if (child != null && child is childItem)
-                    return (childItem)child;
-                else
-                {
-                    childItem childOfChild = FindVisualChild<childItem>(child);
-                    if (childOfChild != null)
-                        return childOfChild;
-                }
-            }
-            return null;
-        }
-
 
         private async void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -184,17 +164,18 @@ namespace MangaReader
             }
         }
 
-        private void ScrollViewer_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        private  async void ScrollViewer_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
+            await Task.Delay(1);
             var scrollViewer = sender as ScrollViewer;
             var doubleTapPoint = e.GetPosition(scrollViewer);
             if (scrollViewer.ZoomFactor != 1)
             {
-                scrollViewer.ChangeView(doubleTapPoint.X, doubleTapPoint.Y, 1);
+                scrollViewer.ChangeView(doubleTapPoint.X, doubleTapPoint.Y, 1,false);
             }
             else if (scrollViewer.ZoomFactor == 1)
             {
-                scrollViewer.ChangeView(doubleTapPoint.X, doubleTapPoint.Y, 2);
+                scrollViewer.ChangeView(doubleTapPoint.X, doubleTapPoint.Y, 2,false);
             }
         }
 
@@ -214,6 +195,34 @@ namespace MangaReader
             System.GC.Collect();
             System.GC.WaitForPendingFinalizers();
         }
+
+        public FrameworkElement SearchVisualTree(DependencyObject targetElement, string elementName)
+        {
+            FrameworkElement res = null;
+            var count = VisualTreeHelper.GetChildrenCount(targetElement);
+            if (count == 0)
+                return res;
+
+            for (int i = 0; i < count; i++)
+            {
+                var child = VisualTreeHelper.GetChild(targetElement, i);
+                if ((child as FrameworkElement).Name == elementName)
+                {
+                    res = child as FrameworkElement;
+                    return res;
+                }
+                else
+                {
+                    res = SearchVisualTree(child, elementName);
+                    if (res != null)
+                        return res;
+                }
+            }
+            return res;
+        }
+
+ 
+
         private async Task CargarBitmap(int capitulo)
         {
            // Debug.WriteLine("Cargando episodio: " + capitulo);
