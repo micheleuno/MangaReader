@@ -8,6 +8,7 @@ What to expect:
 -Continue from previously read episode and page.  
 -Fullscreen mode.  
 -Change reading direction (Left to Right or Right to Left).  
+-Fit image to Width or Heigth  
 -Double click to zoom in and out.  
 -Some reading statistics (Number of pages, episodes and mangas finished, and time spent reading).  
 -Usable UI.  
