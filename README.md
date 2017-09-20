@@ -1,7 +1,7 @@
 # MangaReader
 I have no idea what i'm doing but whatever (i doubt anyone will read this)
-This is an UWP (Universar Windows Platform) application that lets you add a manga or comic (previously downloaded with 
-something like Free Manga Downloader) and read comfortably in your PC or windows-based tablet.
+This is an UWP (Universal Windows Platform) application that lets you add a manga or comic (previously downloaded with 
+something like Free Manga Downloader) and read it comfortably in your PC or windows-based tablet.
 
 What to expect:  
 -Add multiple Mangas.  
