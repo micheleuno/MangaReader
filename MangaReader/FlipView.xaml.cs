@@ -20,6 +20,21 @@ namespace MangaReader
     /// <summary>
     /// Una página vacía que se puede usar de forma independiente o a la que se puede navegar dentro de un objeto Frame.
     /// </summary>
+    /// 
+    public abstract class DataTemplateSelector : ContentControl
+    {
+        public virtual DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            return null;
+        }
+
+        protected override void OnContentChanged(object oldContent, object newContent)
+        {
+            base.OnContentChanged(oldContent, newContent);
+
+            ContentTemplate = SelectTemplate(newContent, this);
+        }
+    }
 
     public sealed partial class FlipView : Page
     {
@@ -57,6 +72,7 @@ namespace MangaReader
             {
                 flipView.FlowDirection = FlowDirection.LeftToRight;
             }
+          
 
             mangaG = manga;
             MangasG = Mangas;
@@ -68,13 +84,21 @@ namespace MangaReader
                 MoverPagina();
             }
             loading.IsActive = false;
+            if (localSettings.Values["AjusteImagen"].ToString() == "1")
+            {
+                flipView.ItemTemplate = Resources["AjustarAncho"] as DataTemplate;
+            }
+           
+           
             sw.Start();
         }
 
         private async void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //  Debug.WriteLine("Index " + flipView.SelectedIndex +" todos "+ " contador " + flipView.Items.Count);
-            EpisodeConter.Content = (flipView.SelectedIndex+1).ToString() + " de " + flipView.Items.Count.ToString();   
+            EpisodeConter.Content = (flipView.SelectedIndex+1).ToString() + " de " + flipView.Items.Count.ToString();
+           
+
 
             if (flipView.Items.Count > 2 &&  flipView.SelectedIndex + 1 == flipView.Items.Count)
             {
@@ -163,6 +187,7 @@ namespace MangaReader
                 {
                     BtnNext.Content = "End of Manga";
                 }
+                
             }
           
         }
@@ -197,6 +222,9 @@ namespace MangaReader
             episodeIm = new List<BitmapImage>();
             System.GC.Collect();
             System.GC.WaitForPendingFinalizers();
+
+          
+
         }
 
         public FrameworkElement SearchVisualTree(DependencyObject targetElement, string elementName)

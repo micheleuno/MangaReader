@@ -53,6 +53,14 @@ namespace MangaReader
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            if (localSettings.Values["readingDirection"] == null)
+            {
+                localSettings.Values["readingDirection"] = 1;
+            }
+            if (localSettings.Values["AjusteImagen"] == null)
+            {
+                localSettings.Values["AjusteImagen"] = 1;
+            }
             if (Mangas.Count == 0)
             {
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
@@ -95,10 +103,7 @@ namespace MangaReader
                 }
                
             }
-            if (localSettings.Values["readingDirection"] == null)
-            {
-                localSettings.Values["readingDirection"] = 1;
-            }
+        
             FullScreen_loaded();
         }
         private async void LlenarGridview()
@@ -327,6 +332,7 @@ namespace MangaReader
                 }
                 localSettings.Values["MangaActual"] = ComboBoxManga.SelectedIndex;
                 GuardarDireccion();
+                GuardarAjusteImagen();
                 Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(ComboBoxEpisode.SelectedIndex);
                 Frame.Navigate(typeof(FlipView), Mangas);
             }
@@ -358,6 +364,7 @@ namespace MangaReader
                    
                             localSettings.Values["MangaActual"] = ComboBoxManga.SelectedIndex;
                             GuardarDireccion();
+                            GuardarAjusteImagen();
                             Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
                             if (localSettings.Values[Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName()] == null)
                             {
@@ -422,6 +429,15 @@ namespace MangaReader
                 {
                     toggleSwitch.IsOn = false;
                 }
+
+                if ((localSettings.Values["AjusteImagen"].ToString() == "1"))
+                {
+                    SwitchAjustar.IsOn = true;
+                }
+                else
+                {
+                    SwitchAjustar.IsOn = false;
+                }
             }
              
         }
@@ -466,7 +482,18 @@ namespace MangaReader
                 localSettings.Values["readingDirection"] = 0;
                 Mangas.ElementAt(0).SetDirección(0);
             }
-          //  var t = Task.Run(() => Clases.XmlIO.Writefile(Mangas));
+        }
+
+        private void GuardarAjusteImagen()
+        {
+            if (SwitchAjustar.IsOn == true)
+            {
+                localSettings.Values["AjusteImagen"] = 1;
+            }
+            else
+            {
+                localSettings.Values["AjusteImagen"] = 0;
+            }
         }
 
         private void FullScreen_Toggled(object sender, RoutedEventArgs e)
