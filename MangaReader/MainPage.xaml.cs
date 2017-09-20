@@ -1,6 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -21,17 +22,18 @@ namespace MangaReader
     public sealed partial class MainPage : Page
     {
         private static List<Manga> Mangas = new List<Manga>();
+
         Windows.Storage.ApplicationDataContainer localSettings =
         Windows.Storage.ApplicationData.Current.LocalSettings;
         Windows.Storage.StorageFolder localFolder =
-            Windows.Storage.ApplicationData.Current.LocalFolder;
+        Windows.Storage.ApplicationData.Current.LocalFolder;
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e != null)
             {
                 if (e.Parameter is List<Manga> MangasParameter && Mangas != null)
-                {
+                {               
                     PopulateCBoxManga();
                     UpdateItems();
                 }
@@ -65,35 +67,31 @@ namespace MangaReader
                         loading.IsActive = true;
                     var watch = System.Diagnostics.Stopwatch.StartNew();
                     while (i + 1 < lines.Length)
-                        {
-                            foreach (String value in lines) {
-                                //  Debug.WriteLine(value);
-                            }
-                            // Debug.WriteLine(lines[i + 1]);
-                            Windows.Storage.StorageFolder folder = await OpenFolder(lines[i + 1]); //segunda linea
-                            if (folder != null)
-                            {
-                                 Manga1 = Clases.Functions.LoadAll(folder, folder.Path, folder.Name, lines[i], lines[i + 3]);
-                                if (Manga1 != null)
-                                {
-                                    Mangas.Add(Manga1);
-                                }                                                    
-                            }
-                            i = i + 4;
+                    {
+                        foreach (String value in lines) {
+                            //  Debug.WriteLine(value);
                         }
+                        // Debug.WriteLine(lines[i + 1]);
+                        Windows.Storage.StorageFolder folder = await OpenFolder(lines[i + 1]); //segunda linea
+                        if (folder != null)
+                        {
+                                Manga1 = Clases.Functions.LoadAll(folder, folder.Path, folder.Name, lines[i], lines[i + 3]);
+                            if (Manga1 != null)
+                            {
+                                Mangas.Add(Manga1);
+                            }                                                    
+                        }
+                        i = i + 4;
+                    }
                     watch.Stop();
-                   Debug.WriteLine("Tiempo lectura: "+ watch.ElapsedMilliseconds);
-                  
-                   
-                    PopulateCBoxManga();
-                        UpdateItems();
-                  
-                   
-                   await  Clases.XmlIO.WriteJsonAsync(Mangas);
-                        loading.IsActive = false;
-                  //  ReadData();
-                  //  SaveData1();
+                    Debug.WriteLine("Tiempo lectura: "+ watch.ElapsedMilliseconds);                   
+                    PopulateCBoxManga();                   
+                    UpdateItems();
+                    //LlenarGridview();
 
+
+                    await  Clases.XmlIO.WriteJsonAsync(Mangas);
+                        loading.IsActive = false;
                 }
                
             }
@@ -102,6 +100,39 @@ namespace MangaReader
                 localSettings.Values["readingDirection"] = 1;
             }
             FullScreen_loaded();
+        }
+        private async void LlenarGridview()
+        {
+            List<String> Pages = new List<String>();
+            Episode episode = new Episode();
+            String Url;
+            if (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count > 0)
+            {
+                try
+                {
+                    episode = await Clases.Functions.LoadEpisodeAsync(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().ElementAt(0).GetDirectory());
+                    if (episode != null)
+                    {
+                        Pages = episode.GetPages();
+                        Url = (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory() + @"\" + episode.GetDirectory() + @"\" + episode.GetPages().ElementAt(0));
+                        BitmapImage image1 = new BitmapImage();
+                        StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
+                        IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
+                        image1 = new BitmapImage();
+                        await image1.SetSourceAsync(fileStream);
+                        image.Source = image1;
+                        ObservableCollection<BitmapImage> listItems = new ObservableCollection<BitmapImage>();
+                        itemListView.Items.Add(image1);                        
+                    }
+
+                }
+                catch (FileNotFoundException)
+                {
+
+                }
+            }
+            
+           
         }
 
         private void FullScreen_loaded()

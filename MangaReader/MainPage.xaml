@@ -89,6 +89,24 @@
         </StackPanel>
         <Image x:Name="image" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0,20,20,0" Tapped="ImageTapped" />
 
+        <GridView Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"  x:Name="itemListView" Visibility="Collapsed">
+            <GridView.ItemTemplate>
+                <DataTemplate x:DataType="x:String">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="47"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="Assets/placeholder.png" Width="32" Height="32" 
+                       HorizontalAlignment="Left"/>
+                        <TextBlock Text="{x:Bind}" Foreground="Teal" 
+                           FontSize="15" Grid.Column="1"/>
+                    </Grid>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+        
+       
     </Grid>
 
 
