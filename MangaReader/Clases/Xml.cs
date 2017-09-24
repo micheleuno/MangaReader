@@ -216,7 +216,7 @@ namespace MangaReader.Clases
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + Nombre + ".json"))
             {
                 File.Delete((ApplicationData.Current.LocalFolder.Path + @"\" + Nombre + ".json"));
-               
+
             }
 
         }

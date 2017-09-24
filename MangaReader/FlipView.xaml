@@ -47,12 +47,12 @@
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        
-        
+
+
 
         <FlipView  x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" >
 
-           
+
 
             <FlipView.ItemTemplate>
                 <DataTemplate x:Name="asd">
@@ -69,9 +69,9 @@
                                 MaxHeight="{Binding Path=ViewportHeight, ElementName=ScrollViewerMain}"                             
                                 />
                     </ScrollViewer>
-                </DataTemplate>      
+                </DataTemplate>
 
-            </FlipView.ItemTemplate>        
+            </FlipView.ItemTemplate>
 
 
         </FlipView>
@@ -82,5 +82,5 @@
         <Button x:Name="EpisodeConter" HorizontalAlignment="Center"  VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
         <ProgressRing x:Name="loading" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="75" Height="75" />
     </Grid>
-    
+
 </Page>

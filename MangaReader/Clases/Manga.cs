@@ -9,7 +9,7 @@ namespace MangaReader
     {
         private List<Episode> Episodes = new List<Episode>();
         private List<BitmapImage> FullEpisode = new List<BitmapImage>();
-        private int actual=0;
+        private int actual = 0;
         private int UltimoEpisodioLeido = 0;
         private int ActualManga = 0;
         private int Direccion = 0;
@@ -73,7 +73,7 @@ namespace MangaReader
         {
             return this.Direccion;
         }
-      
+
 
 
 

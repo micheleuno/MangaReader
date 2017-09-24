@@ -14,13 +14,13 @@ namespace MangaReader.Clases
 {
     class Functions
     {
-        public static Manga LoadAll(Windows.Storage.StorageFolder folder, String path, String name, String Actual,String direccion)
+        public static Manga LoadAll(Windows.Storage.StorageFolder folder, String path, String name, String Actual, String direccion)
         {
-           // Debug.WriteLine("direccion:" + direccion);            
-           
+            // Debug.WriteLine("direccion:" + direccion);            
+
             List<String> folders = Clases.XmlIO.ReadJson(name);
-            if (folders!=null)
-            {               
+            if (folders != null)
+            {
                 Manga manga = new Manga();
                 manga.SetDirectory(path);
                 manga.SetName(name);
@@ -37,7 +37,7 @@ namespace MangaReader.Clases
                 return manga;
             }
             else
-            {               
+            {
                 string[] folders1 = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);
                 if (folders1.Count() > 0)
                 {
@@ -56,7 +56,7 @@ namespace MangaReader.Clases
                     }
                     return manga;
                 }
-                
+
             }
             return null;
         }
@@ -79,7 +79,7 @@ namespace MangaReader.Clases
             }
             catch (DirectoryNotFoundException)
             {
-                await CreateMessageAsync("Ocurrión un error al leer el archivo: "+path);
+                await CreateMessageAsync("Ocurrió un error al leer el archivo: " + path);
                 return null;
             }
         }
@@ -88,9 +88,9 @@ namespace MangaReader.Clases
 
         public static async Task<List<BitmapImage>> LoadEpisodeImageAsync(List<String> Completeurl)
         {
-            
-             List<BitmapImage> images = new List<BitmapImage>();
-            BitmapImage image;
+
+            List<BitmapImage> images = new List<BitmapImage>();
+            BitmapImage image = new BitmapImage();
             //   Stopwatch sw = new Stopwatch();          
             //sw.Start();
             try
@@ -103,12 +103,15 @@ namespace MangaReader.Clases
                         StorageFile file = await StorageFile.GetFileFromPathAsync((value));
                         IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
                         image = new BitmapImage();
-                        await image.SetSourceAsync(fileStream);  
+                        await image.SetSourceAsync(fileStream);
                         images.Add(image);
                     }
                     else
                     {
-                        await CreateMessageAsync("Ocurrión un error al leer el archivo: " + value);
+                        await CreateMessageAsync("Ocurrió un error al leer el archivo: " + value);
+                        var imageUriForlogo = new Uri("ms-appx:///Assets/Imagen.png");
+                        image.UriSource = imageUriForlogo;
+                        images.Add(image);
                     }
                     // sw.Stop();
                     // Debug.WriteLine("TIempo lectura imagenes: " + sw.Elapsed);
@@ -116,8 +119,11 @@ namespace MangaReader.Clases
             }
             catch (Exception)
             {
-                await CreateMessageAsync("Ocurrión un error al leer el archivo:");
-            }        
+                await CreateMessageAsync("Ocurrió un error al leer el archivo:");
+                var imageUriForlogo = new Uri("ms-appx:///Assets/Imagen.png");
+                image.UriSource = imageUriForlogo;
+                images.Add(image);
+            }
             return images;
         }
 
@@ -126,7 +132,7 @@ namespace MangaReader.Clases
             var dialog = new MessageDialog(mensaje);
             await dialog.ShowAsync();
         }
-     
+
     }
-   
+
 }
