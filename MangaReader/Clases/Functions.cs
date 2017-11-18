@@ -86,11 +86,14 @@ namespace MangaReader.Clases
 
         public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
 
+
         public static async Task<List<BitmapImage>> LoadEpisodeImageAsync(List<String> Completeurl)
         {
 
             List<BitmapImage> images = new List<BitmapImage>();
             BitmapImage image = new BitmapImage();
+            int cont = 1;
+            Boolean flag = true;
             //   Stopwatch sw = new Stopwatch();          
             //sw.Start();
             try
@@ -99,12 +102,30 @@ namespace MangaReader.Clases
                 {
 
                     if (ImageExtensions.Contains(Path.GetExtension(value).ToUpperInvariant()))
-                    {
+                    {   
+                        
+                            try
+                            {
+                                int numero = Int32.Parse(value.Substring(value.Length - 7, 3));                               
+                                if (numero != cont)
+                                {
+                                    flag = false;                                  
+                                }
+                               //
+                            }
+                            catch (FormatException)
+                            {
+                               
+                            }                          
+
+                        
+                        
                         StorageFile file = await StorageFile.GetFileFromPathAsync((value));
                         IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
                         image = new BitmapImage();
                         await image.SetSourceAsync(fileStream);
                         images.Add(image);
+                        cont++;
                     }
                     else
                     {
@@ -119,10 +140,14 @@ namespace MangaReader.Clases
             }
             catch (Exception)
             {
-                await CreateMessageAsync("Ocurrió un error al leer el archivo:");
+                await CreateMessageAsync("Ocurrió un error al leer el archivo");
                 var imageUriForlogo = new Uri("ms-appx:///Assets/Imagen.png");
                 image.UriSource = imageUriForlogo;
                 images.Add(image);
+            }
+            if (!flag)
+            {
+                await CreateMessageAsync("Puede que falten páginas");
             }
             return images;
         }

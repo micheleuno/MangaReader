@@ -78,8 +78,8 @@ namespace MangaReader
             MangasG = Mangas;
             loading.IsActive = true;
 
-            try
-            {
+            try { 
+            
                 await CargarBitmap(mangaG.GetActual());
                 LoadFlipView();
                 if (localSettings.Values[mangaG.GetName()] != null && !localSettings.Values[mangaG.GetName()].ToString().Equals("0") && mangaG.GetActual() == mangaG.GetUltimoEpisodioLeido())
