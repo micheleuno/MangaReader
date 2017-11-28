@@ -107,6 +107,7 @@ namespace MangaReader
 
             FullScreen_loaded();
         }
+
         private async void LlenarGridview()
         {
             List<String> Pages = new List<String>();
@@ -243,7 +244,9 @@ namespace MangaReader
 
                     SaveData();
                     await Clases.XmlIO.WriteJsonAsync(Mangas);
-                    PopulateCBoxManga();
+                    Mangas.ElementAt(0).SetMangaActual(Mangas.Count()-1);
+                    localSettings.Values["MangaActual"] = Mangas.Count-1;
+                    PopulateCBoxManga();                   
                     UpdateItems();
                 }
                 else
@@ -467,22 +470,41 @@ namespace MangaReader
 
         private async void BtnEliminar(object sender, RoutedEventArgs e)
         {
-            MessageDialog showDialog = new MessageDialog("Está seguro de que desea eliminar " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + "?");
-            showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
-            showDialog.Commands.Add(new UICommand("No") { Id = 1 });
-            showDialog.DefaultCommandIndex = 0;
-            showDialog.CancelCommandIndex = 1;
-            var result = await showDialog.ShowAsync();
-
-            if ((int)result.Id == 0 && ComboBoxManga.SelectedIndex != -1)
+            if (ComboBoxManga.SelectedIndex != -1)
             {
-                Clases.XmlIO.DeleteJson(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName());
-                Mangas.RemoveAt(ComboBoxManga.SelectedIndex);
-                SaveData();
-                PopulateCBoxManga();
-                if (ComboBoxManga.Items.Count > 0)
-                    ComboBoxManga.SelectedIndex = 0;
-                Mangas.ElementAt(0).SetMangaActual(0);
+                MessageDialog showDialog = new MessageDialog("Está seguro de que desea eliminar " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + "?");
+                showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
+                showDialog.Commands.Add(new UICommand("No") { Id = 1 });
+                showDialog.DefaultCommandIndex = 0;
+                showDialog.CancelCommandIndex = 1;
+                var result = await showDialog.ShowAsync();
+
+                if ((int)result.Id == 0)
+                {
+                    Clases.XmlIO.DeleteJson(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName());
+                    Mangas.RemoveAt(ComboBoxManga.SelectedIndex);
+                    SaveData();
+                    PopulateCBoxManga();
+                    ActualizarComboboxManga();
+                    if (ComboBoxManga.Items.Count > 0)
+                    {
+                        ComboBoxManga.SelectedIndex = 0;
+                        Mangas.ElementAt(0).SetMangaActual(0);
+                    }
+                    else
+                    {
+                        ComboBoxEpisode.Items.Clear();
+                        var imageUriForlogo = new Uri("ms-appx:///Assets/Imagen.png");
+                        image.Source = new BitmapImage(imageUriForlogo);
+                        contEpisode.Text = "de";
+
+                    }
+
+                }
+            }
+            else
+            {
+                await Clases.Functions.CreateMessageAsync("Debe agregar un manga primero");
             }
 
         }
@@ -531,10 +553,11 @@ namespace MangaReader
         {
             String[] previousdata = await Clases.XmlIO.ReadStatistics();
             TimeSpan tiempo;
-            tiempo = TimeSpan.Parse(previousdata[2]);
+           
 
             if (previousdata != null)
             {
+                tiempo = TimeSpan.Parse(previousdata[2]);
                 FLyout.Text = "Páginas leidas: " + previousdata[0] + "\nCapítulos leídos: " + previousdata[1] + "\nMangas terminados: " + previousdata[3] + "\nTiempo total: " + tiempo.ToString(@"d\:hh\:mm");
             }
             else
@@ -545,47 +568,54 @@ namespace MangaReader
 
         private async void BtnRecargar(object sender, RoutedEventArgs e)
         {
-            MessageDialog showDialog = new MessageDialog(" Esto agregará nuevos capitulos agregados en la carpeta, desea continuar? ");
-            showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
-            showDialog.Commands.Add(new UICommand("No") { Id = 1 });
-            showDialog.DefaultCommandIndex = 0;
-            showDialog.CancelCommandIndex = 1;
-            var result = await showDialog.ShowAsync();
-
-            if ((int)result.Id == 0 && ComboBoxManga.SelectedIndex != -1 && Mangas.Count > 0)
+            if (ComboBoxManga.SelectedIndex != -1 && Mangas.Count > 0)
             {
-              
-                String directorio = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory();
-               
-                try
-                {
-                    string[] folders1 = System.IO.Directory.GetDirectories(directorio, "*", System.IO.SearchOption.AllDirectories);
-                    int cantidadActual = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count;
-                    int cantidadNueva = folders1.Count();
-                    if (cantidadNueva > cantidadActual)
+                MessageDialog showDialog = new MessageDialog(" Esto agregará nuevos capitulos agregados en la carpeta, desea continuar? ");
+                showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
+                showDialog.Commands.Add(new UICommand("No") { Id = 1 });
+                showDialog.DefaultCommandIndex = 0;
+                showDialog.CancelCommandIndex = 1;
+                var result = await showDialog.ShowAsync();
+                if ((int)result.Id == 0 )
+                {                                  
+                    String directorio = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory();
+                    try
                     {
-                        for (int i = cantidadActual; i<cantidadNueva;i++)
+                        loading.IsActive = true;
+                        string[] folders1 = System.IO.Directory.GetDirectories(directorio, "*", System.IO.SearchOption.AllDirectories);
+                        int cantidadActual = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count;
+                        int cantidadNueva = folders1.Count();
+                        if (cantidadNueva > cantidadActual)
                         {
-                            Episode episode = new Episode();
-                            episode.SetDirectory(folders1[i]);
-                            Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetEpisode(episode);
+                            for (int i = cantidadActual; i < cantidadNueva; i++)
+                            {
+                                Episode episode = new Episode();
+                                episode.SetDirectory(folders1[i]);
+                                Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetEpisode(episode);
+                            }
+                            await Clases.XmlIO.WriteMangaJsonAsync(Mangas.ElementAt(ComboBoxManga.SelectedIndex), CreationCollisionOption.ReplaceExisting);
+                            ActualizarComboboxManga();
+                            loading.IsActive = false;
+                            await Clases.Functions.CreateMessageAsync("Se agregaron " + (cantidadNueva - cantidadActual) + " capítulos nuevos");
                         }
-                        await Clases.XmlIO.WriteMangaJsonAsync(Mangas.ElementAt(ComboBoxManga.SelectedIndex), CreationCollisionOption.ReplaceExisting);
-                        ActualizarComboboxManga();
-                        await Clases.Functions.CreateMessageAsync("Se agregaron "+(cantidadNueva-cantidadActual)+ " capítulos nuevos");
+                        else
+                        {
+                            loading.IsActive = false;
+                            await Clases.Functions.CreateMessageAsync("No hay nuevos capítulos que agregar");
+                        }
+                        loading.IsActive = false;
+
                     }
-                    else
+                    catch (Exception)
                     {
-                        await Clases.Functions.CreateMessageAsync("No hay nuevos capítulos que agregar");
+                        await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al recargar el manga");
                     }
+                }             
 
-                    
-                }
-                catch (Exception)
-                {
-                    await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al recargar el manga");
-                }
-
+            }
+            else
+            {
+                await Clases.Functions.CreateMessageAsync("Debe agregar un manga");
             }
         }
     }
