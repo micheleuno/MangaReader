@@ -104,6 +104,11 @@ namespace MangaReader
                 }
 
             }
+            if (Mangas.Count == 0)
+            {
+                var imageUriForlogo = new Uri("ms-appx:///Assets/Imagen.png");
+                image.Source = new BitmapImage(imageUriForlogo);
+            }
 
             FullScreen_loaded();
         }
@@ -497,9 +502,7 @@ namespace MangaReader
                         var imageUriForlogo = new Uri("ms-appx:///Assets/Imagen.png");
                         image.Source = new BitmapImage(imageUriForlogo);
                         contEpisode.Text = "de";
-
                     }
-
                 }
             }
             else
