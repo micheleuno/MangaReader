@@ -70,6 +70,7 @@
             <Button Content="Ver Episodio"   Click="ButtonView_Click" Margin="7"/>
             <TextBlock x:Name="contEpisode"  TextWrapping="Wrap" Text="de"   Margin="5"/>
             <Button x:Name="BtnContinue" Content="Continuar"  Click="BtnNext_Click"  Margin="5"/>
+            <Button x:Name="RecargarManga" Content="Recargar Manga"   Click="BtnRecargar" Margin="5" />
 
         </StackPanel>
 

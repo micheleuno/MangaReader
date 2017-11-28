@@ -174,28 +174,39 @@ namespace MangaReader.Clases
         }
         public static async Task WriteJsonAsync(List<Manga> Mangas)
         {
-            List<String> directorios = new List<string>();
+           
             foreach (Manga value1 in Mangas)
             {
-                try
-                {
-                    foreach (Episode value in value1.GetEpisodes())
-                    {
-                        directorios.Add(value.GetDirectory());
-                    }
-                    string json = JsonConvert.SerializeObject(directorios);
-
-                    var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(value1.GetName() + ".json", CreationCollisionOption.FailIfExists);
-                    await FileIO.WriteTextAsync(file, json);
-                }
-                catch (Exception)
-                {
-
-                }
-                directorios = new List<string>();
+              await   WriteMangaJsonAsync(value1, CreationCollisionOption.FailIfExists);
             }
 
         }
+
+        public static async Task WriteMangaJsonAsync(Manga manga, CreationCollisionOption option)
+        {
+            List<String> directorios = new List<string>();
+
+            try
+            {
+                foreach (Episode value in manga.GetEpisodes())
+                {
+                    directorios.Add(value.GetDirectory());
+                }
+                string json = JsonConvert.SerializeObject(directorios);
+
+                var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(manga.GetName() + ".json", option);
+                await FileIO.WriteTextAsync(file, json);
+            }
+            catch (Exception)
+            {
+
+            }
+            directorios = new List<string>();
+
+
+        }
+
+
         public static List<String> ReadJson(String Nombre)
         {
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + Nombre + ".json"))

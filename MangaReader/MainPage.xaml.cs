@@ -99,7 +99,7 @@ namespace MangaReader
                     //LlenarGridview();
 
 
-                    await Clases.XmlIO.WriteJsonAsync(Mangas);
+                   await Clases.XmlIO.WriteJsonAsync(Mangas);
                     loading.IsActive = false;
                 }
 
@@ -268,28 +268,34 @@ namespace MangaReader
 
             if (ComboBoxManga.SelectedIndex != -1 && Mangas.Count > 0)
             {
-                try
-                {
-                    List<Episode> Episodes = new List<Episode>();
-                    Episodes = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes();
-                    Mangas.ElementAt(0).SetMangaActual(ComboBoxManga.SelectedIndex);
-                    int i = 1;
-                    ComboBoxEpisode.Items.Clear();
-                    foreach (Episode value in Episodes)
-                    {
-                        ComboBoxEpisode.Items.Add(i.ToString());
-                        i++;
-                    }
-                    contEpisode.Text = Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetUltimoEpisodioLeido().ToString() + " de "
-                  + Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetEpisodes().Count().ToString();
-                    ComboBoxEpisode.SelectedIndex = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido();
-                }
-                catch (ArgumentException)
-                {
-                    ComboBoxEpisode.SelectedIndex = 0;
-                }
+                ActualizarComboboxManga();
 
                 LoadImage();
+            }
+
+        }
+
+        private void ActualizarComboboxManga()
+        {
+            try
+            {
+                List<Episode> Episodes = new List<Episode>();
+                Episodes = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes();
+                Mangas.ElementAt(0).SetMangaActual(ComboBoxManga.SelectedIndex);
+                int i = 1;
+                ComboBoxEpisode.Items.Clear();
+                foreach (Episode value in Episodes)
+                {
+                    ComboBoxEpisode.Items.Add(i.ToString());
+                    i++;
+                }
+                contEpisode.Text = Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetUltimoEpisodioLeido().ToString() + " de "
+              + Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetEpisodes().Count().ToString();
+                ComboBoxEpisode.SelectedIndex = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido();
+            }
+            catch (ArgumentException)
+            {
+                ComboBoxEpisode.SelectedIndex = 0;
             }
 
         }
@@ -534,6 +540,52 @@ namespace MangaReader
             else
             {
                 FLyout.Text = "No ha leído nada aun :)";
+            }
+        }
+
+        private async void BtnRecargar(object sender, RoutedEventArgs e)
+        {
+            MessageDialog showDialog = new MessageDialog(" Esto agregará nuevos capitulos agregados en la carpeta, desea continuar? ");
+            showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
+            showDialog.Commands.Add(new UICommand("No") { Id = 1 });
+            showDialog.DefaultCommandIndex = 0;
+            showDialog.CancelCommandIndex = 1;
+            var result = await showDialog.ShowAsync();
+
+            if ((int)result.Id == 0 && ComboBoxManga.SelectedIndex != -1 && Mangas.Count > 0)
+            {
+              
+                String directorio = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory();
+               
+                try
+                {
+                    string[] folders1 = System.IO.Directory.GetDirectories(directorio, "*", System.IO.SearchOption.AllDirectories);
+                    int cantidadActual = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count;
+                    int cantidadNueva = folders1.Count();
+                    if (cantidadNueva > cantidadActual)
+                    {
+                        for (int i = cantidadActual; i<cantidadNueva;i++)
+                        {
+                            Episode episode = new Episode();
+                            episode.SetDirectory(folders1[i]);
+                            Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetEpisode(episode);
+                        }
+                        await Clases.XmlIO.WriteMangaJsonAsync(Mangas.ElementAt(ComboBoxManga.SelectedIndex), CreationCollisionOption.ReplaceExisting);
+                        ActualizarComboboxManga();
+                        await Clases.Functions.CreateMessageAsync("Se agregaron "+(cantidadNueva-cantidadActual)+ " capítulos nuevos");
+                    }
+                    else
+                    {
+                        await Clases.Functions.CreateMessageAsync("No hay nuevos capítulos que agregar");
+                    }
+
+                    
+                }
+                catch (Exception)
+                {
+                    await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al recargar el manga");
+                }
+
             }
         }
     }
