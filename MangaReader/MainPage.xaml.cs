@@ -226,8 +226,8 @@ namespace MangaReader
             Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();
 
             Boolean flag = false;
-            loadingLoadManga.IsActive = true;       
-
+           
+          
             if (folder != null)
             {
                 foreach (Manga value in Mangas)
@@ -238,6 +238,9 @@ namespace MangaReader
                 //loadingLoadManga.IsActive = false;
                 if (!flag)
                 {
+                    loadingLoadManga.IsActive = true;
+                    await Task.Yield();
+                    await PutTaskDelay();
                     StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);
                     Manga1 = (Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));
                     if (Manga1 != null)
@@ -575,7 +578,7 @@ namespace MangaReader
         }
         async Task PutTaskDelay()
         {
-            await Task.Delay(5000);
+            await Task.Delay(100);
         }
 
         private async void BtnRecargar(object sender, RoutedEventArgs e)
@@ -591,8 +594,12 @@ namespace MangaReader
                 if ((int)result.Id == 0 )
                 {                                  
                     String directorio = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory();
+
                     loading.IsActive = true;
-                   
+                    await Task.Yield();
+                   await PutTaskDelay();
+
+
                     try
                     {
                       
