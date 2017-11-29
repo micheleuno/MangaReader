@@ -27,6 +27,7 @@ namespace MangaReader
         Windows.Storage.ApplicationData.Current.LocalSettings;
         Windows.Storage.StorageFolder localFolder =
         Windows.Storage.ApplicationData.Current.LocalFolder;
+       
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -53,6 +54,8 @@ namespace MangaReader
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("asdasdasda:"+ApplicationData.Current.LocalFolder.Path);
+            var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
             if (localSettings.Values["readingDirection"] == null)
             {
                 localSettings.Values["readingDirection"] = 1;
@@ -63,6 +66,7 @@ namespace MangaReader
             }
             if (Mangas.Count == 0)
             {
+                contEpisode.Text = loader.GetString("Farewell");
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
 
                 Mangas = new List<Manga>();
@@ -210,7 +214,7 @@ namespace MangaReader
                 Mangas = new List<Manga>();
             }
             Manga Manga1 = new Manga();
-            loadingLoadManga.IsActive = true;
+           
             var picker = new Windows.Storage.Pickers.FolderPicker()
             {
                 ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
@@ -222,6 +226,7 @@ namespace MangaReader
             Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();
 
             Boolean flag = false;
+            loadingLoadManga.IsActive = true;       
 
             if (folder != null)
             {
@@ -568,6 +573,10 @@ namespace MangaReader
                 FLyout.Text = "No ha leído nada aun :)";
             }
         }
+        async Task PutTaskDelay()
+        {
+            await Task.Delay(5000);
+        }
 
         private async void BtnRecargar(object sender, RoutedEventArgs e)
         {
@@ -578,13 +587,15 @@ namespace MangaReader
                 showDialog.Commands.Add(new UICommand("No") { Id = 1 });
                 showDialog.DefaultCommandIndex = 0;
                 showDialog.CancelCommandIndex = 1;
-                var result = await showDialog.ShowAsync();
+                var result = await showDialog.ShowAsync();  
                 if ((int)result.Id == 0 )
                 {                                  
                     String directorio = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory();
+                    loading.IsActive = true;
+                   
                     try
                     {
-                        loading.IsActive = true;
+                      
                         string[] folders1 = System.IO.Directory.GetDirectories(directorio, "*", System.IO.SearchOption.AllDirectories);
                         int cantidadActual = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count;
                         int cantidadNueva = folders1.Count();

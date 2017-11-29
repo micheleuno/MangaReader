@@ -61,15 +61,15 @@
         <ProgressRing x:Name="loadingLoadManga" Grid.Column="1" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center"  Width="100" Height="100" />
 
         <StackPanel HorizontalAlignment="Center"   Grid.Row="0" VerticalAlignment="Center" >
-            <Button x:Name="BtnOpenFIle" Content="Agregar Manga"   Click="BtnOpenFile" Margin="5" />
-            <TextBlock HorizontalAlignment="center"  TextWrapping="Wrap" Text="Nombre Manga" VerticalAlignment="Top" Margin="5"/>
+            <Button  x:Uid="BtnOpenFIle"  x:Name="BtnOpenFIle" Content=""   Click="BtnOpenFile" Margin="5" />
+            <TextBlock  x:Uid="NombreManga" HorizontalAlignment="center"  TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="5"/>
             <ComboBox x:Name="ComboBoxManga"  Width="auto" SelectionChanged="ComboBoxManga_SelectionChanged" Margin="7" />
-            <TextBlock TextWrapping="Wrap" Text="Episodio"  Margin="5" />
+            <TextBlock  x:Uid="Episodio" TextWrapping="Wrap" Text=""  Margin="5" />
             <ComboBox x:Name="ComboBoxEpisode"  Width="auto" Margin="5"/>
-            <Button Content="Ver Episodio"   Click="ButtonView_Click" Margin="7"/>
-            <TextBlock x:Name="contEpisode"  TextWrapping="Wrap" Text="de"   Margin="5"/>
-            <Button x:Name="BtnContinue" Content="Continuar"  Click="BtnNext_Click"  Margin="5"/>
-            <Button x:Name="RecargarManga" Content="Recargar Manga"   Click="BtnRecargar" Margin="5" />
+            <Button  x:Uid="VerEpisodio" Content=""   Click="ButtonView_Click" Margin="7"/>
+            <TextBlock x:Uid="contEpisode" Text=""  x:Name="contEpisode" TextWrapping="Wrap"    Margin="5"/>
+            <Button x:Uid="Continuar" x:Name="BtnContinue" Content=""  Click="BtnNext_Click"  Margin="5"/>
+            <Button x:Uid="RecargarManga"  x:Name="RecargarManga"   Content=""   Click="BtnRecargar" Margin="5" />
 
         </StackPanel>
 

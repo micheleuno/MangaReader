@@ -332,6 +332,7 @@ namespace MangaReader
             }
             episodeIm = new List<BitmapImage>();
             flipView.Items.Clear();
+            System.GC.Collect();
             var t = Task.Run(() => Clases.XmlIO.WriteStatistics(paginas, episodios, sw, mangasterminados));
             Frame.Navigate(typeof(MainPage), MangasG);
         }
