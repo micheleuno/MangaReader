@@ -102,24 +102,23 @@ namespace MangaReader.Clases
                 {
 
                     if (ImageExtensions.Contains(Path.GetExtension(value).ToUpperInvariant()))
-                    {   
-                        
-                            try
-                            {
-                                int numero = Int32.Parse(value.Substring(value.Length - 7, 3));                               
-                                if (numero != cont)
-                                {
-                                    flag = false;                                  
-                                }
-                               //
-                            }
-                            catch (FormatException)
-                            {
-                               
-                            }                          
+                    {
 
-                        
-                        
+                        try
+                        {
+                            int numero = Int32.Parse(value.Substring(value.Length - 7, 3));
+                            if (numero > 0 && numero != cont)
+                            {
+                                flag = false;
+                            }
+                            //
+                        }
+                        catch (FormatException)
+                        {
+
+                        }                      
+
+                                          
                         StorageFile file = await StorageFile.GetFileFromPathAsync((value));
                         IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
                         image = new BitmapImage();

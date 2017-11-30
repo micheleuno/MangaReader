@@ -108,13 +108,16 @@ namespace MangaReader
 
         }
 
+      
+
+
         private async void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //  Debug.WriteLine("Index " + flipView.SelectedIndex +" todos "+ " contador " + flipView.Items.Count);
             EpisodeConter.Content = (flipView.SelectedIndex + 1).ToString() + " de " + flipView.Items.Count.ToString();
 
-
-
+            // sv.ScrollToEnd();
+       
             if (flipView.Items.Count > 2 && flipView.SelectedIndex + 1 == flipView.Items.Count)
             {
 

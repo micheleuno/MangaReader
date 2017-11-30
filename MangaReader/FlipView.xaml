@@ -8,8 +8,8 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <DataTemplate x:Name="AjustarAncho">
-            <ScrollViewer  MinZoomFactor="0.8" 
+        <DataTemplate x:Name="AjustarAncho" >
+            <ScrollViewer   MinZoomFactor="0.8" 
                                    DoubleTapped="ScrollViewer_DoubleTapped"
                                    x:Name="ScrollViewerMain"                                   
                                     HorizontalScrollBarVisibility="Auto"
