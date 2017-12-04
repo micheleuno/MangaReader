@@ -52,8 +52,6 @@
 
         <FlipView  x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" >
 
-
-
             <FlipView.ItemTemplate>
                 <DataTemplate x:Name="asd">
                     <ScrollViewer  MinZoomFactor="0.8" 

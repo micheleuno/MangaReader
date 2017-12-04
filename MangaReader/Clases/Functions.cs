@@ -92,7 +92,7 @@ namespace MangaReader.Clases
 
             List<BitmapImage> images = new List<BitmapImage>();
             BitmapImage image = new BitmapImage();
-            int cont = 1;
+            int cont = 1, anterior =0;
             Boolean flag = true;
             //   Stopwatch sw = new Stopwatch();          
             //sw.Start();
@@ -107,10 +107,13 @@ namespace MangaReader.Clases
                         try
                         {
                             int numero = Int32.Parse(value.Substring(value.Length - 7, 3));
-                            if (numero > 0 && numero != cont)
-                            {
-                                flag = false;
-                            }
+
+                            
+                                if (numero >= 0 && ((numero-anterior)!=1)||(numero-anterior==0))
+                                {
+                                    flag = false;
+                                }    
+                            anterior = numero;
                             //
                         }
                         catch (FormatException)

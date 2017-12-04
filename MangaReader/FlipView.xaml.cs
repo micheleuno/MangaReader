@@ -108,16 +108,41 @@ namespace MangaReader
 
         }
 
-      
 
+       /* public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child != null && child is T)
+                    {
+                        yield return (T)child;
+                    }
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
+        }*/
 
         private async void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //  Debug.WriteLine("Index " + flipView.SelectedIndex +" todos "+ " contador " + flipView.Items.Count);
-            EpisodeConter.Content = (flipView.SelectedIndex + 1).ToString() + " de " + flipView.Items.Count.ToString();
+           EpisodeConter.Content = (flipView.SelectedIndex + 1).ToString() + " de " + flipView.Items.Count.ToString();
+         /*   foreach (ScrollViewer tb in FindVisualChildren<ScrollViewer>(flipView))
+            {
+                tb.ChangeView(0,100,0);
+                Debug.WriteLine("encontrado");
+            }*/
 
-            // sv.ScrollToEnd();
-       
+
+
+
+
             if (flipView.Items.Count > 2 && flipView.SelectedIndex + 1 == flipView.Items.Count)
             {
 
