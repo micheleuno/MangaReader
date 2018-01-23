@@ -109,11 +109,14 @@ namespace MangaReader.Clases
                             int numero = Int32.Parse(value.Substring(value.Length - 7, 3));
 
                             
-                                if (numero >= 0 && ((numero-anterior)!=1)||(numero-anterior==0))
+                                if (numero >= 0 && (((numero-anterior)!=1)&&(numero!=anterior)) )
                                 {
-                                    flag = false;
-                                }    
+                                Debug.WriteLine("Adentro Actual:" + numero + " Anterior: " + anterior);
+                                flag = false;
+                                }
+                            Debug.WriteLine("Actual:" + numero + " Anterior: " + anterior);
                             anterior = numero;
+                           
                             //
                         }
                         catch (FormatException)
