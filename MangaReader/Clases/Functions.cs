@@ -38,8 +38,12 @@ namespace MangaReader.Clases
             }
             else
             {
+                
                 string[] folders1 = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);
-                if (folders1.Count() > 0)
+
+
+          
+                if (folders1.Count() > 0)   
                 {
                     Manga manga = new Manga();
                     manga.SetDirectory(path);
@@ -49,7 +53,7 @@ namespace MangaReader.Clases
                     Int32.TryParse(direccion, out result);
                     manga.SetDirección(result);
                     for (int i = 0; i < folders1.Count(); i++)
-                    {
+                    {                       
                         Episode episode = new Episode();
                         episode.SetDirectory(folders1.ElementAt(i));
                         manga.SetEpisode(episode);
@@ -111,10 +115,10 @@ namespace MangaReader.Clases
                             
                                 if (numero >= 0 && (((numero-anterior)!=1)&&(numero!=anterior)) )
                                 {
-                                Debug.WriteLine("Adentro Actual:" + numero + " Anterior: " + anterior);
+                              //  Debug.WriteLine("Adentro Actual:" + numero + " Anterior: " + anterior);
                                 flag = false;
                                 }
-                            Debug.WriteLine("Actual:" + numero + " Anterior: " + anterior);
+                          //  Debug.WriteLine("Actual:" + numero + " Anterior: " + anterior);
                             anterior = numero;
                            
                             //

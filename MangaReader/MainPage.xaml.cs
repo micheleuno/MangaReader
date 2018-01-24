@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -359,10 +360,11 @@ namespace MangaReader
             if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.Count > 0)
             {
 
-                if (ComboBoxEpisode.SelectedIndex < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido())
+                if (ComboBoxEpisode.SelectedIndex < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() || ComboBoxEpisode.SelectedIndex- Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido()>1)
                 {
                     await Clases.Functions.CreateMessageAsync("No se actualizará el ultimo episodio leído");
                 }
+
                 localSettings.Values["MangaActual"] = ComboBoxManga.SelectedIndex;
                 GuardarDireccion();
                 GuardarAjusteImagen();
@@ -565,12 +567,12 @@ namespace MangaReader
         {
             String[] previousdata = await Clases.XmlIO.ReadStatistics();
             TimeSpan tiempo;
-           
+       
 
             if (previousdata != null)
             {
                 tiempo = TimeSpan.Parse(previousdata[2]);
-                FLyout.Text = "Páginas leidas: " + previousdata[0] + "\nCapítulos leídos: " + previousdata[1] + "\nMangas terminados: " + previousdata[3] + "\nTiempo total: " + tiempo.ToString(@"d\:hh\:mm");
+                FLyout.Text = "Páginas leidas: " +  previousdata[0] + "\nCapítulos leídos: " + previousdata[1] + "\nMangas terminados: " + previousdata[3] + "\nTiempo total: " + tiempo.ToString(@"d\:hh\:mm");
             }
             else
             {

@@ -79,6 +79,7 @@
         <Button x:Name="BtnFullScreen" Content="Pantalla Completa" HorizontalAlignment="Center"  VerticalAlignment="Top" Click="Fullscren" Background="Black"/>
         <Button x:Name="EpisodeConter" HorizontalAlignment="Center"  VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
         <ProgressRing x:Name="loading" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="75" Height="75" />
+        <ProgressRing x:Name="loadingBackgorund" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Width="40" Height="40" />
     </Grid>
 
 </Page>
