@@ -318,8 +318,7 @@ namespace MangaReader
             String Url = "", Url2;
             episode = await Clases.Functions.LoadEpisodeAsync(mangaG.GetEpisodes().ElementAt(capitulo).GetDirectory());
             if (episode.GetPages().Count > 0 && episode != null)
-            {
-                loading.IsActive = true;   
+            {                
                 Pages = episode.GetPages();
                 paginasaux = Pages.Count;
                 Url = mangaG.GetDirectory() + @"\" + episode.GetDirectory();
@@ -333,8 +332,7 @@ namespace MangaReader
                     Completeurl.Add(Url2);
                 }
 
-                episodeIm = await Clases.Functions.LoadEpisodeImageAsync(Completeurl);
-                loading.IsActive = false;
+                episodeIm = await Clases.Functions.LoadEpisodeImageAsync(Completeurl);              
             }
             else
             {
