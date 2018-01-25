@@ -378,6 +378,7 @@ namespace MangaReader
             }
 
         }
+     
 
         private void BtnNext_Click(object sender, RoutedEventArgs e)
         {

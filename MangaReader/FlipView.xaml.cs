@@ -129,33 +129,43 @@ namespace MangaReader
             }
         }*/
 
+     
         private async void FlipView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             //  Debug.WriteLine("Index " + flipView.SelectedIndex +" todos "+ " contador " + flipView.Items.Count);
-           EpisodeConter.Content = (flipView.SelectedIndex + 1).ToString() + " de " + flipView.Items.Count.ToString();
-            /*   foreach (ScrollViewer tb in FindVisualChildren<ScrollViewer>(flipView))
-               {
-                   tb.ChangeView(0,100,0);
-                   Debug.WriteLine("encontrado");
-               }*/
+            EpisodeConter.Content = (flipView.SelectedIndex + 1).ToString() + " de " + flipView.Items.Count.ToString();
 
 
-            await Task.Delay(100);
 
-
-            if (flipView.SelectedIndex + 1 == flipView.Items.Count||flipView.Items.Count==1) // Probar con una espera
+            if (flipView.Items.Count > 2 && flipView.SelectedIndex + 1 == flipView.Items.Count)
             {
-                SiguienteEpisodio();
+
+                if (flagepisodio)
+                {
+                    paginas = paginas + paginasaux;
+                    episodios++;
+
+                    if (mangaG.GetActual() < mangaG.GetEpisodes().Count() && mangaG.GetActual() >= mangaG.GetUltimoEpisodioLeido() && mangaG.GetUltimoEpisodioLeido() < mangaG.GetEpisodes().Count())
+                    {
+                        mangaG.GetEpisodes().ElementAt<Episode>(mangaG.GetActual()).SetRead(true);
+                        mangaG.SetUltimoEpisodioLeido(mangaG.GetActual() + 1);
+                        mangaG.SetActual(mangaG.GetActual() + 1);
+                        var t = Task.Run(() => Clases.XmlIO.Writefile(MangasG));
+                    }
+                    else if (mangaG.GetActual() < mangaG.GetEpisodes().Count())
+                    {
+                        mangaG.SetActual(mangaG.GetActual() + 1);
+                    }
+                    flagepisodio = false;
+                }
                 MakeVisible();
-            }        
-         
+
+            }
             if (cargaBitmap == false && flipView.SelectedIndex > (flipView.Items.Count) / 2 && mangaG.GetActual() < (mangaG.GetEpisodes().Count - 1))
             {
                 cargaBitmap = true;
-                loadingBackgorund.IsActive = true;
                 await CargarBitmap(mangaG.GetActual() + 1);
-                loadingBackgorund.IsActive = false;
-            }           
+            }
 
         }
 
@@ -182,7 +192,9 @@ namespace MangaReader
 
         } 
 
-        private async void MoverPagina()
+
+
+private async void MoverPagina()
         {
             Int32.TryParse(localSettings.Values[mangaG.GetName()].ToString(), out int pagina);
             if (pagina < flipView.Items.Count)
