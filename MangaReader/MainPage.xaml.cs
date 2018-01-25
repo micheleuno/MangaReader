@@ -360,7 +360,7 @@ namespace MangaReader
             if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.Count > 0)
             {
 
-                if (ComboBoxEpisode.SelectedIndex < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() || ComboBoxEpisode.SelectedIndex- Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido()>1)
+                if (ComboBoxEpisode.SelectedIndex < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido())
                 {
                     await Clases.Functions.CreateMessageAsync("No se actualizará el ultimo episodio leído");
                 }
