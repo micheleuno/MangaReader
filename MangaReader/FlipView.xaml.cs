@@ -149,8 +149,10 @@ namespace MangaReader
 
             if (cargaBitmap == false && flipView.SelectedIndex > (flipView.Items.Count) / 2 && mangaG.GetActual() < (mangaG.GetEpisodes().Count - 1))
             {
+                loadingBackgorund.IsActive = true;
                 cargaBitmap = true;
                 await CargarBitmap(mangaG.GetActual() + 1);
+                loadingBackgorund.IsActive = false;
             }
 
         }
