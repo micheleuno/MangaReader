@@ -94,7 +94,7 @@ namespace MangaReader.Clases
                 {
                     var path = @"\Project1\statistics.txt";
                     var folder = ApplicationData.Current.LocalFolder;
-                    // Debug.WriteLine(folder.Path);
+                     Debug.WriteLine(folder.Path);
                     String data2;
                     System.Text.StringBuilder sb = new System.Text.StringBuilder();
                     // acquire file
