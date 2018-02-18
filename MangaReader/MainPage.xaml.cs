@@ -568,12 +568,15 @@ namespace MangaReader
         {
             String[] previousdata = await Clases.XmlIO.ReadStatistics();
             TimeSpan tiempo;
-       
+            int PagT = Int32.Parse(previousdata[0]);
+            int CapT = Int32.Parse(previousdata[1]);
+            int ManT = Int32.Parse(previousdata[3]);
+                     
 
             if (previousdata != null)
             {
                 tiempo = TimeSpan.Parse(previousdata[2]);
-                FLyout.Text = "Páginas leidas: " +  previousdata[0] + "\nCapítulos leídos: " + previousdata[1] + "\nMangas terminados: " + previousdata[3] + "\nTiempo total: " + tiempo.ToString(@"d\:hh\:mm");
+                FLyout.Text = "Páginas leidas: " + PagT.ToString("#,##0") + "\nCapítulos leídos: " + CapT.ToString("#,##0") + "\nMangas terminados: " + ManT.ToString("#,##0") + "\nTiempo total: " + tiempo.ToString(@"d\:hh\:mm");
             }
             else
             {

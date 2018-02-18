@@ -192,7 +192,7 @@
       <Version>2.1.1</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
-      <Version>10.0.3</Version>
+      <Version>11.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

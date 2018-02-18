@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Composition;
+using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -182,7 +183,7 @@ namespace MangaReader
 
 
 
-private async void MoverPagina()
+    private async void MoverPagina()
         {
             Int32.TryParse(localSettings.Values[mangaG.GetName()].ToString(), out int pagina);
             if (pagina < flipView.Items.Count)
@@ -385,6 +386,7 @@ private async void MoverPagina()
             BtnClose.Visibility = Visibility.Visible;
             if (flipView.Items.Count != 0)
                 EpisodeConter.Content =(flipView.SelectedIndex + 1).ToString() + " de " + flipView.Items.Count.ToString();
+            Windows.Devices.Power.Battery.AggregateBattery.ReportUpdated += AggregateBatteryOnReportUpdated;
             EpisodeConter.Visibility = Visibility.Visible;
             flag = true;
             if ((mangaG.GetActual() + 1) <= mangaG.GetEpisodes().Count())
@@ -399,6 +401,25 @@ private async void MoverPagina()
             {
                 BtnNext.Visibility = Visibility.Visible;
             }
+           
+
+        }
+
+        private async void  AggregateBatteryOnReportUpdated(Windows.Devices.Power.Battery sender, object args)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                // await UpdatePercentage(sender);  
+                var details = sender.GetReport();
+                var getPercentage = (details.RemainingCapacityInMilliwattHours.Value / (double)details.FullChargeCapacityInMilliwattHours.Value);
+                var getStatus = details.Status;
+                string per = getPercentage.ToString("##%");
+                string asd="";
+                if (per.Length > 0)
+                    asd = "Batería restante ";
+                Battery.Content = (asd+per);
+            });
+           
 
         }
 
