@@ -417,7 +417,7 @@ namespace MangaReader
                 string asd="";
                 if (per.Length > 0)
                     asd = "Batería restante ";
-                Battery.Content = (asd+per);
+              //  Battery.Content = (asd+per);
             });
            
 

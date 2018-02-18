@@ -78,7 +78,7 @@
         <Button  x:Name="BtnNext" Content="Siguiente" Height="50" Width="120"  HorizontalAlignment="Right" Click="BtnNext_Click" Background="Black" />
         <Button x:Name="BtnFullScreen" Content="Pantalla Completa" HorizontalAlignment="Center"  VerticalAlignment="Top" Click="Fullscren" Background="Black"/>
         <Button x:Name="EpisodeConter" HorizontalAlignment="Center"  VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
-        <Button x:Name="Battery" HorizontalAlignment="Right"  VerticalAlignment="Top" Background="Black"/>
+        <!-- <Button x:Name="Battery" HorizontalAlignment="Right"  VerticalAlignment="Top" Background="Black"/>-->
         <ProgressRing x:Name="loading" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="75" Height="75" />
         <ProgressRing x:Name="loadingBackgorund" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Width="40" Height="40" />
     </Grid>
