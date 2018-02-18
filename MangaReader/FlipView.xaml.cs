@@ -386,7 +386,7 @@ namespace MangaReader
             BtnClose.Visibility = Visibility.Visible;
             if (flipView.Items.Count != 0)
                 EpisodeConter.Content =(flipView.SelectedIndex + 1).ToString() + " de " + flipView.Items.Count.ToString();
-            Windows.Devices.Power.Battery.AggregateBattery.ReportUpdated += AggregateBatteryOnReportUpdated;
+          //  Windows.Devices.Power.Battery.AggregateBattery.ReportUpdated += AggregateBatteryOnReportUpdated;
             EpisodeConter.Visibility = Visibility.Visible;
             flag = true;
             if ((mangaG.GetActual() + 1) <= mangaG.GetEpisodes().Count())
