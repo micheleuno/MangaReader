@@ -66,9 +66,9 @@ namespace MangaReader
             {
                 localSettings.Values["AjusteImagen"] = 1;
             }
-            if (localSettings.Values["FullScreen"] == null)
+            if (localSettings.Values["FullScrenn"] == null)
             {
-                localSettings.Values["FullScreen"] = 0;
+                localSettings.Values["FullScrenn"] = 0;
             }
             if (Mangas.Count == 0)
             {
