@@ -28,6 +28,8 @@
             <Setter Property="HorizontalAlignment" Value="Center"></Setter>
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
         </Style>
+
+        
     </Page.Resources>
 
 
@@ -90,25 +92,31 @@
         </StackPanel>
         <Image x:Name="image" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0,20,20,0" Tapped="ImageTapped" />
 
-        <GridView Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"  x:Name="itemListView" Visibility="Collapsed">
+       <!--<GridView Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"  x:Name="itemListView" >
             <GridView.ItemTemplate>
-                <DataTemplate x:DataType="x:String">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="47"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Image Source="Assets/placeholder.png" Width="32" Height="32" 
-                       HorizontalAlignment="Left"/>
-                        <TextBlock Text="{x:Bind}" Foreground="Teal" 
-                           FontSize="15" Grid.Column="1"/>
+                <DataTemplate  x:Name="asd">
+                    <Grid Name="mainPanel" HorizontalAlignment="Stretch" Width="500" >
+                        <Image  x:Name="image" 
+                                Source="{Binding}" 
+                                MaxHeight="{Binding Path=ViewportHeight, ElementName=ScrollViewerMain}"                             
+                                />
                     </Grid>
                 </DataTemplate>
             </GridView.ItemTemplate>
-        </GridView>
+        </GridView>-->
+
+
+
+
+
+
+
+
 
 
     </Grid>
 
+    
+    
 
 </Page>

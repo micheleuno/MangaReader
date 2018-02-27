@@ -66,6 +66,10 @@ namespace MangaReader
             {
                 localSettings.Values["AjusteImagen"] = 1;
             }
+            if (localSettings.Values["FullScreen"] == null)
+            {
+                localSettings.Values["FullScreen"] = 0;
+            }
             if (Mangas.Count == 0)
             {
                 contEpisode.Text = loader.GetString("Farewell");
@@ -117,9 +121,14 @@ namespace MangaReader
             }
 
             FullScreen_loaded();
+            if ((localSettings.Values["FullScrenn"].ToString() == "1"))
+            {
+                fullScreen.IsOn = true;
+            }
+
         }
 
-        private async void LlenarGridview()
+      /*  private async void LlenarGridview()
         {
             List<String> Pages = new List<String>();
             Episode episode = new Episode();
@@ -151,7 +160,7 @@ namespace MangaReader
             }
 
 
-        }
+        }*/
 
         private void FullScreen_loaded()
         {
@@ -201,9 +210,20 @@ namespace MangaReader
             }
             catch (Exception)
             {
-                await Clases.Functions.CreateMessageAsync("Ha ocurrido un error en la lectura de: " + directorio.Split('\\').Last() + "\nVerifique el directorio");
-                SaveData();
-                Clases.XmlIO.DeleteJson(directorio.Split('\\').Last());
+
+                MessageDialog showDialog = new MessageDialog("Ha ocurrido un error en la lectura de: " + directorio.Split('\\').Last() + "\n¿Desea eliminarlo de la lista de mangas?");
+                showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
+                showDialog.Commands.Add(new UICommand("No") { Id = 1 });
+                showDialog.DefaultCommandIndex = 0;
+                showDialog.CancelCommandIndex = 1;
+                var result = await showDialog.ShowAsync();
+                if ((int)result.Id == 0)
+                {
+                    SaveData();
+                    Clases.XmlIO.DeleteJson(directorio.Split('\\').Last());
+
+                }                
+               
                 return null;
             }
         }
@@ -557,10 +577,12 @@ namespace MangaReader
             if (isInFullScreenMode)
             {
                 view.ExitFullScreenMode();
+                localSettings.Values["FullScrenn"] = 0;
             }
             else
             {
                 view.TryEnterFullScreenMode();
+                localSettings.Values["FullScrenn"] = 1;
             }
         }
 
