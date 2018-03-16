@@ -60,7 +60,7 @@ namespace MangaReader
             var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
             if (localSettings.Values["readingDirection"] == null)
             {
-                localSettings.Values["readingDirection"] = 1;
+                localSettings.Values["readingDirection"] = 0;
             }
             if (localSettings.Values["AjusteImagen"] == null)
             {
@@ -478,14 +478,15 @@ namespace MangaReader
                 contEpisode.Text = Mangas.ElementAt(mangaactual).GetUltimoEpisodioLeido().ToString() + " de "
                     + Mangas.ElementAt(mangaactual).GetEpisodes().Count().ToString();
 
-                if ((localSettings.Values["readingDirection"].ToString() == "1"))
+                if ((localSettings.Values["readingDirection"].ToString().Length>0))
                 {
-                    toggleSwitch.IsOn = true;
+                    DireccionLectura.SelectedIndex = Int32.Parse(localSettings.Values["readingDirection"].ToString());
                 }
                 else
                 {
-                    toggleSwitch.IsOn = false;
+                    DireccionLectura.SelectedIndex = 0;
                 }
+               
 
                 if ((localSettings.Values["AjusteImagen"].ToString() == "1"))
                 {
@@ -546,16 +547,14 @@ namespace MangaReader
 
         private void GuardarDireccion()
         {
-            if (toggleSwitch.IsOn == true)
+            if (DireccionLectura.SelectedIndex!=-1)
             {
-                localSettings.Values["readingDirection"] = 1;
-                // Mangas.ElementAt(0).SetDirección(1);
+                localSettings.Values["readingDirection"] = DireccionLectura.SelectedIndex;
             }
             else
             {
                 localSettings.Values["readingDirection"] = 0;
-                Mangas.ElementAt(0).SetDirección(0);
-            }
+            }     
         }
 
         private void GuardarAjusteImagen()

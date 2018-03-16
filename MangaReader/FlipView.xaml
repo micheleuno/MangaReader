@@ -23,12 +23,15 @@
                                 Source="{Binding}" 
                                 MaxWidth="{Binding Path=ViewportWidth, ElementName=ScrollViewerMain}"                             
                                 />
-
-
             </ScrollViewer>
-
-
         </DataTemplate>
+
+
+        <ItemsPanelTemplate  x:Name="vertical">
+                <VirtualizingStackPanel Orientation="Vertical"/>
+            </ItemsPanelTemplate>
+  
+
     </Page.Resources>
 
 
@@ -50,7 +53,10 @@
 
 
 
-        <FlipView  x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" >
+        <FlipView  x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark"  ItemsSource="{Binding BitMapCollection}" >
+
+         
+
 
             <FlipView.ItemTemplate>
                 <DataTemplate x:Name="asd">

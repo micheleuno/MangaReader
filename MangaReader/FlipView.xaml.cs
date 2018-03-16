@@ -92,9 +92,21 @@ namespace MangaReader
                 {
                     flipView.ItemTemplate = Resources["AjustarAncho"] as DataTemplate;
                 }
-
-
-                sw.Start();
+               
+                if (localSettings.Values["readingDirection"].ToString() == "2")
+                {
+                    flipView.ItemsPanel = Resources["vertical"] as ItemsPanelTemplate;
+                    BtnClose.HorizontalAlignment = HorizontalAlignment.Center;
+                    BtnClose.VerticalAlignment = VerticalAlignment.Top;
+                    BtnNext.HorizontalAlignment = HorizontalAlignment.Center;
+                    BtnNext.VerticalAlignment = VerticalAlignment.Bottom;
+                    BtnFullScreen.HorizontalAlignment = HorizontalAlignment.Right;
+                    BtnFullScreen.VerticalAlignment = VerticalAlignment.Center;
+                    EpisodeConter.HorizontalAlignment = HorizontalAlignment.Left;
+                    EpisodeConter.VerticalAlignment = VerticalAlignment.Center;
+                    
+                }
+                    sw.Start();
 
             }
             catch (Exception)
