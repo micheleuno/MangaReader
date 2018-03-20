@@ -73,6 +73,18 @@ namespace MangaReader
             {
                 flipView.FlowDirection = FlowDirection.LeftToRight;
             }
+            if (localSettings.Values["readingDirection"].ToString() == "2")
+            {
+                flipView.ItemsPanel = Resources["vertical"] as ItemsPanelTemplate;
+                BtnClose.HorizontalAlignment = HorizontalAlignment.Center;
+                BtnClose.VerticalAlignment = VerticalAlignment.Top;
+                BtnNext.HorizontalAlignment = HorizontalAlignment.Center;
+                BtnNext.VerticalAlignment = VerticalAlignment.Bottom;
+                BtnFullScreen.HorizontalAlignment = HorizontalAlignment.Right;
+                BtnFullScreen.VerticalAlignment = VerticalAlignment.Center;
+                EpisodeConter.HorizontalAlignment = HorizontalAlignment.Left;
+                EpisodeConter.VerticalAlignment = VerticalAlignment.Center;
+            }
 
 
             mangaG = manga;
@@ -91,23 +103,9 @@ namespace MangaReader
                 if (localSettings.Values["AjusteImagen"].ToString() == "1")
                 {
                     flipView.ItemTemplate = Resources["AjustarAncho"] as DataTemplate;
-                }
-               
-                if (localSettings.Values["readingDirection"].ToString() == "2")
-                {
-                    flipView.ItemsPanel = Resources["vertical"] as ItemsPanelTemplate;
-                    BtnClose.HorizontalAlignment = HorizontalAlignment.Center;
-                    BtnClose.VerticalAlignment = VerticalAlignment.Top;
-                    BtnNext.HorizontalAlignment = HorizontalAlignment.Center;
-                    BtnNext.VerticalAlignment = VerticalAlignment.Bottom;
-                    BtnFullScreen.HorizontalAlignment = HorizontalAlignment.Right;
-                    BtnFullScreen.VerticalAlignment = VerticalAlignment.Center;
-                    EpisodeConter.HorizontalAlignment = HorizontalAlignment.Left;
-                    EpisodeConter.VerticalAlignment = VerticalAlignment.Center;
-                    
-                }
+                }              
+              
                     sw.Start();
-
             }
             catch (Exception)
             {
@@ -417,7 +415,7 @@ namespace MangaReader
 
         }
 
-        private async void  AggregateBatteryOnReportUpdated(Windows.Devices.Power.Battery sender, object args)
+     /*   private async void  AggregateBatteryOnReportUpdated(Windows.Devices.Power.Battery sender, object args)
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -433,7 +431,7 @@ namespace MangaReader
             });
            
 
-        }
+        }*/
 
         private void MakeInvisible()
         {

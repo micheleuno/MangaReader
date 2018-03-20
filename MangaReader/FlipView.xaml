@@ -25,10 +25,10 @@
                                 />
             </ScrollViewer>
         </DataTemplate>
-
-
-        <ItemsPanelTemplate  x:Name="vertical">
-                <VirtualizingStackPanel Orientation="Vertical"/>
+        
+       
+            <ItemsPanelTemplate  x:Name="vertical">
+            <StackPanel Orientation="Vertical"/>           
             </ItemsPanelTemplate>
   
 
