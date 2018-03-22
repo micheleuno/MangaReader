@@ -14,7 +14,8 @@ What to expect:
 -Usable UI.  
 -Decent performance on Atom-Based devices.  
 -Probable Bug and crashes.     
--Kinda excesive ram usage.  
+-Kinda excesive ram usage (Fixed).
+-Some stutter in larger images.  
 
 What not to expect:  
 -Tidy, commented and efficient code.  
