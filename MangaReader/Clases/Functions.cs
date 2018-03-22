@@ -154,10 +154,10 @@ namespace MangaReader.Clases
                 image.UriSource = imageUriForlogo;
                 images.Add(image);
             }
-            if (!flag)
+           /* if (!flag)
             {
                 await CreateMessageAsync("Puede que falten páginas");
-            }
+            }*/
             return images;
         }
 
