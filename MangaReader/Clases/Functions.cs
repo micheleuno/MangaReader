@@ -88,6 +88,43 @@ namespace MangaReader.Clases
             }
         }
 
+        public static async void CheckPagesNumber(Episode episode)
+        {
+            int cont=1;
+            Boolean flag = true;
+              Stopwatch sw = new Stopwatch();          
+          //  sw.Start();
+            try
+            {            
+                if (episode.GetPages().Count > 0 && episode != null)
+                {
+                    foreach (String value in episode.GetPages())
+                    {
+                        int numero = Int32.Parse(value.Substring(value.Length - 7, 3));                       
+                        if (numero != cont)
+                        {
+                            flag = false;
+                        }
+                      
+                        cont++;
+                    }
+
+                    if (!flag)
+                    {
+                        await CreateMessageAsync("Puede que falten páginas");
+                    }
+                }
+            }
+            catch (FormatException)
+            {
+
+            }
+            /* sw.Stop();
+            Debug.WriteLine("tiempo revision" + sw.ElapsedMilliseconds);*/
+        }
+
+
+
         public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
 
 
@@ -95,46 +132,19 @@ namespace MangaReader.Clases
         {
 
             List<BitmapImage> images = new List<BitmapImage>();
-            BitmapImage image = new BitmapImage();
-            int cont = 1, anterior =0;
-            Boolean flag = true;
-            //   Stopwatch sw = new Stopwatch();          
-            //sw.Start();
+            BitmapImage image = new BitmapImage();           
             try
             {
                 foreach (String value in Completeurl)
                 {
 
                     if (ImageExtensions.Contains(Path.GetExtension(value).ToUpperInvariant()))
-                    {
-
-                        try
-                        {
-                            int numero = Int32.Parse(value.Substring(value.Length - 7, 3));
-
-                            
-                                if (numero >= 0 && (((numero-anterior)!=1)&&(numero!=anterior)) )
-                                {
-                              //  Debug.WriteLine("Adentro Actual:" + numero + " Anterior: " + anterior);
-                                flag = false;
-                                }
-                          //  Debug.WriteLine("Actual:" + numero + " Anterior: " + anterior);
-                            anterior = numero;
-                           
-                            //
-                        }
-                        catch (FormatException)
-                        {
-
-                        }                      
-
-                                          
+                    {                                          
                         StorageFile file = await StorageFile.GetFileFromPathAsync((value));
                         IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
                         image = new BitmapImage();
                         await image.SetSourceAsync(fileStream);
                         images.Add(image);
-                        cont++;
                     }
                     else
                     {
@@ -143,8 +153,7 @@ namespace MangaReader.Clases
                         image.UriSource = imageUriForlogo;
                         images.Add(image);
                     }
-                    // sw.Stop();
-                    // Debug.WriteLine("TIempo lectura imagenes: " + sw.Elapsed);
+                                     
                 }
             }
             catch (Exception)
@@ -153,11 +162,7 @@ namespace MangaReader.Clases
                 var imageUriForlogo = new Uri("ms-appx:///Assets/Imagen.png");
                 image.UriSource = imageUriForlogo;
                 images.Add(image);
-            }
-           /* if (!flag)
-            {
-                await CreateMessageAsync("Puede que falten páginas");
-            }*/
+            }        
             return images;
         }
 
@@ -166,7 +171,6 @@ namespace MangaReader.Clases
             var dialog = new MessageDialog(mensaje);
             await dialog.ShowAsync();
         }
-
     }
 
 }
