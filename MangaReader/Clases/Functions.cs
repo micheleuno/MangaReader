@@ -100,13 +100,22 @@ namespace MangaReader.Clases
                 {
                     foreach (String value in episode.GetPages())
                     {
-                        int numero = Int32.Parse(value.Substring(value.Length - 7, 3));                       
-                        if (numero != cont)
+                        if (value.Length > 7)
                         {
-                            flag = false;
+                            int numero = Int32.Parse(value.Substring(value.Length - 7, 3));
+                            if (numero != cont)
+                            {
+                                flag = false;
+                            }
+
+                            cont++;
                         }
-                      
-                        cont++;
+                        else
+                        {
+                            flag = true;
+                            break;
+                        }
+                       
                     }
 
                     if (!flag)

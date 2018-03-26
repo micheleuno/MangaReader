@@ -221,21 +221,27 @@ namespace MangaReader
                 var result = await showDialog.ShowAsync();
                 if ((int)result.Id == 0)
                 {
+                    cargaBitmap = true;
                     loading.IsActive = true;
-                    Stopwatch sw = new Stopwatch();
-                    sw.Start();
+                 /*   Stopwatch sw = new Stopwatch();
+                    sw.Start();*/
                     for (int i = 0; i < pagina; i++)
                     {                   
                         contPag++;
                         await CargarBitmap(mangaG.GetActual(), contPag + 1, false);
                         LoadFlipView();      
                     }
-                    sw.Stop();
-                    Debug.WriteLine(sw.ElapsedMilliseconds);
+                   /* sw.Stop();
+                    Debug.WriteLine(sw.ElapsedMilliseconds);*/
                     loading.IsActive = false;
-                    contPag = pagina;
-                    flipView.SelectedIndex = pagina;
-              
+                    contPag = pagina+1;
+                    Debug.WriteLine("aentes " + contPag);
+                    for(int i = 1; i <= pagina; i++)
+                    {
+                        flipView.SelectedIndex = i;
+                    }
+                    Debug.WriteLine("dp " + contPag);
+                    cargaBitmap = false;
                 }
             }
         }
