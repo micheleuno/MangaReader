@@ -33,8 +33,7 @@
 
         <DataTemplate x:Key="photos">
             <Grid Background="black" >              
-                   <Image Source="{Binding IName}" HorizontalAlignment="Center" VerticalAlignment="Center"/>                  
-               
+                   <Image Source="{Binding IName}" HorizontalAlignment="Center" VerticalAlignment="Center"/>  
             </Grid>
         </DataTemplate>
 

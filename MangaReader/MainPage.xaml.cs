@@ -59,8 +59,6 @@ namespace MangaReader
         public MainPage()
         {
             this.InitializeComponent();
-          
-
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -117,13 +115,11 @@ namespace MangaReader
                     PopulateCBoxManga();
                     UpdateItems();
                     LoadGrid();
-                    //LlenarGridview();
-                   
 
                     await Clases.XmlIO.WriteJsonAsync(Mangas);
                     loading.IsActive = false;
                 }
-                LoadGrid();
+               
 
             }
             if (Mangas.Count == 0)
@@ -141,8 +137,7 @@ namespace MangaReader
         }
 
         private  void  LoadGrid()
-        {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
+        {          
             List<String> Pages = new List<String>();
             Episode episode = new Episode();
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>();
@@ -160,8 +155,7 @@ namespace MangaReader
                     {
                         if(File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg"))
                         {
-                            items.Add(new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg") });
-                            Debug.WriteLine("URL  " + ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg");
+                            items.Add(new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg") });                           
                         }
                         else
                         {
@@ -178,8 +172,7 @@ namespace MangaReader
               }
             image.Source = null;
             MangaImages.ItemsSource = items;
-            watch.Stop();
-            Debug.WriteLine("Tiempo llenado grid: " + watch.ElapsedMilliseconds);
+ 
         }
 
 
@@ -300,7 +293,9 @@ namespace MangaReader
                 if (!flag)
                 {
                     loadingLoadManga.IsActive = true;
-                   
+                    await Task.Yield();
+                    await PutTaskDelay();
+
                     StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);
                     Manga1 = (Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));
                     

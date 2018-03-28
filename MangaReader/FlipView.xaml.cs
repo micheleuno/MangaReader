@@ -48,6 +48,7 @@ namespace MangaReader
         Boolean flag = false, flagepisodio = true, cargaBitmap = false;
         Stopwatch sw = new Stopwatch();
         List<BitmapImage> episodeIm;
+        Uri imageEpisodio;
         Episode episodeG;
         int paginasaux = 0, paginas = 0, episodios = 0, mangasterminados = 0, contPag=1, contPagAnt=0, cantPag=0;
 
@@ -213,6 +214,7 @@ namespace MangaReader
             Int32.TryParse(localSettings.Values[mangaG.GetName()].ToString(), out int pagina);
             if (pagina < cantPag)
             {
+                var watch = System.Diagnostics.Stopwatch.StartNew();
                 MessageDialog showDialog = new MessageDialog("Desea continuar el capitulo en la página " + (pagina + 1) + "?");
                 showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
                 showDialog.Commands.Add(new UICommand("No") { Id = 1 });
@@ -234,15 +236,16 @@ namespace MangaReader
                    /* sw.Stop();
                     Debug.WriteLine(sw.ElapsedMilliseconds);*/
                     loading.IsActive = false;
-                    contPag = pagina+1;
-                    Debug.WriteLine("aentes " + contPag);
+                    contPag = pagina+1;                 
                     for(int i = 1; i <= pagina; i++)
                     {
                         flipView.SelectedIndex = i;
                     }
-                    Debug.WriteLine("dp " + contPag);
+                  
                     cargaBitmap = false;
                 }
+                watch.Stop();
+                Debug.WriteLine("Tiempo movimiento: " + watch.ElapsedMilliseconds);
             }
         }
 
@@ -322,7 +325,8 @@ namespace MangaReader
             {
                 cont++;
                // flipView.Items.Insert(0, value);
-                flipView.Items.Add(value);
+               flipView.Items.Add(value);
+
             }
            episodeIm = new List<BitmapImage>();
           
@@ -393,8 +397,10 @@ namespace MangaReader
                         Url2 = Url;
                         Url2 = Url + @"\" + Pages[inicio];
                         Completeurl.Add(Url2);
+                     //   imageEpisodio = new Uri(Url2);
                     }
                     episodeIm = await Clases.Functions.LoadEpisodeImageAsync(Completeurl);
+
                 }
             }
             else
