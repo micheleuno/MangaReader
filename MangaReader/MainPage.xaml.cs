@@ -21,6 +21,13 @@ using Windows.UI.Xaml.Navigation;
 
 namespace MangaReader
 {
+    public class MenuItem
+    {
+        public Uri IName
+        {
+            get; set;
+        }
+    }
     public sealed partial class MainPage : Page
     {
         private static List<Manga> Mangas = new List<Manga>();
@@ -39,6 +46,7 @@ namespace MangaReader
                 {
                     PopulateCBoxManga();
                     UpdateItems();
+                    LoadGrid();
                 }
             }
             else
@@ -51,6 +59,7 @@ namespace MangaReader
         public MainPage()
         {
             this.InitializeComponent();
+          
 
         }
 
@@ -104,14 +113,17 @@ namespace MangaReader
                     }
                     watch.Stop();
                     Debug.WriteLine("Tiempo lectura: " + watch.ElapsedMilliseconds);
+                    
                     PopulateCBoxManga();
                     UpdateItems();
+                    LoadGrid();
                     //LlenarGridview();
+                   
 
-
-                   await Clases.XmlIO.WriteJsonAsync(Mangas);
+                    await Clases.XmlIO.WriteJsonAsync(Mangas);
                     loading.IsActive = false;
                 }
+                LoadGrid();
 
             }
             if (Mangas.Count == 0)
@@ -128,39 +140,66 @@ namespace MangaReader
 
         }
 
-      /*  private async void LlenarGridview()
+        private  void  LoadGrid()
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             List<String> Pages = new List<String>();
             Episode episode = new Episode();
-            String Url;
-            if (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count > 0)
-            {
-                try
-                {
-                    episode = await Clases.Functions.LoadEpisodeAsync(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().ElementAt(0).GetDirectory());
-                    if (episode != null)
+            ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>();
+            BitmapImage image1 = new BitmapImage();
+
+
+            if (ComboBoxManga.Items.Count>0 && Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count > 0)
+              {
+
+                  try
+                  {                  
+
+                    
+                    for (int i = 0; i < Mangas.Count(); i++)
                     {
-                        Pages = episode.GetPages();
-                        Url = (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory() + @"\" + episode.GetDirectory() + @"\" + episode.GetPages().ElementAt(0));
-                        BitmapImage image1 = new BitmapImage();
-                        StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
-                        IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
-                        image1 = new BitmapImage();
-                        await image1.SetSourceAsync(fileStream);
-                        image.Source = image1;
-                        ObservableCollection<BitmapImage> listItems = new ObservableCollection<BitmapImage>();
-                        itemListView.Items.Add(image1);
+                        if(File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg"))
+                        {
+                            items.Add(new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg") });
+                            Debug.WriteLine("URL  " + ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg");
+                        }
+                        else
+                        {
+                            items.Add(new MenuItem() { IName = new Uri("ms-appx:///Assets/Imagen.png") });
+                        }
+                       
+                    }                    
+
                     }
-
-                }
                 catch (FileNotFoundException)
-                {
-
+                  {
+                    
                 }
+              }
+            image.Source = null;
+            MangaImages.ItemsSource = items;
+            watch.Stop();
+            Debug.WriteLine("Tiempo llenado grid: " + watch.ElapsedMilliseconds);
+        }
+
+
+
+
+        private void GridSelection(object sender, SelectionChangedEventArgs e)
+        {
+          
+            ComboBoxManga.SelectedIndex = MangaImages.SelectedIndex;
+          
+        }
+        private void GridDOubleTap(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
+        {
+            Debug.WriteLine("asd " + MangaImages.SelectedIndex + " cbox " + ComboBoxManga.SelectedIndex);
+            if (ComboBoxManga.SelectedIndex == MangaImages.SelectedIndex)
+            {
+                ContinuarLectura();
             }
+        }
 
-
-        }*/
 
         private void FullScreen_loaded()
         {
@@ -261,10 +300,10 @@ namespace MangaReader
                 if (!flag)
                 {
                     loadingLoadManga.IsActive = true;
-                    await Task.Yield();
-                    await PutTaskDelay();
+                   
                     StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);
                     Manga1 = (Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));
+                    
                     if (Manga1 != null)
                     {
                         loadingLoadManga.IsActive = false;
@@ -281,8 +320,12 @@ namespace MangaReader
                     await Clases.XmlIO.WriteJsonAsync(Mangas);
                     Mangas.ElementAt(0).SetMangaActual(Mangas.Count()-1);
                     localSettings.Values["MangaActual"] = Mangas.Count-1;
+                    GuardarImagen();
+                    await PutTaskDelay();
+                   
                     PopulateCBoxManga();                   
                     UpdateItems();
+                    LoadGrid();
                 }
                 else
                 {
@@ -290,6 +333,37 @@ namespace MangaReader
                 }
             }
             loadingLoadManga.IsActive = false;
+        }
+        private async void GuardarImagen()
+        {
+            List<String> Pages = new List<String>();
+            Episode episode = new Episode();
+            BitmapImage image1 = new BitmapImage();
+            String Url;
+            episode = await Clases.Functions.LoadEpisodeAsync(Mangas.ElementAt(Mangas.Count() - 1).GetEpisodes().ElementAt(0).GetDirectory());
+            try
+            {
+                if (episode != null && episode.GetPages().Count > 0)
+                {
+                    Pages = episode.GetPages();
+                    Url = (Mangas.ElementAt(Mangas.Count-1).GetDirectory() + @"\" + episode.GetDirectory() + @"\" + episode.GetPages().ElementAt(0));
+                    StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
+                    StorageFolder rootFolder = ApplicationData.Current.LocalFolder;
+                    StorageFolder projectFolder = await rootFolder.CreateFolderAsync("Images", CreationCollisionOption.OpenIfExists);
+
+                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\Images");
+
+                    await file.CopyAsync(folder);
+                    file = await StorageFile.GetFileFromPathAsync((ApplicationData.Current.LocalFolder.Path + @"\Images" + @"\" + episode.GetPages().ElementAt(0)));
+                    await file.RenameAsync(Mangas.ElementAt(Mangas.Count - 1).GetName()+".jpg");
+                }
+            }
+            catch (FileNotFoundException)
+            {
+
+               
+            }
+         
         }
 
         private void PopulateCBoxManga()
@@ -308,7 +382,7 @@ namespace MangaReader
             {
                 ActualizarComboboxManga();
 
-                LoadImage();
+             //   LoadImage();
             }
 
         }
@@ -358,7 +432,7 @@ namespace MangaReader
                         IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read);
                         image1 = new BitmapImage();
                         await image1.SetSourceAsync(fileStream);
-                        image.Source = image1;
+                       // image.Source = image1;
                     }
                     else
                     {
@@ -520,10 +594,17 @@ namespace MangaReader
                 if ((int)result.Id == 0)
                 {
                     Clases.XmlIO.DeleteJson(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName());
+                    if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + ".jpg"))
+                    {
+                        StorageFile file = await StorageFile.GetFileFromPathAsync((ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + ".jpg"));
+                        await file.DeleteAsync();
+                    }
+                   
                     Mangas.RemoveAt(ComboBoxManga.SelectedIndex);
                     SaveData();
                     PopulateCBoxManga();
                     ActualizarComboboxManga();
+                    
                     if (ComboBoxManga.Items.Count > 0)
                     {
                         ComboBoxManga.SelectedIndex = 0;
@@ -542,7 +623,7 @@ namespace MangaReader
             {
                 await Clases.Functions.CreateMessageAsync("Debe agregar un manga primero");
             }
-
+            LoadGrid();
         }
 
         private void GuardarDireccion()
@@ -667,5 +748,8 @@ namespace MangaReader
                 await Clases.Functions.CreateMessageAsync("Debe agregar un manga");
             }
         }
+
+     
+
     }
 }

@@ -2,8 +2,10 @@
     x:Class="MangaReader.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"    
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    
     mc:Ignorable="d" 
      Loaded="Window_Loaded"
     >
@@ -29,7 +31,13 @@
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
         </Style>
 
-        
+        <DataTemplate x:Key="photos">
+            <Grid Background="black" >              
+                   <Image Source="{Binding IName}" HorizontalAlignment="Center" VerticalAlignment="Center"/>                  
+               
+            </Grid>
+        </DataTemplate>
+
     </Page.Resources>
 
 
@@ -40,7 +48,7 @@
                     <VisualState.StateTriggers>
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="IsFullScreenText.Text" Value="In full screen mode" />
+                      
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
@@ -52,31 +60,33 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.45*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
 
 
 
-        <ProgressRing x:Name="loading" Grid.Column="1" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center"  Width="100" Height="100" />
-        <ProgressRing x:Name="loadingLoadManga" Grid.Column="1" HorizontalAlignment="Center"  Grid.Row="3" VerticalAlignment="Center"  Width="100" Height="100" />
+        <ProgressRing x:Name="loading" Grid.Column="1" HorizontalAlignment="Right"  Grid.Row="3" VerticalAlignment="Bottom"  Width="100" Height="100" />
+        <ProgressRing x:Name="loadingLoadManga" Grid.Column="1" HorizontalAlignment="Right"  Grid.Row="3" VerticalAlignment="Bottom"  Width="100" Height="100" />
 
         <StackPanel HorizontalAlignment="Center"   Grid.Row="0" VerticalAlignment="Center" >
-            <Button  x:Uid="BtnOpenFIle"  x:Name="BtnOpenFIle" Content=""   Click="BtnOpenFile" Margin="5" />
+           
             <TextBlock  x:Uid="NombreManga" HorizontalAlignment="center"  TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="5"/>
-            <ComboBox x:Name="ComboBoxManga"  Width="auto" SelectionChanged="ComboBoxManga_SelectionChanged" Margin="7" />
+            <ComboBox x:Name="ComboBoxManga" IsHitTestVisible="False" Width="auto" SelectionChanged="ComboBoxManga_SelectionChanged" Margin="7" />
             <TextBlock  x:Uid="Episodio" TextWrapping="Wrap" Text=""  Margin="5" />
             <ComboBox x:Name="ComboBoxEpisode"  Width="auto" Margin="5"/>
             <Button  x:Uid="VerEpisodio" Content=""   Click="ButtonView_Click" Margin="7"/>
             <TextBlock x:Uid="contEpisode" Text=""  x:Name="contEpisode" TextWrapping="Wrap"    Margin="5"/>
             <Button x:Uid="Continuar" x:Name="BtnContinue" Content=""  Click="BtnNext_Click"  Margin="5"/>
             <Button x:Uid="RecargarManga"  x:Name="RecargarManga"   Content=""   Click="BtnRecargar" Margin="5" />
+            <Button x:Name="button" Content="Eliminar Manga" Grid.Column="1" Grid.Row="1" Click="BtnEliminar"  Margin="20"  />
 
         </StackPanel>
 
 
         <StackPanel HorizontalAlignment="Center"   Grid.Row="2" VerticalAlignment="Center" >
+            <Button  x:Uid="BtnOpenFIle"  x:Name="BtnOpenFIle" Content=""   Click="BtnOpenFile" Margin="5" />
             <ComboBox x:Name="DireccionLectura"  Width="auto" Margin="5" Header="Dirección Lectura">                
                 <ComboBoxItem Name="cbi1">Izquierda a Derecha</ComboBoxItem>
                 <ComboBoxItem Name="cbi2">Derecha a Izquierda</ComboBoxItem>
@@ -84,7 +94,7 @@
             </ComboBox>           
             <ToggleSwitch x:Name="fullScreen" Grid.Column="2" Header="Pantalla Completa"     OnContent="Si"  OffContent="No"  Margin="5" />
             <ToggleSwitch x:Name="SwitchAjustar" Grid.Column="2" Header="Ajuste de imagen"     OnContent="Ajusar al Ancho"  OffContent="Ajustar al Alto"  Margin="5" />
-            <Button x:Name="button" Content="Eliminar Manga" Grid.Column="1" Grid.Row="1" Click="BtnEliminar"  Margin="20"  />
+           
             <Button Content="Estadisticas" Click="Button_Click">
                 <Button.Flyout>
                     <Flyout Placement="Right">
@@ -95,24 +105,12 @@
         </StackPanel>
         <Image x:Name="image" Grid.Column="1" Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center" Margin="0,20,20,0" Tapped="ImageTapped" />
 
-       <!--<GridView Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center"  x:Name="itemListView" >
-            <GridView.ItemTemplate>
-                <DataTemplate  x:Name="asd">
-                    <Grid Name="mainPanel" HorizontalAlignment="Stretch" Width="500" >
-                        <Image  x:Name="image" 
-                                Source="{Binding}" 
-                                MaxHeight="{Binding Path=ViewportHeight, ElementName=ScrollViewerMain}"                             
-                                />
-                    </Grid>
-                </DataTemplate>
-            </GridView.ItemTemplate>
-        </GridView>-->
 
-
-
-
-
-
+        <Controls:AdaptiveGridView  x:Name="MangaImages" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"   IsMultiSelectCheckBoxEnabled="False"
+                                   HorizontalAlignment="Center" Margin="10,10,10,10" VerticalAlignment="Center" 
+                                 ItemHeight="250" ItemTemplate="{StaticResource photos}" 
+                                SelectionChanged="GridSelection"  AutomationProperties.AccessibilityView="Raw" 
+                                    DoubleTapped="GridDOubleTap"/>
 
 
 

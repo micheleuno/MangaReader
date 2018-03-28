@@ -47,7 +47,7 @@ namespace MangaReader.Clases
                 throw;
             }
         }
-
+      
         public static async Task Writefile(List<Manga> Mangas)
         {
             //   Manga manga = new Manga();
