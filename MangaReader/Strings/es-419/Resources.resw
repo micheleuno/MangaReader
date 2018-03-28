@@ -123,17 +123,11 @@
   <data name="contEpisode.Text" xml:space="preserve">
     <value>de</value>
   </data>
-  <data name="Continuar.Content" xml:space="preserve">
-    <value>Continuar</value>
-  </data>
   <data name="Episodio.Text" xml:space="preserve">
     <value>Episodio</value>
   </data>
   <data name="NombreManga.Text" xml:space="preserve">
     <value>Nombre Manga</value>
-  </data>
-  <data name="RecargarManga.Content" xml:space="preserve">
-    <value>Recargar Manga</value>
   </data>
   <data name="VerEpisodio.Content" xml:space="preserve">
     <value>Ver Episodio</value>

@@ -48,7 +48,6 @@ namespace MangaReader
         Boolean flag = false, flagepisodio = true, cargaBitmap = false;
         Stopwatch sw = new Stopwatch();
         List<BitmapImage> episodeIm;
-        Uri imageEpisodio;
         Episode episodeG;
         int paginasaux = 0, paginas = 0, episodios = 0, mangasterminados = 0, contPag=1, contPagAnt=0, cantPag=0;
 

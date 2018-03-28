@@ -117,23 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BtnOpenFIle.Content" xml:space="preserve">
-    <value>Load Manga</value>
-  </data>
   <data name="contEpisode.Text" xml:space="preserve">
     <value>of</value>
-  </data>
-  <data name="Continuar.Content" xml:space="preserve">
-    <value>Continue</value>
   </data>
   <data name="Episodio.Text" xml:space="preserve">
     <value>Episode</value>
   </data>
   <data name="NombreManga.Text" xml:space="preserve">
     <value>Manga Name</value>
-  </data>
-  <data name="RecargarManga.Content" xml:space="preserve">
-    <value>Reload Manga</value>
   </data>
   <data name="VerEpisodio.Content" xml:space="preserve">
     <value>View Episode</value>
