@@ -90,7 +90,7 @@ namespace MangaReader
 
             mangaG = manga;
             MangasG = Mangas;
-           
+            Debug.WriteLine("manga actual flipview" + mangaG.GetActual());
             episodeG = await Clases.Functions.LoadEpisodeAsync(mangaG.GetEpisodes().ElementAt(mangaG.GetActual()).GetDirectory());
             Clases.Functions.CheckPagesNumber(episodeG);
 

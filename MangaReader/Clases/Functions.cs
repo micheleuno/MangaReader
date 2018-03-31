@@ -8,6 +8,8 @@ using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace MangaReader.Clases
@@ -177,7 +179,12 @@ namespace MangaReader.Clases
 
         public static async Task CreateMessageAsync(String mensaje)
         {
-            var dialog = new MessageDialog(mensaje);
+            ContentDialog dialog = new ContentDialog();
+
+           // var dialog = new MessageDialog(mensaje);
+            dialog.RequestedTheme = ElementTheme.Dark;
+            dialog.Title=mensaje;
+            dialog.PrimaryButtonText = "Aceptar";
             await dialog.ShowAsync();
         }
     }

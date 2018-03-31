@@ -29,9 +29,14 @@ namespace MangaReader
         {
             get; set;
         }
-    }  
-
+        public String Titulo
+        {
+            get; set;
+        }
+    }
     
+
+
     public sealed partial class MainPage : Page
     {
         private static List<Manga> Mangas = new List<Manga>();
@@ -48,7 +53,7 @@ namespace MangaReader
             {
                 if (e.Parameter is List<Manga> MangasParameter && Mangas != null)
                 {
-                    PopulateCBoxManga();
+                  //  PopulateCBoxManga();
                     UpdateItems();
                     LoadGrid();
                 }
@@ -83,10 +88,9 @@ namespace MangaReader
                 localSettings.Values["FullScrenn"] = 0;
             }
             if (Mangas.Count == 0)
-            {
-                contEpisode.Text = loader.GetString("Farewell");
+            {              
                 ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(500, 500));
-
+                FullScreen_loaded();
                 Mangas = new List<Manga>();
                 Manga Manga1 = new Manga();
                 String[] lines = await Clases.XmlIO.Readfile();
@@ -117,7 +121,7 @@ namespace MangaReader
                     watch.Stop();
                     Debug.WriteLine("Tiempo lectura: " + watch.ElapsedMilliseconds);
                     
-                    PopulateCBoxManga();
+                   // PopulateCBoxManga();
                     UpdateItems();
                     LoadGrid();
 
@@ -128,7 +132,7 @@ namespace MangaReader
 
             }          
 
-            FullScreen_loaded();
+           
             if ((localSettings.Values["FullScrenn"].ToString() == "1"))
             {
                 fullScreen.IsOn = true;
@@ -137,9 +141,51 @@ namespace MangaReader
         }
 
         private void ListTapped(object sender, TappedRoutedEventArgs e)
-        {          
-            NombreManga.Text = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName();
-            FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+        {
+            int numero = MangaImages.SelectedIndex;
+            if (numero == 0)
+            {
+                AgregarManga();
+            }
+            else
+            {
+                numero--;
+                if (Mangas.ElementAt(numero).GetUltimoEpisodioLeido() == 0)
+                {
+                    ContLectura.Text = "Comenzar lectura";
+                }
+                else
+                {
+                    String ContEpi = " (" + Mangas.ElementAt(numero).GetUltimoEpisodioLeido() + " de " + (Mangas.ElementAt(numero).GetEpisodes().Count) + ")";
+                    ContLectura.Text = "Continuar lectura" + ContEpi;
+                }
+
+                NombreManga.Text = Mangas.ElementAt(numero).GetName();
+                FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
+            }
+          
+        }
+
+        private async void FlyoutSeleccionarEpisodio(object sender, TappedRoutedEventArgs e)
+        {
+            int selectedEpi = await InputTextDialogAsync("Seleccionar capitulo de " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName());
+            if (selectedEpi!=-1)
+            {
+
+                if (selectedEpi < Mangas.ElementAt(MangaImages.SelectedIndex-1).GetUltimoEpisodioLeido())
+                {
+                    await Clases.Functions.CreateMessageAsync("No se actualizará el ultimo episodio leído");
+                }
+
+                localSettings.Values["MangaActual"] = MangaImages.SelectedIndex-1;
+                GuardarDireccion();
+                GuardarAjusteImagen();
+                Mangas.ElementAt(MangaImages.SelectedIndex-1).SetActual(selectedEpi);
+                Mangas.ElementAt(0).SetMangaActual(MangaImages.SelectedIndex-1);
+                Frame.Navigate(typeof(FlipView), Mangas);
+
+            }
+
         }
 
         private void FlyoutContinuar(object sender, TappedRoutedEventArgs e)
@@ -156,16 +202,13 @@ namespace MangaReader
             picker.FileTypeFilter.Add(".jpg");
             picker.FileTypeFilter.Add(".jpeg");
             picker.FileTypeFilter.Add(".png");
-            int selecteditem = ComboBoxManga.SelectedIndex;
+            int selecteditem = MangaImages.SelectedIndex-1;
             Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
             if (file != null)
             {
-
-
-
                 try
                 {
-                    if (Mangas.Count>0 && ComboBoxManga.SelectedIndex!=-1)
+                    if (Mangas.Count>0 && MangaImages.SelectedIndex-1 != -1)
                     {
                        
                         StorageFolder rootFolder = ApplicationData.Current.LocalFolder;
@@ -174,9 +217,9 @@ namespace MangaReader
                         StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\Images");
                         Nombre = file.Name;
                         Debug.WriteLine("nombre archivo"+Nombre);
-                        if(File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images" + @"\" + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + ".jpg"))
+                        if(File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images" + @"\" + Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName() + ".jpg"))
                         {
-                            StorageFile OldFile = await StorageFile.GetFileFromPathAsync((ApplicationData.Current.LocalFolder.Path + @"\Images" + @"\" + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + ".jpg"));
+                            StorageFile OldFile = await StorageFile.GetFileFromPathAsync((ApplicationData.Current.LocalFolder.Path + @"\Images" + @"\" + Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName() + ".jpg"));
 
                             await OldFile.DeleteAsync();
                            
@@ -195,7 +238,7 @@ namespace MangaReader
 
 
                 }
-                ComboBoxManga.SelectedIndex = selecteditem; 
+                MangaImages.SelectedIndex = selecteditem; 
                 LoadGrid();
             }
           
@@ -205,58 +248,73 @@ namespace MangaReader
 
 
         }
+        private async Task<int> InputTextDialogAsync(string title)
+        {
+         
+            ContentDialog dialog = new ContentDialog();
+            ComboBox cBox = new ComboBox();
+            List<Episode> Episodes = new List<Episode>();
+            Episodes = Mangas.ElementAt(MangaImages.SelectedIndex-1).GetEpisodes();
+            cBox.HorizontalAlignment= HorizontalAlignment.Center;
+            int i = 1;
+          
+            foreach (Episode value in Episodes)
+            {
+                cBox.Items.Add(i.ToString());
+                i++;
+            }
+
+            cBox.SelectedIndex = 0;
+            dialog.RequestedTheme = ElementTheme.Dark;
+            dialog.Content = cBox;
+            dialog.Title = title;
+            dialog.IsSecondaryButtonEnabled = true;
+            dialog.PrimaryButtonText = "Ir";
+            dialog.SecondaryButtonText = "Cancelar";
+            if (cBox.SelectedIndex == -1)
+            {
+                return -1;
+            }
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                return cBox.SelectedIndex;
+            else
+                return -1;
+        }
 
         private  void  LoadGrid()
         {          
-            List<String> Pages = new List<String>();
+           
             Episode episode = new Episode();
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>();
             BitmapImage image1 = new BitmapImage();
-
-            if (ComboBoxManga.Items.Count>0 && Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count > 0)
-              {
-
-                  try
-                  {       
-                    for (int i = 0; i < Mangas.Count(); i++)
+           
+            try
+            {
+                items.Add(new MenuItem() { IName = new Uri("ms-appx:///Assets/Agregar.png"),Titulo="Agregar Nuevo" });
+               
+                for (int i = 0; i < Mangas.Count(); i++)
                     {
                         if(File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg"))
                         {
-                            items.Add(new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg") });
+                            items.Add(new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg"), Titulo = Mangas.ElementAt(i).GetName()});
                         }
                         else
                         {
                             items.Add(new MenuItem() { IName = new Uri("ms-appx:///Assets/Imagen.png") });
                         }
                     }         
-                  }
-                catch (FileNotFoundException)
-                  {
+            }
+            catch (FileNotFoundException)
+            {
                     
-                }
-              }
+            }
+             
             
             MangaImages.ItemsSource = items;
  
         }
 
 
-
-
-        private void GridSelection(object sender, SelectionChangedEventArgs e)
-        {
-          
-            ComboBoxManga.SelectedIndex = MangaImages.SelectedIndex;
-          
-        }
-        private void GridDOubleTap(object sender, Windows.UI.Xaml.Input.DoubleTappedRoutedEventArgs e)
-        {
-            Debug.WriteLine("asd " + MangaImages.SelectedIndex + " cbox " + ComboBoxManga.SelectedIndex);
-            if (ComboBoxManga.SelectedIndex == MangaImages.SelectedIndex)
-            {
-                ContinuarLectura();
-            }
-        }
 
 
         private void FullScreen_loaded()
@@ -267,7 +325,6 @@ namespace MangaReader
             DataContext = this;
             ts.IsOn = syncStatus;
             ts.Toggled += FullScreen_Toggled;
-
         }
 
         private async void SaveData1()
@@ -325,7 +382,7 @@ namespace MangaReader
             }
         }
 
-        private async void BtnOpenFile(object sender, RoutedEventArgs e)
+        private async void AgregarManga()
         {
 
             if (Mangas == null)
@@ -381,9 +438,8 @@ namespace MangaReader
                     Mangas.ElementAt(0).SetMangaActual(Mangas.Count()-1);
                     localSettings.Values["MangaActual"] = Mangas.Count-1;
                     GuardarImagen();
-                    await PutTaskDelay();
-                   
-                    PopulateCBoxManga();                   
+                    await PutTaskDelay();                   
+                         
                     UpdateItems();
                     LoadGrid();
                 }
@@ -426,106 +482,40 @@ namespace MangaReader
          
         }
 
-        private void PopulateCBoxManga()
-        {
-            ComboBoxManga.Items.Clear();
-            foreach (Manga value in Mangas)
-            {
-                ComboBoxManga.Items.Add(value.GetName());
-            }
-        }
-
-        private void ComboBoxManga_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-            if (ComboBoxManga.SelectedIndex != -1 && Mangas.Count > 0)
-            {
-                ActualizarComboboxManga();
-
-             //   LoadImage();
-            }
-
-        }
-
-        private void ActualizarComboboxManga()
-        {
-            try
-            {
-                List<Episode> Episodes = new List<Episode>();
-                Episodes = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes();
-                Mangas.ElementAt(0).SetMangaActual(ComboBoxManga.SelectedIndex);
-                int i = 1;
-                ComboBoxEpisode.Items.Clear();
-                foreach (Episode value in Episodes)
-                {
-                    ComboBoxEpisode.Items.Add(i.ToString());
-                    i++;
-                }
-                contEpisode.Text = Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetUltimoEpisodioLeido().ToString() + " de "
-              + Mangas.ElementAt(Mangas.ElementAt(0).GetMangaActual()).GetEpisodes().Count().ToString();
-                ComboBoxEpisode.SelectedIndex = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido();
-            }
-            catch (ArgumentException)
-            {
-                ComboBoxEpisode.SelectedIndex = 0;
-            }
-
-        }
-       
-
-        private async void ButtonView_Click(object sender, RoutedEventArgs e)
-        {
-            if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.Count > 0)
-            {
-
-                if (ComboBoxEpisode.SelectedIndex < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido())
-                {
-                    await Clases.Functions.CreateMessageAsync("No se actualizará el ultimo episodio leído");
-                }
-
-                localSettings.Values["MangaActual"] = ComboBoxManga.SelectedIndex;
-                GuardarDireccion();
-                GuardarAjusteImagen();
-                Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(ComboBoxEpisode.SelectedIndex);
-                Frame.Navigate(typeof(FlipView), Mangas);
-
-            }
-            else
-            {
-                await Clases.Functions.CreateMessageAsync("Debe agregar un manga primero");
-            }
-
-        }
      
         private async void ContinuarLectura()
         {
             try
             {
-                if (ComboBoxManga.SelectedIndex != -1 && ComboBoxEpisode.SelectedIndex != -1 && Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() < Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count)
+                if (MangaImages.SelectedIndex-1 != -1 && Mangas.ElementAt(MangaImages.SelectedIndex-1).GetUltimoEpisodioLeido() < Mangas.ElementAt(MangaImages.SelectedIndex-1).GetEpisodes().Count)
                 {
-                    MessageDialog showDialog = new MessageDialog("¿Desea continuar con el capítulo " + (Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido() + 1) + " de " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + "?");
-                    showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
-                    showDialog.Commands.Add(new UICommand("No") { Id = 1 });
-                    showDialog.DefaultCommandIndex = 0;
-                    showDialog.CancelCommandIndex = 1;
-                    var result = await showDialog.ShowAsync();
-                    if ((int)result.Id == 0 && ComboBoxManga.SelectedIndex != -1 && Mangas.Count > 0)
-                    {
 
-                        localSettings.Values["MangaActual"] = ComboBoxManga.SelectedIndex;
+                    ContentDialog dialog = new ContentDialog();                 
+                  
+                    dialog.RequestedTheme = ElementTheme.Dark;                   
+                    dialog.Title = "¿Desea continuar con el capítulo " + (Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetUltimoEpisodioLeido() + 1) + " de " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName() + "?";
+                    dialog.IsSecondaryButtonEnabled = true;
+                    dialog.PrimaryButtonText = "Sí";
+                    dialog.SecondaryButtonText = "No";
+
+                    if (await dialog.ShowAsync() == ContentDialogResult.Primary && MangaImages.SelectedIndex - 1 != -1 && Mangas.Count > 0) {
+
                         GuardarDireccion();
                         GuardarAjusteImagen();
-                        Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetActual(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
-                        if (localSettings.Values[Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName()] == null)
+                        Mangas.ElementAt(0).SetMangaActual(MangaImages.SelectedIndex - 1);
+                        Mangas.ElementAt(MangaImages.SelectedIndex - 1).SetActual(Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetUltimoEpisodioLeido());
+
+                        if (localSettings.Values[Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName()] == null)
                         {
-                            localSettings.Values[Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName()] = 0;
+
+                            localSettings.Values[Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName()] = 0;
                         }
                         Frame.Navigate(typeof(FlipView), Mangas);
                     }
                 }
                 else
                 {
-                    await Clases.Functions.CreateMessageAsync("No hay más episodios, episodio actual: " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetUltimoEpisodioLeido());
+                    await Clases.Functions.CreateMessageAsync("No hay más episodios, episodio actual: " + Mangas.ElementAt(MangaImages.SelectedIndex-1).GetUltimoEpisodioLeido());
                 }
             }
             catch (ArgumentOutOfRangeException)
@@ -534,42 +524,14 @@ namespace MangaReader
             }
         }
 
-        private void ImageTapped(object sender, RoutedEventArgs e)
-        {
-            ContinuarLectura();
-        }
+      
 
         private void UpdateItems()
         {
             if (Mangas.Count > 0)
             {
-                int mangaactual = Mangas.ElementAt(0).GetMangaActual();
-
-
-                if (localSettings.Values["MangaActual"] != null)
-                {
-                    try
-                    {
-                        Int32.TryParse(localSettings.Values["MangaActual"].ToString(), out mangaactual);
-                        ComboBoxManga.SelectedIndex = mangaactual;
-                    }
-                    catch (Exception)
-                    {
-                        ComboBoxManga.SelectedIndex = 0;
-                        Mangas.ElementAt(0).SetActual(0);
-                        mangaactual = Mangas.ElementAt(0).GetMangaActual();
-                    }
-                }
-                else
-                {
-                    ComboBoxManga.SelectedIndex = mangaactual;
-                }
-
-                ComboBoxEpisode.SelectedIndex = 0;
-
-
-                contEpisode.Text = Mangas.ElementAt(mangaactual).GetUltimoEpisodioLeido().ToString() + " de "
-                    + Mangas.ElementAt(mangaactual).GetEpisodes().Count().ToString();
+                int mangaactual = Mangas.ElementAt(0).GetMangaActual();             
+                
 
                 if ((localSettings.Values["readingDirection"].ToString().Length>0))
                 {
@@ -601,47 +563,38 @@ namespace MangaReader
 
         private async void FlyoutEliminar(object sender, TappedRoutedEventArgs e)
         {
-            if (ComboBoxManga.SelectedIndex != -1)
+            if (MangaImages.SelectedIndex-1 != -1)
             {
-                MessageDialog showDialog = new MessageDialog("Está seguro de que desea eliminar " + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + "?");
-                showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
-                showDialog.Commands.Add(new UICommand("No") { Id = 1 });
-                showDialog.DefaultCommandIndex = 0;
-                showDialog.CancelCommandIndex = 1;
-                var result = await showDialog.ShowAsync();
 
-                if ((int)result.Id == 0)
+
+
+
+                ContentDialog dialog = new ContentDialog();
+
+                dialog.RequestedTheme = ElementTheme.Dark;
+                dialog.Title = "Está seguro de que desea eliminar " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName() + "?";
+                dialog.IsSecondaryButtonEnabled = true;
+                dialog.PrimaryButtonText = "Sí";
+                dialog.SecondaryButtonText = "No";          
+
+                if (await dialog.ShowAsync() == ContentDialogResult.Primary)
                 {
-                    Clases.XmlIO.DeleteJson(Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName());
-                    if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + ".jpg"))
+                    Clases.XmlIO.DeleteJson(Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName());
+                    if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName() + ".jpg"))
                     {
-                        StorageFile file = await StorageFile.GetFileFromPathAsync((ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetName() + ".jpg"));
+                        StorageFile file = await StorageFile.GetFileFromPathAsync((ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName() + ".jpg"));
                         await file.DeleteAsync();
                     }
                    
-                    Mangas.RemoveAt(ComboBoxManga.SelectedIndex);
+                    Mangas.RemoveAt(MangaImages.SelectedIndex-1);
                     SaveData();
-                    PopulateCBoxManga();
-                    ActualizarComboboxManga();
-                    
-                    if (ComboBoxManga.Items.Count > 0)
-                    {
-                        ComboBoxManga.SelectedIndex = 0;
-                        Mangas.ElementAt(0).SetMangaActual(0);
-                    }
-                    else
-                    {
-                        ComboBoxEpisode.Items.Clear();
-                        LoadGrid();
-                        contEpisode.Text = "de";
-                    }
+                    LoadGrid();
                 }
             }
             else
             {
                 await Clases.Functions.CreateMessageAsync("Debe agregar un manga primero");
-            }
-            LoadGrid();
+            }           
         }
 
         private void GuardarDireccion()
@@ -710,17 +663,21 @@ namespace MangaReader
 
         private async void FlyoutRecargar(object sender, TappedRoutedEventArgs e)
         {
-            if (ComboBoxManga.SelectedIndex != -1 && Mangas.Count > 0)
+            if (MangaImages.SelectedIndex-1 != -1 && Mangas.Count > 0)
             {
-                MessageDialog showDialog = new MessageDialog(" Esto agregará nuevos capitulos agregados en la carpeta, desea continuar? ");
-                showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
-                showDialog.Commands.Add(new UICommand("No") { Id = 1 });
-                showDialog.DefaultCommandIndex = 0;
-                showDialog.CancelCommandIndex = 1;
-                var result = await showDialog.ShowAsync();  
-                if ((int)result.Id == 0 )
-                {                                  
-                    String directorio = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetDirectory();
+
+
+                ContentDialog dialog = new ContentDialog();
+
+                dialog.RequestedTheme = ElementTheme.Dark;
+                dialog.Title = " Esto agregará nuevos capitulos agregados en la carpeta, desea continuar? ";
+                dialog.IsSecondaryButtonEnabled = true;
+                dialog.PrimaryButtonText = "Sí";
+                dialog.SecondaryButtonText = "No";
+         
+                if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+                    {                                  
+                    String directorio = Mangas.ElementAt(MangaImages.SelectedIndex-1).GetDirectory();
 
                     loading.IsActive = true;
                     await Task.Yield();
@@ -731,7 +688,7 @@ namespace MangaReader
                     {
                       
                         string[] folders1 = System.IO.Directory.GetDirectories(directorio, "*", System.IO.SearchOption.AllDirectories);
-                        int cantidadActual = Mangas.ElementAt(ComboBoxManga.SelectedIndex).GetEpisodes().Count;
+                        int cantidadActual = Mangas.ElementAt(MangaImages.SelectedIndex-1).GetEpisodes().Count;
                         int cantidadNueva = folders1.Count();
                         if (cantidadNueva > cantidadActual)
                         {
@@ -739,10 +696,9 @@ namespace MangaReader
                             {
                                 Episode episode = new Episode();
                                 episode.SetDirectory(folders1[i]);
-                                Mangas.ElementAt(ComboBoxManga.SelectedIndex).SetEpisode(episode);
+                                Mangas.ElementAt(MangaImages.SelectedIndex-1).SetEpisode(episode);
                             }
-                            await Clases.XmlIO.WriteMangaJsonAsync(Mangas.ElementAt(ComboBoxManga.SelectedIndex), CreationCollisionOption.ReplaceExisting);
-                            ActualizarComboboxManga();
+                            await Clases.XmlIO.WriteMangaJsonAsync(Mangas.ElementAt(MangaImages.SelectedIndex-1), CreationCollisionOption.ReplaceExisting);                           
                             loading.IsActive = false;
                             await Clases.Functions.CreateMessageAsync("Se agregaron " + (cantidadNueva - cantidadActual) + " capítulos nuevos");
                         }

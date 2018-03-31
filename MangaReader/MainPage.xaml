@@ -34,19 +34,39 @@
         <MenuFlyout x:Key="cmdMenuFlyout"  Placement="Right">
             <MenuFlyoutItem Name="NombreManga" Text="" HorizontalAlignment="Center" IsTapEnabled="False" IsEnabled="False" />
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem Text="Continuar Lectura" Tapped="FlyoutContinuar" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem Name="ContLectura" Text="" Tapped="FlyoutContinuar" HorizontalAlignment="Center"/>
+            <MenuFlyoutSeparator/>
+
+            <MenuFlyoutItem Text="Leer capitulo" Tapped="FlyoutSeleccionarEpisodio" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="Recargar Manga" Tapped="FlyoutRecargar" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="Cambiar Imagen" Tapped="FlyoutCambiarImagen" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="Eliminar Manga" Tapped="FlyoutEliminar" HorizontalAlignment="Center"/>
+
+
+            
         </MenuFlyout>
 
+
         <DataTemplate x:Key="photos">
-            <Grid Background="black" FlyoutBase.AttachedFlyout="{StaticResource cmdMenuFlyout}" Tapped="ListTapped" >
-                <Image Source="{Binding IName}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            
+            
+            <Grid Background="black" FlyoutBase.AttachedFlyout="{StaticResource cmdMenuFlyout}" Tapped="ListTapped">
+
+                <Grid.RowDefinitions>
+
+                    <RowDefinition />
+                    <RowDefinition Height="0.10*" />
+                </Grid.RowDefinitions>               
+
+                <Image Source="{Binding IName}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Titulo}"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
+            
+            
+            
         </DataTemplate>
 
        
@@ -69,60 +89,70 @@
 
 
         <Grid.RowDefinitions>
-         
-            <RowDefinition/>
-            <RowDefinition Height="0.50*"/>
+
+            <RowDefinition Height="0.075*"/>
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel HorizontalAlignment="Center"   Grid.Row="2" VerticalAlignment="Center" >
-          
-            <ComboBox x:Name="ComboBoxManga" Header="Manga Seleccionado" IsHitTestVisible="False" Width="auto" SelectionChanged="ComboBoxManga_SelectionChanged" Margin="7" />
-            <TextBlock x:Uid="contEpisode" Text=""  x:Name="contEpisode" TextWrapping="Wrap"    Margin="5"/>
-
-            <ComboBox x:Name="ComboBoxEpisode" Header="Episodio"  Width="auto" Margin="5"/>
-            <Button  x:Uid="VerEpisodio" Content=""   Click="ButtonView_Click" Margin="7"/>
-            <Button  x:Uid="BtnOpenFIle"  x:Name="BtnOpenFIle" Content=""   Click="BtnOpenFile" Margin="5" />
-
-        </StackPanel>
-        <StackPanel  HorizontalAlignment="Center"   Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">
-
-            <ComboBox x:Name="DireccionLectura"  Width="auto" Margin="5" Header="Dirección Lectura">
-                <ComboBoxItem Name="cbi1">Izquierda a Derecha</ComboBoxItem>
-                <ComboBoxItem Name="cbi2">Derecha a Izquierda</ComboBoxItem>
-                <ComboBoxItem Name="cbi3">Vertical</ComboBoxItem>
-            </ComboBox>
 
 
+        <Grid Grid.Row="0" Grid.Column="0">
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <ToggleSwitch x:Name="fullScreen" Grid.Column="2" Header="Pantalla Completa"     OnContent="Si"  OffContent="No"  Margin="5" />
-            <ToggleSwitch x:Name="SwitchAjustar" Grid.Column="2" Header="Ajuste de imagen"     OnContent="Ajusar al Ancho"  OffContent="Ajustar al Alto"  Margin="5" />
 
-            <Button Content="Estadisticas" Click="Button_Click"  Margin="5">
+            <Button Content="Configuraciones" Margin="5" Grid.Column="0">
+                <Button.Flyout>
+                    <Flyout>
+                        <StackPanel>
+                            <ComboBox x:Name="DireccionLectura"  Width="auto" Margin="5" Header="Dirección Lectura">
+                                <ComboBoxItem Name="cbi1">Izquierda a Derecha</ComboBoxItem>
+                                <ComboBoxItem Name="cbi2">Derecha a Izquierda</ComboBoxItem>
+                                <ComboBoxItem Name="cbi3">Vertical</ComboBoxItem>
+                            </ComboBox>
+                            <ToggleSwitch x:Name="fullScreen" Grid.Column="2" Header="Pantalla Completa"     OnContent="Si"  OffContent="No"  Margin="5" />
+                            <ToggleSwitch x:Name="SwitchAjustar" Grid.Column="2" Header="Ajuste de imagen"     OnContent="Ajusar al Ancho"  OffContent="Ajustar al Alto"  Margin="5" />
+
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <Button Content="Estadisticas" Click="Button_Click"  Margin="5" Grid.Column="1">
                 <Button.Flyout>
                     <Flyout Placement="Right">
                         <TextBlock Name="FLyout" Text="This is a flyout!"/>
                     </Flyout>
                 </Button.Flyout>
             </Button>
-        </StackPanel>
+
+
+        </Grid>
+
+         
+
+       
 
 
 
-        <ProgressRing x:Name="loading" Grid.Column="0" HorizontalAlignment="Center" Grid.ColumnSpan="2"  Grid.Row="1" VerticalAlignment="Top"  Width="100" Height="100" />
-        <ProgressRing x:Name="loadingLoadManga"  Grid.Column="0" HorizontalAlignment="Center" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="top"  Width="100" Height="100" />
+
+        <ProgressRing x:Name="loading" Grid.Column="0" HorizontalAlignment="Center" Grid.ColumnSpan="2"  Grid.Row="1" VerticalAlignment="Center"  Width="75" Height="75" />
+        <ProgressRing x:Name="loadingLoadManga"  HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center"  Width="75" Height="75" />
 
 
 
 
-        <Controls:AdaptiveGridView  x:Name="MangaImages" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"   IsMultiSelectCheckBoxEnabled="False"
+        <Controls:AdaptiveGridView  x:Name="MangaImages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"   IsMultiSelectCheckBoxEnabled="False"
                                    HorizontalAlignment="Center" Margin="10,10,10,10" VerticalAlignment="Center" 
-                                 ItemHeight="250" ItemTemplate="{StaticResource photos}" 
-                                SelectionChanged="GridSelection"  AutomationProperties.AccessibilityView="Raw" 
-                                    DoubleTapped="GridDOubleTap"/>
+                                DesiredWidth="200"  ItemTemplate="{StaticResource photos}" 
+                                 AutomationProperties.AccessibilityView="Raw" 
+                                   />
 
 
     </Grid>
