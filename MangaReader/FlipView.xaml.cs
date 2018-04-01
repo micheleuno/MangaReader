@@ -404,6 +404,7 @@ namespace MangaReader
             }
             else
             {
+                SiguienteEpisodio();
                 await Clases.Functions.CreateMessageAsync("El capitulo no contiene imágenes");
             }
 

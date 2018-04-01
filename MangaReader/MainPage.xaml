@@ -50,19 +50,19 @@
         </MenuFlyout>
 
 
-        <DataTemplate x:Key="photos">
+        <DataTemplate x:Key="photos" >
             
             
-            <Grid Background="black" FlyoutBase.AttachedFlyout="{StaticResource cmdMenuFlyout}" Tapped="ListTapped">
+            <Grid x:Name="gridMangas" Background="black" FlyoutBase.AttachedFlyout="{StaticResource cmdMenuFlyout}" Tapped="ListTapped">
 
                 <Grid.RowDefinitions>
 
                     <RowDefinition />
                     <RowDefinition Height="0.10*" />
-                </Grid.RowDefinitions>               
+                </Grid.RowDefinitions>
 
-                <Image Source="{Binding IName}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBlock Text="{Binding Titulo}"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Image x:Name="imagesGrid" Source="{Binding IName}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock x:Name="TitleGrid" Text="{Binding Titulo}"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
             
             
@@ -151,7 +151,7 @@
         <Controls:AdaptiveGridView  x:Name="MangaImages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"   IsMultiSelectCheckBoxEnabled="False"
                                    HorizontalAlignment="Center" Margin="10,10,10,10" VerticalAlignment="Center" 
                                 DesiredWidth="200"  ItemTemplate="{StaticResource photos}" 
-                                 AutomationProperties.AccessibilityView="Raw" 
+                               
                                    />
 
 
