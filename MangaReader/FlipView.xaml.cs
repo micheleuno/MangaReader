@@ -77,12 +77,12 @@ namespace MangaReader
                 EpisodeConter.HorizontalAlignment = HorizontalAlignment.Left;
                 EpisodeConter.VerticalAlignment = VerticalAlignment.Center;
             }
-
+            loading.IsActive = true;
             mangaG = manga;
             MangasG = Mangas; 
             episodeG = await Clases.Functions.LoadEpisodeAsync(mangaG.GetEpisodes().ElementAt(mangaG.GetActual()).GetDirectory());
-            Clases.Functions.CheckPagesNumber(episodeG);
-            loading.IsActive = true;
+            await Clases.Functions.CheckPagesNumber(episodeG);
+           
             try {             
                 await CargarBitmap(mangaG.GetActual(),-1,false);
                 LoadFlipView();             
@@ -179,13 +179,7 @@ namespace MangaReader
             if (pagina < cantPag)
             {
                 var watch = System.Diagnostics.Stopwatch.StartNew();
-                MessageDialog showDialog = new MessageDialog("Desea continuar el capitulo en la página " + (pagina + 1) + "?");
-                showDialog.Commands.Add(new UICommand("Si") { Id = 0 });
-                showDialog.Commands.Add(new UICommand("No") { Id = 1 });
-                showDialog.DefaultCommandIndex = 0;
-                showDialog.CancelCommandIndex = 1;
-                var result = await showDialog.ShowAsync();
-                if ((int)result.Id == 0)
+                if (await Clases.Functions.SiNoMensaje(("¿Desea continuar el capitulo en la página " + (pagina + 1) + "?")) == 1)
                 {
                     cargaBitmap = true;
                     loading.IsActive = true;                

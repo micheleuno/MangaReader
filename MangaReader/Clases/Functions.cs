@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -82,7 +83,7 @@ namespace MangaReader.Clases
             }
         }
 
-        public static async void CheckPagesNumber(Episode episode)
+        public static async Task  CheckPagesNumber(Episode episode)
         {
             int cont=1;
             Boolean flag = true;
@@ -91,10 +92,10 @@ namespace MangaReader.Clases
                 if (episode.GetPages().Count > 0 && episode != null)
                 {
                     foreach (String value in episode.GetPages())
-                    {
-                        if (value.Length > 7)
+                    {                       
+                        if (value.Length >= 7)
                         {
-                            int numero = Int32.Parse(value.Substring(value.Length - 7, 3));
+                            int numero = Int32.Parse(value.Substring(value.Length - 7, 3));                          
                             if (numero != cont)
                             {
                                 flag = false;
@@ -113,13 +114,15 @@ namespace MangaReader.Clases
                     if (!flag)
                     {
                         await CreateMessageAsync("Puede que falten páginas");
+                        
                     }
                 }
             }
             catch (FormatException)
             {
 
-            }           
+            }
+           
         }
         
         public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
