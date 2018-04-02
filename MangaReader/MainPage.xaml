@@ -10,7 +10,6 @@
      Loaded="Window_Loaded"
     >
     <Page.Resources>
-
         <Style TargetType="Button">
             <Setter Property="HorizontalAlignment" Value="Center"></Setter>
             <Setter Property="VerticalAlignment" Value="Center"></Setter>
@@ -36,7 +35,6 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Name="ContLectura" Text="" Tapped="FlyoutContinuar" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
-
             <MenuFlyoutItem Text="Leer capitulo" Tapped="FlyoutSeleccionarEpisodio" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="Recargar Manga" Tapped="FlyoutRecargar" HorizontalAlignment="Center"/>
@@ -44,28 +42,19 @@
             <MenuFlyoutItem Text="Cambiar Imagen" Tapped="FlyoutCambiarImagen" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="Eliminar Manga" Tapped="FlyoutEliminar" HorizontalAlignment="Center"/>
-
-
-            
         </MenuFlyout>
 
 
-        <DataTemplate x:Key="photos" >
-            
-            
+        <DataTemplate x:Key="photos" >            
             <Grid x:Name="gridMangas" Background="black" FlyoutBase.AttachedFlyout="{StaticResource cmdMenuFlyout}" Tapped="ListTapped">
 
                 <Grid.RowDefinitions>
-
                     <RowDefinition />
                     <RowDefinition Height="0.10*" />
                 </Grid.RowDefinitions>
-
                 <Image x:Name="imagesGrid" Source="{Binding IName}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="TitleGrid" Text="{Binding Titulo}"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Grid>
-            
-            
+            </Grid>  
             
         </DataTemplate>
 
@@ -112,19 +101,32 @@
                 <Button.Flyout>
                     <Flyout>
                         <StackPanel>
-                            <ComboBox x:Name="DireccionLectura"  Width="auto" Margin="5" Header="Dirección Lectura">
+                            <ComboBox x:Name="DireccionLectura"  Width="auto" Margin="5" Header="Dirección Lectura" SelectionChanged="DireccionLectura_SelectionChanged">
                                 <ComboBoxItem Name="cbi1">Izquierda a Derecha</ComboBoxItem>
                                 <ComboBoxItem Name="cbi2">Derecha a Izquierda</ComboBoxItem>
                                 <ComboBoxItem Name="cbi3">Vertical</ComboBoxItem>
                             </ComboBox>
-                            <ToggleSwitch x:Name="fullScreen" Grid.Column="2" Header="Pantalla Completa"     OnContent="Si"  OffContent="No"  Margin="5" />
-                            <ToggleSwitch x:Name="SwitchAjustar" Grid.Column="2" Header="Ajuste de imagen"     OnContent="Ajusar al Ancho"  OffContent="Ajustar al Alto"  Margin="5" />
 
+                            <ComboBox x:Name="AjustarImagen"  Width="auto" Margin="5" Header="Ajuste de imagen" SelectionChanged="AjustarImagen_SelectionChanged">
+                                <ComboBoxItem Name="cbi11">No Ajustar</ComboBoxItem>
+                                <ComboBoxItem Name="cbi22">Ajustar al ancho</ComboBoxItem>
+                                <ComboBoxItem Name="cbi33">Ajustar al alto</ComboBoxItem>
+                            </ComboBox>
+
+
+                            <ToggleSwitch x:Name="fullScreen" Grid.Column="2" Header="Pantalla Completa"     OnContent="Si"  OffContent="No"  Margin="5" />
+                           
                         </StackPanel>
                     </Flyout>
                 </Button.Flyout>
             </Button>
-            <Button Content="Estadisticas" Click="Button_Click"  Margin="5" Grid.Column="1">
+
+           
+
+            <Button Content="Estadisticas" Click="EstadisticasClick"  Margin="5" Grid.Column="1">
+                
+                
+                
                 <Button.Flyout>
                     <Flyout Placement="Right">
                         <TextBlock Name="FLyout" Text="This is a flyout!"/>
@@ -133,24 +135,16 @@
             </Button>
 
 
-        </Grid>
-
-         
-
-       
-
-
-
-
-        <ProgressRing x:Name="loading" Grid.Column="0" HorizontalAlignment="Center" Grid.ColumnSpan="2"  Grid.Row="1" VerticalAlignment="Center"  Width="75" Height="75" />
-        <ProgressRing x:Name="loadingLoadManga"  HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center"  Width="75" Height="75" />
-
+        </Grid>       
+        
+        <ProgressRing x:Name="loading" Grid.Column="0" HorizontalAlignment="Center" Grid.ColumnSpan="2"  Grid.Row="1" VerticalAlignment="Center"  Width="100" Height="100" />
+        <ProgressRing x:Name="loadingLoadManga"  HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center"  Width="70" Height="70" />
 
 
 
         <Controls:AdaptiveGridView  x:Name="MangaImages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"   IsMultiSelectCheckBoxEnabled="False"
                                    HorizontalAlignment="Center" Margin="10,10,10,10" VerticalAlignment="Center" 
-                                DesiredWidth="200"  ItemTemplate="{StaticResource photos}" 
+                                DesiredWidth="250" StretchContentForSingleRow="False" ItemTemplate="{StaticResource photos}" 
                                
                                    />
 

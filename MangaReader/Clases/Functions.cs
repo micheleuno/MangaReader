@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
-using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
@@ -18,8 +15,7 @@ namespace MangaReader.Clases
     {
         public static Manga LoadAll(Windows.Storage.StorageFolder folder, String path, String name, String Actual, String direccion)
         {
-            // Debug.WriteLine("direccion:" + direccion);            
-
+             
             List<String> folders = Clases.XmlIO.ReadJson(name);
             if (folders != null)
             {
@@ -40,11 +36,7 @@ namespace MangaReader.Clases
             }
             else
             {
-                
-                string[] folders1 = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);
-
-
-          
+                string[] folders1 = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);          
                 if (folders1.Count() > 0)   
                 {
                     Manga manga = new Manga();
@@ -94,8 +86,6 @@ namespace MangaReader.Clases
         {
             int cont=1;
             Boolean flag = true;
-              Stopwatch sw = new Stopwatch();          
-          //  sw.Start();
             try
             {            
                 if (episode.GetPages().Count > 0 && episode != null)
@@ -129,19 +119,14 @@ namespace MangaReader.Clases
             catch (FormatException)
             {
 
-            }
-            /* sw.Stop();
-            Debug.WriteLine("tiempo revision" + sw.ElapsedMilliseconds);*/
+            }           
         }
-
-
-
+        
         public static readonly List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG" };
 
 
         public static async Task<List<BitmapImage>> LoadEpisodeImageAsync(List<String> Completeurl)
         {
-
             List<BitmapImage> images = new List<BitmapImage>();
             BitmapImage image = new BitmapImage();           
             try
@@ -179,13 +164,34 @@ namespace MangaReader.Clases
 
         public static async Task CreateMessageAsync(String mensaje)
         {
-            ContentDialog dialog = new ContentDialog();
-
-           // var dialog = new MessageDialog(mensaje);
-            dialog.RequestedTheme = ElementTheme.Dark;
-            dialog.Title=mensaje;
-            dialog.PrimaryButtonText = "Aceptar";
+            ContentDialog dialog = new ContentDialog
+            {
+                RequestedTheme = ElementTheme.Dark,
+                Title = mensaje,
+                PrimaryButtonText = "Aceptar"
+            };
             await dialog.ShowAsync();
+        }
+
+        public static async Task<int> SiNoMensaje(string title)
+        {
+            ContentDialog dialog = new ContentDialog
+            {
+                RequestedTheme = ElementTheme.Dark,
+                Title = title,
+                IsSecondaryButtonEnabled = true,
+                PrimaryButtonText = "Sí",
+                SecondaryButtonText = "No"
+            };
+            if (await dialog.ShowAsync() == ContentDialogResult.Primary)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+            
         }
     }
 

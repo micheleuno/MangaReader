@@ -14,8 +14,7 @@ namespace MangaReader.Clases
     class XmlIO
     {
         public static async Task<String[]> Readfile()
-        {
-            // settings
+        {            
             try
             {
                 if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Project1\data.txt"))
@@ -49,9 +48,7 @@ namespace MangaReader.Clases
         }
       
         public static async Task Writefile(List<Manga> Mangas)
-        {
-            //   Manga manga = new Manga();
-            //  manga = Mangas.ElementAt<Manga>(0);
+        {           
             if (Mangas.Count > 0)
             {
                 String data = null;
@@ -68,7 +65,6 @@ namespace MangaReader.Clases
                     writer.Dispose();
                 }
             }
-
             if (Mangas.Count == 0)
             {
                 StorageFile sampleFile = await CrearSampleFileAsync();
@@ -86,8 +82,7 @@ namespace MangaReader.Clases
         }
 
         public static async Task<String[]> ReadStatistics()
-        {
-            // settings
+        {        
             try
             {
                 if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Project1\statistics.txt"))
@@ -96,8 +91,7 @@ namespace MangaReader.Clases
                     var folder = ApplicationData.Current.LocalFolder;
                      Debug.WriteLine(folder.Path);
                     String data2;
-                    System.Text.StringBuilder sb = new System.Text.StringBuilder();
-                    // acquire file
+                    System.Text.StringBuilder sb = new System.Text.StringBuilder();                 
                     StorageFile file = await folder.GetFileAsync(path);
                     var stream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read); using
 
@@ -105,19 +99,8 @@ namespace MangaReader.Clases
                     {
                         data2 = reader.ReadToEnd().ToString();
                     }
-                    String[] lines = data2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
-                    /*  Debug.Write("1 " + lines[0]);
-                      Debug.Write("2 " + lines[1]);
-                      Debug.Write("3 " + lines[2]);*/
+                    String[] lines = data2.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);                  
                     stream.Dispose();
-
-                    /* return string.Format("{0}hr {1}mn {2}sec",
-                     (int)span.TotalHours,
-                     span.Minutes,
-                     span.Seconds);*/
-
-
-
                     return lines;
                 }
                 else
@@ -135,9 +118,7 @@ namespace MangaReader.Clases
 
 
         public static async Task WriteStatistics(int paginas, int episodios, Stopwatch sw, int mangasterminados)
-        {
-            //   Manga manga = new Manga();
-            //  manga = Mangas.ElementAt<Manga>(0);
+        {          
             TimeSpan tiempo;
             String[] previousdata = await ReadStatistics();
             if (previousdata != null)
@@ -153,13 +134,9 @@ namespace MangaReader.Clases
             else
             {
                 tiempo = sw.Elapsed;
-
             }
             String data = null;
-
-
             data = data + paginas.ToString() + "\n" + episodios.ToString() + "\n" + tiempo + "\n" + mangasterminados.ToString();
-
             byte[] encodedText = Encoding.ASCII.GetBytes(data);
             StorageFolder rootFolder = ApplicationData.Current.LocalFolder;
             var projectFolderName = "Project1";
@@ -172,14 +149,13 @@ namespace MangaReader.Clases
                 writer.Dispose();
             }
         }
+
         public static async Task WriteJsonAsync(List<Manga> Mangas)
-        {
-           
+        {           
             foreach (Manga value1 in Mangas)
             {
               await   WriteMangaJsonAsync(value1, CreationCollisionOption.FailIfExists);
             }
-
         }
 
         public static async Task WriteMangaJsonAsync(Manga manga, CreationCollisionOption option)
@@ -203,7 +179,6 @@ namespace MangaReader.Clases
             }
             directorios = new List<string>();
 
-
         }
 
 
@@ -217,8 +192,7 @@ namespace MangaReader.Clases
                     List<String> items = JsonConvert.DeserializeObject<List<String>>(json);
                     return items;
                 }
-            }
-            // Debug.WriteLine((ApplicationData.Current.LocalFolder.Path + Nombre + ".json"));
+            }            
             return null;
         }
 
@@ -227,9 +201,7 @@ namespace MangaReader.Clases
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + Nombre + ".json"))
             {
                 File.Delete((ApplicationData.Current.LocalFolder.Path + @"\" + Nombre + ".json"));
-
             }
-
         }
     }
 }

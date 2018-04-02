@@ -17,17 +17,30 @@
                                     ZoomMode="Enabled"
                                    AutomationProperties.AccessibilityView="Raw"                
                                   >
-
-
                 <Image  x:Name="image" 
                                 Source="{Binding}" 
-                                MaxWidth="{Binding Path=ViewportWidth, ElementName=ScrollViewerMain}"                             
+                             MaxWidth="{Binding Path=ViewportWidth, ElementName=ScrollViewerMain}"              
                                 />
             </ScrollViewer>
         </DataTemplate>
-        
-       
-            <ItemsPanelTemplate  x:Name="vertical">
+    
+        <DataTemplate x:Name="NoAjustar" >
+            <ScrollViewer   MinZoomFactor="0.8" 
+                                   DoubleTapped="ScrollViewer_DoubleTapped"
+                                   x:Name="ScrollViewerMain"                                   
+                                    HorizontalScrollBarVisibility="Auto"
+                                    VerticalScrollBarVisibility="Auto"
+                                    ZoomMode="Enabled"
+                                   AutomationProperties.AccessibilityView="Raw"                
+                                  >
+                <Image  x:Name="image" 
+                                Source="{Binding}"                                          
+                                />
+            </ScrollViewer>
+        </DataTemplate>
+
+
+        <ItemsPanelTemplate  x:Name="vertical">
             <StackPanel Orientation="Vertical"/>           
             </ItemsPanelTemplate>
   
