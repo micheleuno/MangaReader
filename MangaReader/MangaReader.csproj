@@ -121,7 +121,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Agregar.png" />
+    <Content Include="Assets\Estadistica.png" />
+    <Content Include="Assets\Estadistica2.png" />
     <Content Include="Assets\Gear.png" />
+    <Content Include="Assets\Gear2.png" />
     <Content Include="Assets\Imagen.png" />
     <Content Include="Assets\LargeTile.scale-100.png" />
     <Content Include="Assets\LargeTile.scale-125.png" />

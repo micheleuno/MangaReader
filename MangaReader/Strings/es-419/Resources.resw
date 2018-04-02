@@ -132,4 +132,10 @@
   <data name="VerEpisodio.Content" xml:space="preserve">
     <value>Ver Episodio</value>
   </data>
+  <data name="BtnConfiguracion.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Configuraciones</value>
+  </data>
+  <data name="BtnEstadisticas.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Estadísticas de lectura</value>
+  </data>
 </root>

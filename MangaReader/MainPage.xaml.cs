@@ -362,8 +362,13 @@ namespace MangaReader
             try
             {
                 if (MangaImages.SelectedIndex-1 != -1 && Mangas.ElementAt(MangaImages.SelectedIndex-1).GetUltimoEpisodioLeido() < Mangas.ElementAt(MangaImages.SelectedIndex-1).GetEpisodes().Count)
-                {                                  
-                   String Title = "¿Desea continuar con el capítulo " + (Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetUltimoEpisodioLeido() + 1) + " de " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName() + "?";
+                {
+                    String Title = "¿Desea continuar con el capítulo " + (Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetUltimoEpisodioLeido() + 1) + " de " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName() + "?";
+                    if (Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetUltimoEpisodioLeido() == 0)
+                    {
+                        Title = "¿Desea comenzar la lectura de " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName()+"?";
+                    }
+                   
                     if (await Clases.Functions.SiNoMensaje(Title)==1 && MangaImages.SelectedIndex - 1 != -1 && Mangas.Count > 0) {
                         Mangas.ElementAt(0).SetMangaActual(MangaImages.SelectedIndex - 1);
                         Mangas.ElementAt(MangaImages.SelectedIndex - 1).SetActual(Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetUltimoEpisodioLeido());
