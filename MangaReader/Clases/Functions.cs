@@ -99,6 +99,7 @@ namespace MangaReader.Clases
                             if (numero != cont)
                             {
                                 flag = false;
+                                break;
                             }
 
                             cont++;

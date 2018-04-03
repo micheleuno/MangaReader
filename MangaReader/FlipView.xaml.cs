@@ -241,6 +241,7 @@ namespace MangaReader
                 }
                 loading.IsActive = false;
                 cargaBitmap = false;
+                await Clases.Functions.CheckPagesNumber(episodeG);
             }
             else
             {
