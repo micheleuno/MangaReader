@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
@@ -42,10 +43,12 @@ namespace MangaReader
         List<BitmapImage> episodeIm;
         Episode episodeG;
         int paginasaux = 0, paginas = 0, episodios = 0, mangasterminados = 0, contPag=1, contPagAnt=0, cantPag=0;
+        private static Timer aTimer;
 
         public FlipView()
         {
             this.InitializeComponent();
+
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -225,23 +228,22 @@ namespace MangaReader
                 try
                 {
                     loading.IsActive = true;
-                    episodeG = await Clases.Functions.LoadEpisodeAsync(mangaG.GetEpisodes().ElementAt(mangaG.GetActual()).GetDirectory());
-                    flipView.Items.Clear();                    
-                    flagepisodio = true;
-                    flipView.Items.Clear();                  
+                    flipView.Items.Clear();
+                    MakeInvisible();
+                    episodeG = await Clases.Functions.LoadEpisodeAsync(mangaG.GetEpisodes().ElementAt(mangaG.GetActual()).GetDirectory());                                   
+                    flagepisodio = true;            
                     await CargarBitmap(mangaG.GetActual(), -1, false);                   
                     LoadFlipView();
                     contPag = 1;
-                    contPagAnt = 0;
-                    MakeInvisible();
+                    contPagAnt = 0;                    
                 }
                 catch (ArgumentOutOfRangeException)
                 {                
                     loading.IsActive = false;
-                }
-                loading.IsActive = false;
+                }               
                 cargaBitmap = false;
                 await Clases.Functions.CheckPagesNumber(episodeG);
+                loading.IsActive = false;
             }
             else
             {

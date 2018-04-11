@@ -194,7 +194,6 @@ namespace MangaReader
         { 
             Episode episode = new Episode();
             ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>();
-           
             try
             {
                 items.Add(new MenuItem() { IName = new Uri("ms-appx:///Assets/Agregar.png"),Titulo="Agregar Nuevo" });               
@@ -202,7 +201,7 @@ namespace MangaReader
                 {
                     if(File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg"))
                     {
-                        items.Add(new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg"), Titulo = Mangas.ElementAt(i).GetName()});
+                        items.Add(new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg", UriKind.RelativeOrAbsolute), Titulo = Mangas.ElementAt(i).GetName()});
                     }
                     else
                     {
@@ -279,18 +278,20 @@ namespace MangaReader
                     {
                         loadingLoadManga.IsActive = false;
                         Mangas.Add(Manga1);
-                        await Clases.Functions.CreateMessageAsync("Se ha agregado existosamente: " + folder.Name);
                         GuardarImagen();
+                        SaveData();
+                        await Clases.XmlIO.WriteJsonAsync(Mangas);
+                        await Task.Delay(100);
+                        LoadGrid();
+                        await Clases.Functions.CreateMessageAsync("Se ha agregado existosamente: " + folder.Name);
+                     
                     }
                     else
                     {
                         loadingLoadManga.IsActive = false;
                         await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al agregar: " + folder.Name);
                     }
-                    SaveData();
-                    await Clases.XmlIO.WriteJsonAsync(Mangas);
-                    await Task.Delay(100);
-                    LoadGrid();
+                    
                 }
                 else
                 {
@@ -332,6 +333,7 @@ namespace MangaReader
                 CopiarImagen(file, Mangas.ElementAt(selecteditem).GetName());
                 MangaImages.SelectedIndex = selecteditem;
                 LoadGrid();
+               
             }
         }
 
@@ -425,20 +427,38 @@ namespace MangaReader
         private async void FlyoutEliminar(object sender, TappedRoutedEventArgs e)
         {
             if (MangaImages.SelectedIndex-1 != -1)
-            {                
-                String Title = "Está seguro de que desea eliminar " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName() + "?";  
+            {
+               
+                String Title = "¿Está seguro de que desea eliminar " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName() + "?";  
                 if (await Clases.Functions.SiNoMensaje(Title) == 1)
                 {
+                    String directorio = Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetDirectory();
                     Clases.XmlIO.DeleteJson(Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName());
                     if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName() + ".jpg"))
                     {
                         StorageFile file = await StorageFile.GetFileFromPathAsync((ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName() + ".jpg"));
                         await file.DeleteAsync();
                     }
+                   
                     Mangas.RemoveAt(MangaImages.SelectedIndex-1);
-                    SaveData();
+                    SaveData();                   
+                    Title = "¿Desea eliminar permanentemente los archivos locales?";
+                    if (await Clases.Functions.SiNoMensaje(Title) == 1)
+                    {
+                        try
+                        {
+                            StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
+                            await folder.DeleteAsync();
+                        }
+                        catch (Exception)
+                        {
+                            await Clases.Functions.CreateMessageAsync("Ocurrió un error al borrar los archivos");
+                        }
+                        await Clases.Functions.CreateMessageAsync("Se han elimnado los archivos locales");
+                    }
                     LoadGrid();
                 }
+               
             }
             else
             {
