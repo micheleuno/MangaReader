@@ -23,7 +23,7 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="Recargar Manga" Tapped="FlyoutRecargar" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem Text="Cambiar Imagen" Tapped="FlyoutCambiarImagen" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem Text="Cambiar Imagen" Tapped="FlyoutCambiarImagen" HorizontalAlignment="Center"/>           
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="Eliminar Manga" Tapped="FlyoutEliminar" HorizontalAlignment="Center"/>
         </MenuFlyout>
@@ -41,8 +41,6 @@
             </Grid>  
             
         </DataTemplate>
-
-       
 
     </Page.Resources>
 

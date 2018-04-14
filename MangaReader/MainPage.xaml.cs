@@ -190,6 +190,9 @@ namespace MangaReader
                 return -1;
         }
 
+     
+       
+
         private  void  LoadGrid()
         { 
             Episode episode = new Episode();
@@ -262,6 +265,7 @@ namespace MangaReader
             Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();             
             if (folder != null)
             {
+                MangaImages.IsEnabled = false;
                 foreach (Manga value in Mangas)
                 {
                     if (value.GetName().Equals(folder.Name))
@@ -283,6 +287,7 @@ namespace MangaReader
                         await Clases.XmlIO.WriteJsonAsync(Mangas);
                         await Task.Delay(100);
                         LoadGrid();
+                        MangaImages.IsEnabled = true;
                         await Clases.Functions.CreateMessageAsync("Se ha agregado existosamente: " + folder.Name);
                      
                     }
@@ -298,6 +303,7 @@ namespace MangaReader
                     await Clases.Functions.CreateMessageAsync("Ya existe un manga con ese nombre");
                 }
             }
+            MangaImages.IsEnabled = true;
             loadingLoadManga.IsActive = false;
         }
 
@@ -445,6 +451,9 @@ namespace MangaReader
                     Title = "¿Desea eliminar permanentemente los archivos locales?";
                     if (await Clases.Functions.SiNoMensaje(Title) == 1)
                     {
+                        loadingLoadManga.IsActive = true;
+                        MangaImages.IsEnabled = false;
+
                         try
                         {
                             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
@@ -454,7 +463,9 @@ namespace MangaReader
                         {
                             await Clases.Functions.CreateMessageAsync("Ocurrió un error al borrar los archivos");
                         }
+                        MangaImages.IsEnabled = true;
                         await Clases.Functions.CreateMessageAsync("Se han elimnado los archivos locales");
+                        loadingLoadManga.IsActive = false;
                     }
                     LoadGrid();
                 }
@@ -504,11 +515,12 @@ namespace MangaReader
         {
             if (MangaImages.SelectedIndex-1 != -1 && Mangas.Count > 0)
             {
+                MangaImages.IsEnabled = false;
                 String Title = " Esto agregará nuevos capitulos agregados en la carpeta, desea continuar? ";  
                 if (await Clases.Functions.SiNoMensaje(Title) == 1)
                 {                                  
                 String directorio = Mangas.ElementAt(MangaImages.SelectedIndex-1).GetDirectory();
-                loadingLoadManga.IsActive = true;
+                loadingLoadManga.IsActive = true;                
                 await Task.Yield();
                 await Task.Delay(100);
                 try
@@ -540,7 +552,8 @@ namespace MangaReader
                     {
                         await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al recargar el manga");
                     }
-                }             
+                }
+                MangaImages.IsEnabled = true;
 
             }
             else

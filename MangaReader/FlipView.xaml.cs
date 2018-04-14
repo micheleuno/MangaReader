@@ -43,7 +43,6 @@ namespace MangaReader
         List<BitmapImage> episodeIm;
         Episode episodeG;
         int paginasaux = 0, paginas = 0, episodios = 0, mangasterminados = 0, contPag=1, contPagAnt=0, cantPag=0;
-        private static Timer aTimer;
 
         public FlipView()
         {
