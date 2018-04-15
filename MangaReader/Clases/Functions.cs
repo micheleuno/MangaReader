@@ -15,30 +15,9 @@ namespace MangaReader.Clases
     class Functions
     {
         public static Manga LoadAll(Windows.Storage.StorageFolder folder, String path, String name, String Actual, String direccion)
-        {
-             
-            List<String> folders = Clases.XmlIO.ReadJson(name);
-            if (folders != null)
-            {
-                Manga manga = new Manga();
-                manga.SetDirectory(path);
-                manga.SetName(name);
-                Int32.TryParse(Actual, out int result);
-                manga.SetUltimoEpisodioLeido(result);
-                Int32.TryParse(direccion, out result);
-                manga.SetDirección(result);
-                for (int i = 0; i < folders.Count; i++)
-                {
-                    Episode episode = new Episode();
-                    episode.SetDirectory(folders.ElementAt(i));
-                    manga.SetEpisode(episode);
-                }
-                return manga;
-            }
-            else
-            {
-                string[] folders1 = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);          
-                if (folders1.Count() > 0)   
+        {          
+                string[] folders1 = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);
+                if (folders1.Count() > 0)
                 {
                     Manga manga = new Manga();
                     manga.SetDirectory(path);
@@ -48,13 +27,13 @@ namespace MangaReader.Clases
                     Int32.TryParse(direccion, out result);
                     manga.SetDirección(result);
                     for (int i = 0; i < folders1.Count(); i++)
-                    {                       
+                    {
                         Episode episode = new Episode();
                         episode.SetDirectory(folders1.ElementAt(i));
                         manga.SetEpisode(episode);
                     }
                     return manga;
-                }
+                
 
             }
             return null;
@@ -81,6 +60,37 @@ namespace MangaReader.Clases
                 await CreateMessageAsync("Ocurrió un error al leer el archivo: " + path);
                 return null;
             }
+        }
+
+        public static List<Manga> CargarDatos()
+        {
+            List<Manga> Mangas = new List<Manga>();
+            List<List<String>> arregloMangas =  Clases.XmlIO.ReadJsonEpisodios();
+            List<List<String>> arregloDatos = Clases.XmlIO.ReadJsonData();
+            int cont=0;
+            if (arregloMangas!=null && arregloDatos != null)
+            {
+                foreach (List<String> value in arregloDatos)
+                {
+                    Manga manga = new Manga();
+                    manga.SetDirectory(value.ElementAt(1));
+                    manga.SetName(value.ElementAt(2));
+                    Int32.TryParse(value.ElementAt(0), out int result);
+                    manga.SetUltimoEpisodioLeido(result);
+                    Int32.TryParse(value.ElementAt(3), out result);
+                    manga.SetDirección(result);
+                    foreach (String value2 in arregloMangas.ElementAt(cont))
+                    {
+                        Episode episode = new Episode();
+                        episode.SetDirectory(value2);
+                        manga.SetEpisode(episode);
+                    }
+                    cont++;
+
+                    Mangas.Add(manga);
+                }
+            }            
+            return Mangas;
         }
 
         public static async Task  CheckPagesNumber(Episode episode)

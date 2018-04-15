@@ -59,7 +59,7 @@ namespace MangaReader
             this.InitializeComponent();          
         }   
 
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        private  void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Debug.WriteLine("Main Folder:"+ApplicationData.Current.LocalFolder.Path);
             var loader = new Windows.ApplicationModel.Resources.ResourceLoader();
@@ -67,31 +67,8 @@ namespace MangaReader
             var watch = System.Diagnostics.Stopwatch.StartNew();
             if (Mangas.Count == 0)
             {
-                Mangas = new List<Manga>();
-                Manga Manga1 = new Manga();
-                String[] lines = await Clases.XmlIO.Readfile();
-              
-                if (lines != null)
-                {
-                    int i = 0;
-                    loading.IsActive = true;                   
-                    while (i + 1 < lines.Length)
-                    {                       
-                        Windows.Storage.StorageFolder folder = await OpenFolder(lines[i + 1]); //segunda linea
-                        if (folder != null)
-                        {
-                            Manga1 = Clases.Functions.LoadAll(folder, folder.Path, folder.Name, lines[i], lines[i + 3]);
-                            if (Manga1 != null)
-                            {
-                                Mangas.Add(Manga1);
-                            }
-                        }
-                        i = i + 4;
-                    } 
-                    //await Clases.XmlIO.WriteJsonAsync(Mangas);
-                  //  await Clases.XmlIO.WriteJsonAsyncV2(Mangas);
-                    loading.IsActive = false;
-                }                
+                Mangas = Clases.Functions.CargarDatos();             
+                loading.IsActive = false;
             }
             LoadGrid();
             watch.Stop();
@@ -152,7 +129,10 @@ namespace MangaReader
                 }  
                 Mangas.ElementAt(MangaImages.SelectedIndex-1).SetActual(selectedEpi);
                 Mangas.ElementAt(0).SetMangaActual(MangaImages.SelectedIndex-1);
-                Frame.Navigate(typeof(FlipView), Mangas);
+                if (await VerificarDirectorio(MangaImages.SelectedIndex - 1))
+                {
+                    Frame.Navigate(typeof(FlipView), Mangas);
+                }                
             }
         }
 
@@ -230,21 +210,24 @@ namespace MangaReader
             ts.Toggled += FullScreen_Toggled;
         }
 
-        private async Task<Windows.Storage.StorageFolder> OpenFolder(String directorio)
+        private async Task<bool> VerificarDirectorio(int posicion)
         {
+            String directorio = Mangas.ElementAt(posicion).GetDirectory();
             try
-            {              
+            {        
+               
                 Windows.Storage.StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
-                return (folder);
+                return (true);
             }
             catch (Exception)
             {    
                 if (await Clases.Functions.SiNoMensaje(("Ha ocurrido un error en la lectura de: " + directorio.Split('\\').Last() + "\n¿Desea eliminarlo de la lista de mangas?")) == 1)
                 {
-                    SaveData();
-                    Clases.XmlIO.DeleteJson(directorio.Split('\\').Last());
+                    Mangas.RemoveAt(posicion);
+                    LoadGrid();
+                    SaveData();                   
                 } 
-                return null;
+                return false;
             }
         }
 
@@ -278,27 +261,25 @@ namespace MangaReader
                     await Task.Yield();
                     await Task.Delay(100);
                     StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);
-                    Manga1 = (Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));                    
+                    Manga1 = (Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));
                     if (Manga1 != null)
                     {
                         loadingLoadManga.IsActive = false;
                         Mangas.Add(Manga1);
-                        GuardarImagen();
-                        SaveData();
-                        await Clases.XmlIO.WriteJsonAsync(Mangas);
+                        GuardarImagen();                                           
                         await Task.Delay(100);
                         Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
+                        SaveData();
                         LoadGrid();
                         MangaImages.IsEnabled = true;
                         await Clases.Functions.CreateMessageAsync("Se ha agregado existosamente: " + folder.Name);
-                     
                     }
                     else
                     {
                         loadingLoadManga.IsActive = false;
                         await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al agregar: " + folder.Name);
                     }
-                    
+
                 }
                 else
                 {
@@ -386,7 +367,11 @@ namespace MangaReader
                         {
                             localSettings.Values[Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName()] = 0;
                         }
-                        Frame.Navigate(typeof(FlipView), Mangas);
+                        if (await VerificarDirectorio(MangaImages.SelectedIndex - 1))
+                        {
+                            Frame.Navigate(typeof(FlipView), Mangas);
+                        }
+                      
                     }
                 }
                 else
@@ -426,10 +411,10 @@ namespace MangaReader
             }
         }
 
-        private void SaveData()
+        private async void SaveData()
         {
-            var t = Task.Run(() => Clases.XmlIO.Writefile(Mangas));
-            t.Wait();
+         await Clases.XmlIO.WriteJsonEpisodios(Mangas);
+         await Clases.XmlIO.WriteJsonData(Mangas);          
         }
 
         private async void FlyoutEliminar(object sender, TappedRoutedEventArgs e)
@@ -440,8 +425,7 @@ namespace MangaReader
                 String Title = "¿Está seguro de que desea eliminar " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName() + "?";  
                 if (await Clases.Functions.SiNoMensaje(Title) == 1)
                 {
-                    String directorio = Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetDirectory();
-                    Clases.XmlIO.DeleteJson(Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName());
+                    String directorio = Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetDirectory();                   
                     if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName() + ".jpg"))
                     {
                         StorageFile file = await StorageFile.GetFileFromPathAsync((ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName() + ".jpg"));
@@ -465,9 +449,9 @@ namespace MangaReader
                         {
                             await Clases.Functions.CreateMessageAsync("Ocurrió un error al borrar los archivos");
                         }
-                        MangaImages.IsEnabled = true;
-                        await Clases.Functions.CreateMessageAsync("Se han elimnado los archivos locales");
                         loadingLoadManga.IsActive = false;
+                        MangaImages.IsEnabled = true;
+                        await Clases.Functions.CreateMessageAsync("Se han elimnado los archivos locales");                       
                     }
                     LoadGrid();
                 }
@@ -495,9 +479,9 @@ namespace MangaReader
             }
         }
 
-        private async void EstadisticasClick(object sender, RoutedEventArgs e)
+        private  void EstadisticasClick(object sender, RoutedEventArgs e)
         {
-            String[] previousdata = await Clases.XmlIO.ReadStatistics();
+            List<string> previousdata =  Clases.XmlIO.ReadJsonEstaditicas();
             TimeSpan tiempo; 
             if (previousdata != null)
             {
@@ -538,7 +522,7 @@ namespace MangaReader
                             episode.SetDirectory(folders1[i]);
                             Mangas.ElementAt(MangaImages.SelectedIndex-1).SetEpisode(episode);
                         }
-                        await Clases.XmlIO.WriteMangaJsonAsync(Mangas.ElementAt(MangaImages.SelectedIndex-1), CreationCollisionOption.ReplaceExisting);
+                        SaveData();
                         MangaImages.IsEnabled = true;
                         loadingLoadManga.IsActive = false;
                         await Clases.Functions.CreateMessageAsync("Se agregaron " + (cantidadNueva - cantidadActual) + " capítulos nuevos");
@@ -549,7 +533,7 @@ namespace MangaReader
                         loadingLoadManga.IsActive = false;
                         await Clases.Functions.CreateMessageAsync("No hay nuevos capítulos que agregar");
                     }
-                    loadingLoadManga.IsActive = false;
+                   
 
                     }
                     catch (Exception)
@@ -557,6 +541,7 @@ namespace MangaReader
                         await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al recargar el manga");
                     }
                 }
+                loadingLoadManga.IsActive = false;
                 MangaImages.IsEnabled = true;
 
             }

@@ -162,7 +162,7 @@ namespace MangaReader
                     mangaG.GetEpisodes().ElementAt<Episode>(mangaG.GetActual()).SetRead(true);
                     mangaG.SetUltimoEpisodioLeido(mangaG.GetActual() + 1);
                     mangaG.SetActual(mangaG.GetActual() + 1);
-                    var t = Task.Run(() => Clases.XmlIO.Writefile(MangasG));
+                    var t = Task.Run(() => Clases.XmlIO.WriteJsonData(MangasG));
                 }
                 else if (mangaG.GetActual() < mangaG.GetEpisodes().Count())
                 {
@@ -347,7 +347,7 @@ namespace MangaReader
             episodeIm = new List<BitmapImage>();
             flipView.Items.Clear();
             System.GC.Collect();
-            var t = Task.Run(() => Clases.XmlIO.WriteStatistics(paginas, episodios, sw, mangasterminados));
+            var t = Task.Run(() => Clases.XmlIO.WriteJsonStatistics(paginas, episodios, sw, mangasterminados));
             Frame.Navigate(typeof(MainPage), MangasG);
         }
 
