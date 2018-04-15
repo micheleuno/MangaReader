@@ -71,12 +71,17 @@ namespace MangaReader.Clases
                 await sampleFile.DeleteAsync();
             }
         }
+
+        
+
+
+
+
         public static async Task<StorageFile> CrearSampleFileAsync()
         {
             StorageFolder rootFolder = ApplicationData.Current.LocalFolder;
             var projectFolderName = "Project1";
             StorageFolder projectFolder = await rootFolder.CreateFolderAsync(projectFolderName, CreationCollisionOption.OpenIfExists);
-            Debug.WriteLine(projectFolder.Path);
             StorageFile sampleFile = await projectFolder.CreateFileAsync("data.txt", CreationCollisionOption.ReplaceExisting);
             return sampleFile;
         }
@@ -89,7 +94,6 @@ namespace MangaReader.Clases
                 {
                     var path = @"\Project1\statistics.txt";
                     var folder = ApplicationData.Current.LocalFolder;
-                     Debug.WriteLine(folder.Path);
                     String data2;
                     System.Text.StringBuilder sb = new System.Text.StringBuilder();                 
                     StorageFile file = await folder.GetFileAsync(path);
@@ -158,9 +162,36 @@ namespace MangaReader.Clases
             }
         }
 
+        public static async Task WriteJsonAsyncV2(List<Manga> Mangas)
+        {
+            List<String> directorios = new List<string>();
+            List<List<String>> arreglo = new List<List<String>>();
+
+            foreach (Manga value1 in Mangas)
+            {
+
+                foreach (Episode value in value1.GetEpisodes())
+                {
+                    directorios.Add(value.GetDirectory());
+                }
+
+                arreglo.Add(directorios);
+                directorios = new List<string>();
+            }
+
+            string json = JsonConvert.SerializeObject(arreglo);
+
+            var file = await ApplicationData.Current.LocalFolder.CreateFileAsync("prueba.json", CreationCollisionOption.ReplaceExisting);
+            await FileIO.WriteTextAsync(file, json);
+
+
+
+        }
+
         public static async Task WriteMangaJsonAsync(Manga manga, CreationCollisionOption option)
         {
             List<String> directorios = new List<string>();
+            List<List<String>> arreglo = new List<List<String>>();
 
             try
             {
@@ -179,6 +210,20 @@ namespace MangaReader.Clases
             }
             directorios = new List<string>();
 
+        }
+
+        public static List<List<String>> ReadJsonV2()
+        {
+            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + "prueba.json"))
+            {
+                using (StreamReader r = File.OpenText((ApplicationData.Current.LocalFolder.Path + @"\" + "prueba.json")))
+                {
+                    string json = r.ReadToEnd();
+                    List<List<String>> items = JsonConvert.DeserializeObject<List<List<String>>>(json);
+                    return items;
+                }
+            }
+            return null;
         }
 
 

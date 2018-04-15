@@ -88,7 +88,8 @@ namespace MangaReader
                         }
                         i = i + 4;
                     } 
-                    await Clases.XmlIO.WriteJsonAsync(Mangas);
+                    //await Clases.XmlIO.WriteJsonAsync(Mangas);
+                  //  await Clases.XmlIO.WriteJsonAsyncV2(Mangas);
                     loading.IsActive = false;
                 }                
             }
@@ -232,7 +233,7 @@ namespace MangaReader
         private async Task<Windows.Storage.StorageFolder> OpenFolder(String directorio)
         {
             try
-            {
+            {              
                 Windows.Storage.StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
                 return (folder);
             }
@@ -286,6 +287,7 @@ namespace MangaReader
                         SaveData();
                         await Clases.XmlIO.WriteJsonAsync(Mangas);
                         await Task.Delay(100);
+                        Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
                         LoadGrid();
                         MangaImages.IsEnabled = true;
                         await Clases.Functions.CreateMessageAsync("Se ha agregado existosamente: " + folder.Name);
@@ -537,11 +539,13 @@ namespace MangaReader
                             Mangas.ElementAt(MangaImages.SelectedIndex-1).SetEpisode(episode);
                         }
                         await Clases.XmlIO.WriteMangaJsonAsync(Mangas.ElementAt(MangaImages.SelectedIndex-1), CreationCollisionOption.ReplaceExisting);
+                        MangaImages.IsEnabled = true;
                         loadingLoadManga.IsActive = false;
                         await Clases.Functions.CreateMessageAsync("Se agregaron " + (cantidadNueva - cantidadActual) + " capítulos nuevos");
                     }
                     else
                     {
+                        MangaImages.IsEnabled = true;
                         loadingLoadManga.IsActive = false;
                         await Clases.Functions.CreateMessageAsync("No hay nuevos capítulos que agregar");
                     }

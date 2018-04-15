@@ -95,9 +95,12 @@ namespace MangaReader.Clases
                     {                       
                         if (value.Length >= 7)
                         {
-                            int numero = Int32.Parse(value.Substring(value.Length - 7, 3));                          
+                            int numero = Int32.Parse(value.Substring(value.Length - 7, 3));
+                            if (numero == 0)
+                                cont = 0;
                             if (numero != cont)
                             {
+                                Debug.WriteLine("numero " + numero);
                                 flag = false;
                                 break;
                             }
