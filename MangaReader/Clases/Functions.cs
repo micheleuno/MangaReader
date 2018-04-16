@@ -44,12 +44,12 @@ namespace MangaReader.Clases
             try
             {
                 Episode episode = new Episode();
-                string[] pages = System.IO.Directory.GetFiles(path).Select(Path.GetFileName).ToArray();
+                string[] pages = System.IO.Directory.GetFiles(path).Select(Path.GetFullPath).ToArray();
                 string[] extensions = new[] { ".png", ".jpg", ".tiff" };
                 DirectoryInfo dInfo = new DirectoryInfo(path);
                 for (int i = 0; i < pages.Length; i++)
                 {
-                    episode.AddPage(pages[i]);
+                    episode.AddPage(pages[i]);                    
                 }
                 DirectoryInfo info = new DirectoryInfo(path);
                 episode.SetDirectory(info.Name);

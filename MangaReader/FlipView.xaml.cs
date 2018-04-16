@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Windows.UI.Popups;
+using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -43,11 +44,11 @@ namespace MangaReader
         List<BitmapImage> episodeIm;
         Episode episodeG;
         int paginasaux = 0, paginas = 0, episodios = 0, mangasterminados = 0, contPag=1, contPagAnt=0, cantPag=0;
+     
 
         public FlipView()
         {
             this.InitializeComponent();
-
         }
 
         protected async override void OnNavigatedTo(NavigationEventArgs e)
@@ -85,31 +86,35 @@ namespace MangaReader
             episodeG = await Clases.Functions.LoadEpisodeAsync(mangaG.GetEpisodes().ElementAt(mangaG.GetActual()).GetDirectory());
             await Clases.Functions.CheckPagesNumber(episodeG);
            
-            try {             
-                await CargarBitmap(mangaG.GetActual(),-1,false);
+            try
+            {           
+                await CargarBitmap(-1,false);
                 LoadFlipView();             
                 if (localSettings.Values[mangaG.GetName()] != null && !localSettings.Values[mangaG.GetName()].ToString().Equals("0") && mangaG.GetActual() == mangaG.GetUltimoEpisodioLeido())
                 {                   
                     MoverPagina();
                 }
-                loading.IsActive = false;             
+                loading.IsActive = false;
                 if (localSettings.Values["AjusteImagen"].ToString() == "1")
                 {
                     flipView.ItemTemplate = Resources["AjustarAncho"] as DataTemplate;
                 }
+
                 if (localSettings.Values["AjusteImagen"].ToString() == "0")
                 {
                     flipView.ItemTemplate = Resources["NoAjustar"] as DataTemplate;
                 }
-                    sw.Start();
+                 sw.Start();
             }
             catch (Exception)
             {
+              
                 loading.IsActive = false;
                 var imageUriForlogo = new Uri("ms-appx:///Assets/Imagen.png");
-                BitmapImage image = new BitmapImage();
-                image.UriSource = imageUriForlogo;
-                flipView.Items.Add(image);
+                  BitmapImage image = new BitmapImage();
+                  image.UriSource = imageUriForlogo;
+                  flipView.Items.Add(image);
+               
                 EpisodeConter.Visibility = Visibility.Visible;
             }
 
@@ -122,11 +127,11 @@ namespace MangaReader
                 if (contPagAnt < flipView.SelectedIndex) //Solo cargar si no está en el flipview
                 {
                     contPag++;
-                    EpisodeConter.Content = (contPag).ToString() + " de " + cantPag;
+                   
                     if (flagepisodio && contPag+1 >= flipView.Items.Count())
                     {
                         loadingBackgorund.IsActive = true;
-                        await CargarBitmap(mangaG.GetActual(), contPag + 1,false);
+                        await CargarBitmap(contPag + 1,false);
                         LoadFlipView();
                         loadingBackgorund.IsActive = false;
 
@@ -145,9 +150,9 @@ namespace MangaReader
                 if (flipView.Items.Count > 2 && flipView.SelectedIndex + 1 == flipView.Items.Count)
                 {
                     SiguienteEpisodio();  
-                }
-              
+                }              
             }
+             EpisodeConter.Content = (contPag).ToString() + " de " + cantPag;
         }
 
         private void SiguienteEpisodio()
@@ -188,12 +193,13 @@ namespace MangaReader
                     for (int i = 0; i < pagina; i++)
                     {                   
                         contPag++;
-                        await CargarBitmap(mangaG.GetActual(), contPag + 1, false);
+                        await CargarBitmap(contPag + 1, false);
                         LoadFlipView();      
                     }                  
                     loading.IsActive = false;
-                    contPag = pagina+1;                 
-                    for(int i = 1; i <= pagina; i++)
+                    contPag = pagina+1;
+                    contPagAnt = pagina;
+                    for (int i = 1; i <= pagina; i++)
                     {
                         flipView.SelectedIndex = i;
                     }
@@ -231,7 +237,7 @@ namespace MangaReader
                     MakeInvisible();
                     episodeG = await Clases.Functions.LoadEpisodeAsync(mangaG.GetEpisodes().ElementAt(mangaG.GetActual()).GetDirectory());                                   
                     flagepisodio = true;            
-                    await CargarBitmap(mangaG.GetActual(), -1, false);                   
+                    await CargarBitmap(-1, false);                   
                     LoadFlipView();
                     contPag = 1;
                     contPagAnt = 0;                    
@@ -271,11 +277,12 @@ namespace MangaReader
             foreach (BitmapImage value in episodeIm)
             {       
                flipView.Items.Add(value);
+
             }
            episodeIm = new List<BitmapImage>();
         }
 
-        private async Task CargarBitmap(int capitulo,int pagina,Boolean flag)
+        private async Task CargarBitmap(int pagina,Boolean flag)
         {          
             int inicio = 0, fin = 0;         
             if (pagina == -1)
@@ -293,15 +300,14 @@ namespace MangaReader
                 pagina = 3;
             }          
             episodeIm = new List<BitmapImage>();
-            List<String> Pages = new List<String>();          
-            String Url = "", Url2;          
+            List<String> Pages = new List<String>();
+          
             if (episodeG.GetPages().Count > 0 && episodeG != null)
             {
                 Pages = episodeG.GetPages();
                 if (pagina < Pages.Count())
                 {
-                    paginasaux = cantPag = Pages.Count();
-                    Url = mangaG.GetDirectory() + @"\" + episodeG.GetDirectory();
+                    paginasaux = cantPag = Pages.Count();                  
                     List<String> Completeurl = new List<string>();                  
                     for (inicio = pagina; inicio < fin; inicio++)
                     {                      
@@ -309,11 +315,10 @@ namespace MangaReader
                         {                           
                             SiguienteEpisodio();                          
                             break;
-                        }
-                        Url2 = Url;
-                        Url2 = Url + @"\" + Pages[inicio];
-                        Completeurl.Add(Url2);                   
-                    }
+                        }                       
+                        Completeurl.Add(Pages[inicio]);                       
+                       
+                    }                   
                     episodeIm = await Clases.Functions.LoadEpisodeImageAsync(Completeurl);
                 }
             }
@@ -345,6 +350,7 @@ namespace MangaReader
                 localSettings.Values[mangaG.GetName()] = 0;
             }
             episodeIm = new List<BitmapImage>();
+            
             flipView.Items.Clear();
             System.GC.Collect();
             var t = Task.Run(() => Clases.XmlIO.WriteJsonStatistics(paginas, episodios, sw, mangasterminados));

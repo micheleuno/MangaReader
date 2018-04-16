@@ -185,7 +185,7 @@ namespace MangaReader
                 {
                     if(File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg"))
                     {
-                        items.Add(new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg", UriKind.RelativeOrAbsolute), Titulo = Mangas.ElementAt(i).GetName()});
+                        items.Add(new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg" + "?cache=" + new Random().Next()), Titulo = Mangas.ElementAt(i).GetName()});
                     }
                     else
                     {
@@ -301,7 +301,7 @@ namespace MangaReader
             if (episode != null && episode.GetPages().Count > 0)
             {
                 Pages = episode.GetPages();
-                Url = (Mangas.ElementAt(Mangas.Count-1).GetDirectory() + @"\" + episode.GetDirectory() + @"\" + episode.GetPages().ElementAt(0));
+                Url = (episode.GetPages().ElementAt(0));
                 StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
                 CopiarImagen(file, Mangas.ElementAt(Mangas.Count - 1).GetName());                              
             }  
@@ -321,6 +321,7 @@ namespace MangaReader
             {
                 CopiarImagen(file, Mangas.ElementAt(selecteditem).GetName());
                 MangaImages.SelectedIndex = selecteditem;
+                await Task.Delay(500);
                 LoadGrid();
                
             }
@@ -331,8 +332,7 @@ namespace MangaReader
             try
             {
                 StorageFolder rootFolder = ApplicationData.Current.LocalFolder;
-                StorageFolder projectFolder = await rootFolder.CreateFolderAsync("Images", CreationCollisionOption.OpenIfExists);
-                // StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(ApplicationData.Current.LocalFolder.Path + @"\Images");
+                StorageFolder projectFolder = await rootFolder.CreateFolderAsync("Images", CreationCollisionOption.OpenIfExists); 
                 Debug.WriteLine(projectFolder.Path + @"\" + Nombre + ".jpg");
                 if (File.Exists(projectFolder.Path + @"\" + Nombre + ".jpg"))
                 {
@@ -439,7 +439,6 @@ namespace MangaReader
                     {
                         loadingLoadManga.IsActive = true;
                         MangaImages.IsEnabled = false;
-
                         try
                         {
                             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
@@ -454,8 +453,7 @@ namespace MangaReader
                         await Clases.Functions.CreateMessageAsync("Se han elimnado los archivos locales");                       
                     }
                     LoadGrid();
-                }
-               
+                }               
             }
             else
             {
