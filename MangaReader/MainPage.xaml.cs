@@ -171,9 +171,6 @@ namespace MangaReader
                 return -1;
         }
 
-     
-       
-
         private  void  LoadGrid()
         { 
             Episode episode = new Episode();
@@ -212,11 +209,20 @@ namespace MangaReader
 
         private async Task<bool> VerificarDirectorio(int posicion)
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             String directorio = Mangas.ElementAt(posicion).GetDirectory();
             try
-            {        
-               
+            {  
                 Windows.Storage.StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
+                var items = await folder.GetItemsAsync(0, 1);
+                if (items.Count == 0)
+                {
+                    await Clases.Functions.CreateMessageAsync("El Directorio de " + directorio.Split('\\').Last() + "esta vacio");
+                    return false;
+                }
+                watch.Stop();
+                Debug.WriteLine("Tiempo revisión: " + watch.ElapsedMilliseconds);
+
                 return (true);
             }
             catch (Exception)
@@ -228,7 +234,7 @@ namespace MangaReader
                     SaveData();                   
                 } 
                 return false;
-            }
+            }           
         }
 
         private async void AgregarManga()
@@ -279,7 +285,6 @@ namespace MangaReader
                         loadingLoadManga.IsActive = false;
                         await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al agregar: " + folder.Name);
                     }
-
                 }
                 else
                 {
@@ -322,8 +327,7 @@ namespace MangaReader
                 CopiarImagen(file, Mangas.ElementAt(selecteditem).GetName());
                 MangaImages.SelectedIndex = selecteditem;
                 await Task.Delay(500);
-                LoadGrid();
-               
+                LoadGrid();               
             }
         }
 
@@ -338,8 +342,7 @@ namespace MangaReader
                 {
                     StorageFile OldFile = await StorageFile.GetFileFromPathAsync(projectFolder.Path + @"\" + Nombre + ".jpg");
                     await OldFile.DeleteAsync();
-                }
-            
+                }            
                 await file.CopyAsync(projectFolder,Nombre + ".jpg", NameCollisionOption.ReplaceExisting);
             }
             catch(FileNotFoundException)
@@ -370,8 +373,7 @@ namespace MangaReader
                         if (await VerificarDirectorio(MangaImages.SelectedIndex - 1))
                         {
                             Frame.Navigate(typeof(FlipView), Mangas);
-                        }
-                      
+                        }                      
                     }
                 }
                 else
