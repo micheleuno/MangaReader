@@ -3,17 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.Popups;
 
 namespace MangaReader.Clases
 {
 
     class XmlIO
     {
-       
+
         public static async Task WriteJsonData(List<Manga> Mangas)
         {
             List<String> datosManga = new List<string>();

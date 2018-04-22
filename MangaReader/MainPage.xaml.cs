@@ -46,6 +46,7 @@ namespace MangaReader
                 { 
                     LoadGrid();
                     UpdateItems();
+                    FullScreen_loaded();
                 }
             }
             else
@@ -69,16 +70,18 @@ namespace MangaReader
             {
                 Mangas = Clases.Functions.CargarDatos();             
                 loading.IsActive = false;
-            }
-            LoadGrid();
-            watch.Stop();
+                FullScreen_loaded();
+                LoadGrid();
+                UpdateItems();
+                watch.Stop();              
+            }          
             Debug.WriteLine("Tiempo apertura: " + watch.ElapsedMilliseconds);
-            FullScreen_loaded();
-            UpdateItems();
+         
         }
 
         private void InicializarConfiguraciones()
         {
+        
             if (localSettings.Values["readingDirection"] == null)
             {
                 localSettings.Values["readingDirection"] = 0;
@@ -432,8 +435,10 @@ namespace MangaReader
                     {
                         StorageFile file = await StorageFile.GetFileFromPathAsync((ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(MangaImages.SelectedIndex-1).GetName() + ".jpg"));
                         await file.DeleteAsync();
+                     
+                      
                     }
-                   
+                    ApplicationData.Current.LocalSettings.Values.Remove(Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName());
                     Mangas.RemoveAt(MangaImages.SelectedIndex-1);
                     SaveData();                   
                     Title = "¿Desea eliminar permanentemente los archivos locales?";
@@ -461,7 +466,7 @@ namespace MangaReader
             {
                 await Clases.Functions.CreateMessageAsync("Debe agregar un manga primero");
             }           
-        }
+        }       
 
         private void FullScreen_Toggled(object sender, RoutedEventArgs e)
         {

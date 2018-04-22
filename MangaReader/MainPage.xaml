@@ -38,7 +38,7 @@
                 </Grid.RowDefinitions>
                 <Image x:Name="imagesGrid" Source="{Binding IName}" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="TitleGrid" Text="{Binding Titulo}"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Grid>  
+            </Grid> 
             
         </DataTemplate>
 
@@ -116,8 +116,7 @@
 
         <Controls:AdaptiveGridView  x:Name="MangaImages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"   IsMultiSelectCheckBoxEnabled="False"
                                    HorizontalAlignment="Center" Margin="10,0,10,10" VerticalAlignment="Center" 
-                                DesiredWidth="200" StretchContentForSingleRow="False" ItemTemplate="{StaticResource photos}" 
-                               
+                                DesiredWidth="200" StretchContentForSingleRow="False" ItemTemplate="{StaticResource photos}"                                
                                    />
 
 

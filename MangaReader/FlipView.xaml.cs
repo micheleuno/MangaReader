@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -189,7 +186,8 @@ namespace MangaReader
                 if (await Clases.Functions.SiNoMensaje(("¿Desea continuar el capitulo en la página " + (pagina + 1) + "?")) == 1)
                 {
                     cargaBitmap = true;
-                    loading.IsActive = true;                
+                    loading.IsActive = true;
+                    flipView.IsEnabled = false;
                     for (int i = 0; i < pagina; i++)
                     {                   
                         contPag++;
@@ -203,7 +201,7 @@ namespace MangaReader
                     {
                         flipView.SelectedIndex = i;
                     }
-                  
+                    flipView.IsEnabled = true;
                     cargaBitmap = false;
                 }
                 watch.Stop();
