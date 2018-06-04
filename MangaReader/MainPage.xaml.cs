@@ -38,6 +38,7 @@ namespace MangaReader
         Windows.Storage.ApplicationData.Current.LocalSettings;
         Windows.Storage.StorageFolder localFolder =
         Windows.Storage.ApplicationData.Current.LocalFolder;
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e != null)

@@ -17,7 +17,7 @@
         <MenuFlyout x:Key="cmdMenuFlyout"  Placement="Right">
             <MenuFlyoutItem Name="NombreManga" Text="" HorizontalAlignment="Center" IsTapEnabled="False" IsEnabled="False" />
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem Name="ContLectura" Text="" Tapped="FlyoutContinuar" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem Name="ContLectura" Text="" Tapped="FlyoutContinuar" HorizontalAlignment="Center" />
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="Leer capitulo" Tapped="FlyoutSeleccionarEpisodio" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
@@ -78,6 +78,7 @@
                 <Button.Flyout>
                     <Flyout Placement="Bottom">
                         <StackPanel>
+                            
                             <ComboBox x:Name="DireccionLectura"  Width="auto" Margin="5" Header="Dirección Lectura" SelectionChanged="DireccionLectura_SelectionChanged">
                                 <ComboBoxItem Name="cbi1">Izquierda a Derecha</ComboBoxItem>
                                 <ComboBoxItem Name="cbi2">Derecha a Izquierda</ComboBoxItem>
