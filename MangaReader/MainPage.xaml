@@ -107,10 +107,15 @@
                     </Flyout>
                 </Button.Flyout>
             </Button>
+            
+           
 
-
-        </StackPanel>       
-        
+        </StackPanel>
+        <Button x:Name="BtnCloseApp" x:Uid="BtnClose" Click="CloseApp" Grid.Column="1" MinWidth="10" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Cerrar" HorizontalAlignment="Right" >
+            <Viewbox MaxHeight="30" MaxWidth="30">
+                <SymbolIcon Symbol="Cancel" />
+            </Viewbox>
+        </Button>
         <ProgressRing x:Name="loading" Grid.Column="0" HorizontalAlignment="Center" Grid.ColumnSpan="2"  Grid.Row="1" VerticalAlignment="Center"  Width="100" Height="100" />
         <ProgressRing x:Name="loadingLoadManga" Grid.ColumnSpan="2" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center"  Width="70" Height="70" />
 

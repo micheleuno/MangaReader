@@ -223,12 +223,16 @@ namespace MangaReader
 
         private void FullScreen_loaded()
         {
+            BtnCloseApp.Visibility = Visibility.Collapsed;
             var ts = fullScreen;
             ApplicationView view = ApplicationView.GetForCurrentView();
             bool syncStatus = view.IsFullScreenMode;
             DataContext = this;
             ts.IsOn = syncStatus;
             ts.Toggled += FullScreen_Toggled;
+
+            if (view.IsFullScreenMode)
+                BtnCloseApp.Visibility = Visibility.Visible;
         }
 
         private async Task<bool> VerificarDirectorio(int posicion)
@@ -501,7 +505,8 @@ namespace MangaReader
             else
             {
                 await Clases.Functions.CreateMessageAsync("Debe agregar un manga primero");
-            }           
+            }
+           
         }       
 
         private void FullScreen_Toggled(object sender, RoutedEventArgs e)
@@ -510,11 +515,14 @@ namespace MangaReader
             bool isInFullScreenMode = view.IsFullScreenMode;
             if (isInFullScreenMode)
             {
+                BtnCloseApp.Visibility = Visibility.Collapsed;
                 view.ExitFullScreenMode();
                 localSettings.Values["FullScrenn"] = 0;
+                
             }
             else
             {
+                BtnCloseApp.Visibility = Visibility.Visible;
                 view.TryEnterFullScreenMode();
                 localSettings.Values["FullScrenn"] = 1;
             }
@@ -537,6 +545,15 @@ namespace MangaReader
                 FLyout.Text = "No ha leído nada aun :)";
             }
         }            
+
+        private async void CloseApp(object sender, RoutedEventArgs e)
+        {
+           
+            if (await Clases.Functions.SiNoMensaje("¿Desea realmente salir?") == 1)
+            {
+                Application.Current.Exit();
+            }
+        }
 
         private async void FlyoutRecargar(object sender, TappedRoutedEventArgs e)
         {

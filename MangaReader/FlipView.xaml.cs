@@ -57,8 +57,7 @@ namespace MangaReader
 
             if (localSettings.Values["readingDirection"].ToString() == "1")
             {
-                flipView.FlowDirection = FlowDirection.RightToLeft;
-                BtnClose.HorizontalAlignment = HorizontalAlignment.Right;
+                flipView.FlowDirection = FlowDirection.RightToLeft;              
                 BtnNext.HorizontalAlignment = HorizontalAlignment.Left;
             }
             else
@@ -67,13 +66,9 @@ namespace MangaReader
             }
             if (localSettings.Values["readingDirection"].ToString() == "2")
             {
-                flipView.ItemsPanel = Resources["vertical"] as ItemsPanelTemplate;
-                BtnClose.HorizontalAlignment = HorizontalAlignment.Center;
-                BtnClose.VerticalAlignment = VerticalAlignment.Top;
+                flipView.ItemsPanel = Resources["vertical"] as ItemsPanelTemplate;              
                 BtnNext.HorizontalAlignment = HorizontalAlignment.Center;
                 BtnNext.VerticalAlignment = VerticalAlignment.Bottom;
-                BtnFullScreen.HorizontalAlignment = HorizontalAlignment.Right;
-                BtnFullScreen.VerticalAlignment = VerticalAlignment.Center;
                 EpisodeConter.HorizontalAlignment = HorizontalAlignment.Left;
                 EpisodeConter.VerticalAlignment = VerticalAlignment.Center;
             }
@@ -361,7 +356,6 @@ namespace MangaReader
         {
             int episodioactual = mangaG.GetActual();
             string episodios = mangaG.GetEpisodes().Count().ToString();
-            BtnFullScreen.Visibility = Visibility.Visible;
             BtnClose.Visibility = Visibility.Visible;
             if (flipView.Items.Count != 0)
                 EpisodeConter.Content =contPag+ " de " + cantPag;
@@ -383,25 +377,10 @@ namespace MangaReader
         }
 
         private void MakeInvisible()
-        {
-            BtnFullScreen.Visibility = Visibility.Collapsed;
+        {         
             BtnNext.Visibility = Visibility.Collapsed;
             BtnClose.Visibility = Visibility.Collapsed;
             EpisodeConter.Visibility = Visibility.Collapsed;
-        }
-
-        private void Fullscren(object sender, RoutedEventArgs e)
-        {
-            ApplicationView view = ApplicationView.GetForCurrentView();
-            bool isInFullScreenMode = view.IsFullScreenMode;
-            if (isInFullScreenMode)
-            {
-                view.ExitFullScreenMode();
-            }
-            else
-            {
-                view.TryEnterFullScreenMode();
-            }
-        }
+        }       
     }
 }

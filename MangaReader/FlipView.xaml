@@ -51,20 +51,7 @@
 
 
 
-    <Grid x:Name="Gridp" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup>
-                <VisualState x:Name="InFullScreen">
-                    <VisualState.StateTriggers>
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="IsFullScreenText.Text" Value="In full screen mode" />
-                    </VisualState.Setters>
-                </VisualState>
-            </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
-
-
+    <Grid x:Name="Gridp" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">    
 
         <FlipView   x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark"  ItemsSource="{Binding BitMapCollection}" >
 
@@ -90,9 +77,17 @@
 
         </FlipView>
 
-        <Button x:Name="BtnClose" Content="Cerrar" Height="50" Width="120"  Background="Black" Click="BtnClose_Click" HorizontalAlignment="Left"/>
-        <Button  x:Name="BtnNext" Content="Siguiente" Height="50" Width="120"  HorizontalAlignment="Right" Click="BtnNext_Click" Background="Black" />
-        <Button x:Name="BtnFullScreen" Content=" Pantalla&#xa;Completa"  HorizontalAlignment="Center"  VerticalAlignment="Top" Click="Fullscren" Background="Black"/>
+        <Button x:Name="BtnClose"  Height="50" Width="50"  Background="Black" Click="BtnClose_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Viewbox MaxHeight="30" MaxWidth="30">
+                <SymbolIcon Symbol="Clear" />
+            </Viewbox>
+        </Button>
+        <Button  x:Name="BtnNext" Height="50" Width="120"  HorizontalAlignment="Right" Click="BtnNext_Click" Background="Black">
+
+
+          
+        </Button> 
+    
         <Button x:Name="EpisodeConter" HorizontalAlignment="Center"  VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
         <!-- <Button x:Name="Battery" HorizontalAlignment="Right"  VerticalAlignment="Top" Background="Black"/>-->
         <ProgressRing x:Name="loading" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="75" Height="75" />
