@@ -33,7 +33,7 @@ namespace MangaReader
     public sealed partial class MainPage : Page
     {
         private static List<Manga> Mangas = new List<Manga>();
-
+        ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>();
         Windows.Storage.ApplicationDataContainer localSettings =
         Windows.Storage.ApplicationData.Current.LocalSettings;
         Windows.Storage.StorageFolder localFolder =
@@ -130,13 +130,15 @@ namespace MangaReader
                 if (selectedEpi < Mangas.ElementAt(MangaImages.SelectedIndex-1).GetUltimoEpisodioLeido())
                 {
                     await Clases.Functions.CreateMessageAsync("No se actualizará el ultimo episodio leído");
-                }  
+                }
+                MangaImages.IsEnabled = false;
                 Mangas.ElementAt(MangaImages.SelectedIndex-1).SetActual(selectedEpi);
                 Mangas.ElementAt(0).SetMangaActual(MangaImages.SelectedIndex-1);
                 if (await VerificarDirectorio(MangaImages.SelectedIndex - 1))
                 {
                     Frame.Navigate(typeof(FlipView), Mangas);
-                }                
+                }
+                MangaImages.IsEnabled = true;
             }
         }
 
@@ -178,7 +180,7 @@ namespace MangaReader
         private  void  LoadGrid()
         { 
             Episode episode = new Episode();
-            ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>();
+            items = new ObservableCollection<MenuItem>();
             try
             {
                 items.Add(new MenuItem() { IName = new Uri("ms-appx:///Assets/Agregar.png"),Titulo="Agregar Nuevo" });               
@@ -201,6 +203,24 @@ namespace MangaReader
             MangaImages.ItemsSource = items;
         }
 
+        private void DeleteGrid(int posicion)
+        {
+            items.RemoveAt(posicion);         
+        }
+
+        private void InsertInPosition(String nombre)
+        {
+            int i = GetPosition(nombre);
+            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + nombre + ".jpg"))
+            {
+                items.Insert(i,new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + nombre + ".jpg" + "?cache=" + new Random().Next()), Titulo = nombre });
+            }
+            else
+            {
+                items.Insert(i,new MenuItem() { IName = new Uri("ms-appx:///Assets/Imagen.png"), Titulo = nombre });
+            }
+        }
+
         private void FullScreen_loaded()
         {
             var ts = fullScreen;
@@ -213,7 +233,7 @@ namespace MangaReader
 
         private async Task<bool> VerificarDirectorio(int posicion)
         {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
+          //  var watch = System.Diagnostics.Stopwatch.StartNew();
             String directorio = Mangas.ElementAt(posicion).GetDirectory();
             try
             {  
@@ -224,8 +244,8 @@ namespace MangaReader
                     await Clases.Functions.CreateMessageAsync("El Directorio de " + directorio.Split('\\').Last() + "esta vacio");
                     return false;
                 }
-                watch.Stop();
-                Debug.WriteLine("Tiempo revisión: " + watch.ElapsedMilliseconds);
+               // watch.Stop();
+              //  Debug.WriteLine("Tiempo revisión: " + watch.ElapsedMilliseconds);
 
                 return (true);
             }
@@ -234,7 +254,7 @@ namespace MangaReader
                 if (await Clases.Functions.SiNoMensaje(("Ha ocurrido un error en la lectura de: " + directorio.Split('\\').Last() + "\n¿Desea eliminarlo de la lista de mangas?")) == 1)
                 {
                     Mangas.RemoveAt(posicion);
-                    LoadGrid();
+                    DeleteGrid(posicion+1);
                     SaveData();                   
                 } 
                 return false;
@@ -278,11 +298,10 @@ namespace MangaReader
                         Mangas.Add(Manga1);
                         GuardarImagen();                                           
                         await Task.Delay(100);
-                        Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
+                        Mangas = Mangas.OrderBy(o => o.GetName()).ToList();                        
                         SaveData();
-                        LoadGrid();
-                        MangaImages.IsEnabled = true;
-                        await Clases.Functions.CreateMessageAsync("Se ha agregado existosamente: " + folder.Name);
+                        InsertInPosition(folder.Name);
+                        MangaImages.IsEnabled = true;                     
                     }
                     else
                     {
@@ -297,6 +316,16 @@ namespace MangaReader
             }
             MangaImages.IsEnabled = true;
             loadingLoadManga.IsActive = false;
+        }
+        private int GetPosition(String nombre)
+        {
+            for(int i = 0; i < Mangas.Count; i++)
+            {
+                if (Mangas.ElementAt(i).GetName().Equals(nombre)){
+                    return i+1;
+                }
+            }
+            return Mangas.Count+1 ;
         }
 
         private async void GuardarImagen()
@@ -328,10 +357,13 @@ namespace MangaReader
             Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
             if (file != null && Mangas.Count > 0 && MangaImages.SelectedIndex - 1 != -1)
             {
+                MangaImages.IsEnabled = false;
                 CopiarImagen(file, Mangas.ElementAt(selecteditem).GetName());
                 MangaImages.SelectedIndex = selecteditem;
                 await Task.Delay(500);
-                LoadGrid();               
+                DeleteGrid(selecteditem+1);
+                InsertInPosition(Mangas.ElementAt(selecteditem).GetName());
+                MangaImages.IsEnabled = true;                          
             }
         }
 
@@ -367,7 +399,8 @@ namespace MangaReader
                         Title = "¿Desea comenzar la lectura de " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName()+"?";
                     }
                    
-                    if (await Clases.Functions.SiNoMensaje(Title)==1 && MangaImages.SelectedIndex - 1 != -1 && Mangas.Count > 0) {
+                    if (await Clases.Functions.SiNoMensaje(Title)==1 && MangaImages.SelectedIndex - 1 != -1 && Mangas.Count > 0) {                     
+                        MangaImages.IsEnabled = false;
                         Mangas.ElementAt(0).SetMangaActual(MangaImages.SelectedIndex - 1);
                         Mangas.ElementAt(MangaImages.SelectedIndex - 1).SetActual(Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetUltimoEpisodioLeido());
                         if (localSettings.Values[Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName()] == null)
@@ -375,9 +408,10 @@ namespace MangaReader
                             localSettings.Values[Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName()] = 0;
                         }
                         if (await VerificarDirectorio(MangaImages.SelectedIndex - 1))
-                        {
+                        {                           
                             Frame.Navigate(typeof(FlipView), Mangas);
-                        }                      
+                        }
+                        MangaImages.IsEnabled = true;
                     }
                 }
                 else
@@ -460,7 +494,8 @@ namespace MangaReader
                         MangaImages.IsEnabled = true;
                         await Clases.Functions.CreateMessageAsync("Se han elimnado los archivos locales");                       
                     }
-                    LoadGrid();
+                    
+                    DeleteGrid(MangaImages.SelectedIndex);
                 }               
             }
             else
@@ -508,7 +543,7 @@ namespace MangaReader
             if (MangaImages.SelectedIndex-1 != -1 && Mangas.Count > 0)
             {
                 MangaImages.IsEnabled = false;
-                String Title = " Esto agregará nuevos capitulos agregados en la carpeta, desea continuar? ";  
+                String Title = " Esto agregará nuevos capitulos agregados en la carpeta, ¿desea continuar? ";  
                 if (await Clases.Functions.SiNoMensaje(Title) == 1)
                 {                                  
                 String directorio = Mangas.ElementAt(MangaImages.SelectedIndex-1).GetDirectory();

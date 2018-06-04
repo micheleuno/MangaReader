@@ -66,10 +66,7 @@
 
 
 
-        <FlipView  x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark"  ItemsSource="{Binding BitMapCollection}" >
-
-         
-
+        <FlipView   x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark"  ItemsSource="{Binding BitMapCollection}" >
 
             <FlipView.ItemTemplate>
                 <DataTemplate x:Name="asd">

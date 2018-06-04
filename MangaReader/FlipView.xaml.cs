@@ -108,9 +108,11 @@ namespace MangaReader
               
                 loading.IsActive = false;
                 var imageUriForlogo = new Uri("ms-appx:///Assets/Imagen.png");
-                  BitmapImage image = new BitmapImage();
-                  image.UriSource = imageUriForlogo;
-                  flipView.Items.Add(image);
+                BitmapImage image = new BitmapImage
+                {
+                    UriSource = imageUriForlogo
+                };
+                flipView.Items.Add(image);
                
                 EpisodeConter.Visibility = Visibility.Visible;
             }
