@@ -305,14 +305,15 @@ namespace MangaReader
                     paginasaux = cantPag = Pages.Count();                  
                     List<String> Completeurl = new List<string>();                  
                     for (inicio = pagina; inicio < fin; inicio++)
-                    {                      
+                    {                        
                         if (Pages.Count()==1&&inicio >= Pages.Count())
                         {                           
                             SiguienteEpisodio();                          
                             break;
-                        }                       
-                        Completeurl.Add(Pages[inicio]);                       
-                       
+                        }
+                        if (inicio == cantPag)
+                            break;
+                        Completeurl.Add(Pages[inicio]);
                     }                   
                     episodeIm = await Clases.Functions.LoadEpisodeImageAsync(Completeurl);
                 }
@@ -344,8 +345,7 @@ namespace MangaReader
             {
                 localSettings.Values[mangaG.GetName()] = 0;
             }
-            episodeIm = new List<BitmapImage>();
-            
+            episodeIm = new List<BitmapImage>();            
             flipView.Items.Clear();
             System.GC.Collect();
             var t = Task.Run(() => Clases.XmlIO.WriteJsonStatistics(paginas, episodios, sw, mangasterminados));
