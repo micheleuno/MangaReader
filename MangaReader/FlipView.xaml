@@ -72,23 +72,30 @@
                     </ScrollViewer>
                 </DataTemplate>
 
-            </FlipView.ItemTemplate>
-
-
+            </FlipView.ItemTemplate>            
         </FlipView>
-
+        
         <Button x:Name="BtnClose"  Height="50" Width="50"  Background="Black" Click="BtnClose_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Viewbox MaxHeight="30" MaxWidth="30">
                 <SymbolIcon Symbol="Clear" />
             </Viewbox>
         </Button>
-        <Button  x:Name="BtnNext" Height="50" Width="120"  HorizontalAlignment="Right" Click="BtnNext_Click" Background="Black">
 
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+            
+            <Button x:Name="EpisodeConter" HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
+            <Button x:Name="ChapterConter" HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
+            <Button  x:Name="BtnNext" Height="50" Width="50"  HorizontalAlignment="Right" Click="BtnNext_Click" Background="Black">
+                <Viewbox MaxHeight="50" MaxWidth="50">
+                    <SymbolIcon Symbol="Next" />
+                </Viewbox>
+            </Button>
 
-          
-        </Button> 
+        </StackPanel>
+
+        
     
-        <Button x:Name="EpisodeConter" HorizontalAlignment="Center"  VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
+       
         <!-- <Button x:Name="Battery" HorizontalAlignment="Right"  VerticalAlignment="Top" Background="Black"/>-->
         <ProgressRing x:Name="loading" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="75" Height="75" />
         <ProgressRing x:Name="loadingBackgorund" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Width="40" Height="40" />
