@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -120,7 +121,65 @@ namespace MangaReader
                 NombreManga.Text = Mangas.ElementAt(numero).GetName();
                 FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
             }          
-        }  
+        }
+
+        private async void FlyoutInfo(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var dialog = new ContentDialog()
+            {
+                Title = Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName(),
+                RequestedTheme = ElementTheme.Dark,
+            };
+
+            // Setup Content
+            var panel = new StackPanel();
+
+         
+            panel.Children.Add(new TextBlock
+            {
+                Text = "Directorio: " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetDirectory(),
+                TextWrapping = TextWrapping.Wrap,
+            });
+
+            panel.Children.Add(new TextBlock
+            {
+                Text = "Capitulos: " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetEpisodes().Count,
+                TextWrapping = TextWrapping.Wrap,
+            });
+            panel.Children.Add(new TextBlock
+            {
+                Text = "Capitulos leídos: " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetUltimoEpisodioLeido(),
+                TextWrapping = TextWrapping.Wrap,
+            });
+
+
+           
+            dialog.SecondaryButtonText = "Abrir directorio";
+            dialog.SecondaryButtonClick += async delegate
+            {
+                try
+                {
+                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetDirectory());
+                    await Launcher.LaunchFolderAsync(folder);
+                }
+                catch (FileNotFoundException)
+                {
+                   await Clases.Functions.CreateMessageAsync("No se encuentra el directorio");
+                   
+                }
+            };
+
+
+
+            dialog.Content = panel;
+
+            // Add Buttons
+            dialog.PrimaryButtonText = "OK";
+           
+          await dialog.ShowAsync();
+           
+        }
 
         private async void FlyoutSeleccionarEpisodio(object sender, TappedRoutedEventArgs e)
         {
