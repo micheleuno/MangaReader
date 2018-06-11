@@ -120,7 +120,7 @@ namespace MangaReader
                 NombreManga.Text = Mangas.ElementAt(numero).GetName();
                 FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
             }          
-        }
+        }  
 
         private async void FlyoutSeleccionarEpisodio(object sender, TappedRoutedEventArgs e)
         {
