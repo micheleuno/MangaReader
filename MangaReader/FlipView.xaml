@@ -82,14 +82,21 @@
         </Button>
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-            
-            <Button x:Name="EpisodeConter" HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
+            <Button x:Name="EpisodeConter"  HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
             <Button x:Name="ChapterConter" HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
+            <Button  x:Name="BtnPrevous" Height="50" Width="50"  HorizontalAlignment="Right" Click="BtnPrevious_Click" Background="Black" >
+                <Viewbox MaxHeight="50" MaxWidth="50" >
+                    <SymbolIcon Symbol="Previous" />
+                </Viewbox>
+            </Button>
+
+           
             <Button  x:Name="BtnNext" Height="50" Width="50"  HorizontalAlignment="Right" Click="BtnNext_Click" Background="Black">
                 <Viewbox MaxHeight="50" MaxWidth="50">
                     <SymbolIcon Symbol="Next" />
                 </Viewbox>
             </Button>
+
 
         </StackPanel>
 

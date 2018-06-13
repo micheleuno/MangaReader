@@ -548,6 +548,9 @@ namespace MangaReader
                         {
                             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
                             await folder.DeleteAsync();
+                            loadingLoadManga.IsActive = false;
+                            await Clases.Functions.CreateMessageAsync("Se han elimnado los archivos locales");
+                          
                         }
                         catch (Exception)
                         {
@@ -555,7 +558,7 @@ namespace MangaReader
                         }
                         loadingLoadManga.IsActive = false;
                         MangaImages.IsEnabled = true;
-                        await Clases.Functions.CreateMessageAsync("Se han elimnado los archivos locales");                       
+                                       
                     }
                     
                     DeleteGrid(MangaImages.SelectedIndex);
