@@ -83,7 +83,11 @@
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
             <Button x:Name="EpisodeConter"  HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
-            <Button x:Name="ChapterConter" HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
+           
+            <ComboBox Height="50" x:Name="SelectedPage" SelectionChanged="SelectedPageChanged" Background="Black" BorderBrush="Black">
+
+            </ComboBox>
+            <Button x:Name="ChapterConter" HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" />
             <Button  x:Name="BtnPrevous" Height="50" Width="50"  HorizontalAlignment="Right" Click="BtnPrevious_Click" Background="Black" >
                 <Viewbox MaxHeight="50" MaxWidth="50" >
                     <SymbolIcon Symbol="Previous" />
@@ -96,8 +100,8 @@
                     <SymbolIcon Symbol="Next" />
                 </Viewbox>
             </Button>
-
-
+           
+    
         </StackPanel>
 
         
