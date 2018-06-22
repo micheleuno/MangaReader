@@ -70,8 +70,8 @@ namespace MangaReader
             var watch = System.Diagnostics.Stopwatch.StartNew();
             if (Mangas.Count == 0)
             {
-                Mangas = Clases.Functions.CargarDatos();             
-                loading.IsActive = false;
+                Mangas = Clases.Functions.CargarDatos();           
+               
                 FullScreen_loaded();
                 LoadGrid();
                 UpdateItems();

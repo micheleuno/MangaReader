@@ -28,14 +28,11 @@
             <MenuFlyoutItem Text="Información" Tapped="FlyoutInfo" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Text="Eliminar Manga" Tapped="FlyoutEliminar" HorizontalAlignment="Center"/>
-
-            
         </MenuFlyout>
 
 
         <DataTemplate x:Key="photos" >            
             <Grid x:Name="gridMangas" Background="black" FlyoutBase.AttachedFlyout="{StaticResource cmdMenuFlyout}" Tapped="ListTapped">
-
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="0.10*" />
@@ -64,7 +61,7 @@
 
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.075*"/>
+            <RowDefinition Height="0.080*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -121,12 +118,12 @@
             </Viewbox>
         </Button>
         <ProgressRing x:Name="loading" Grid.Column="0" HorizontalAlignment="Center" Grid.ColumnSpan="2"  Grid.Row="1" VerticalAlignment="Center"  Width="100" Height="100" />
-        <ProgressRing x:Name="loadingLoadManga" Grid.ColumnSpan="2" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center"  Width="70" Height="70" />
+        <ProgressRing x:Name="loadingLoadManga" Grid.ColumnSpan="2" HorizontalAlignment="Center" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center"  Width="65" Height="65" />
 
 
         <Controls:AdaptiveGridView  x:Name="MangaImages" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"   IsMultiSelectCheckBoxEnabled="False"
                                    HorizontalAlignment="Center" Margin="10,0,10,10" VerticalAlignment="Center" 
-                                DesiredWidth="200" StretchContentForSingleRow="False" ItemTemplate="{StaticResource photos}"                          
+                               ItemHeight="310" StretchContentForSingleRow="true" ItemTemplate="{StaticResource photos}"                          
                                    />
 
 

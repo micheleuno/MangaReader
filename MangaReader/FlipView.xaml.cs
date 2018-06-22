@@ -269,28 +269,35 @@ namespace MangaReader
         private async void BtnNext_Click(object sender, RoutedEventArgs e)
         {
             BtnNext.IsEnabled = false;
-            if (mangaG.GetActual() + 1 < mangaG.GetEpisodes().Count && mangaG.GetEpisodes().Count > 1)
+
+            if (flagepisodio) //no ha llegado al final
             {
-
-                if (!flagepisodio || await Clases.Functions.SiNoMensaje("Aun no termina el capítulo, ¿Desea continuar?") == 1)
+                if ((mangaG.GetActual() + 1 < mangaG.GetEpisodes().Count) && (!flagepisodio || await Clases.Functions.SiNoMensaje("Aun no termina el capítulo, ¿Desea continuar?") == 1))
                 {
-
-                    if (flagepisodio) //Si no se ha llegado al fin dal capitulo
+                    if (mangaG.GetActual() >= mangaG.GetUltimoEpisodioLeido() && mangaG.GetUltimoEpisodioLeido() < mangaG.GetEpisodes().Count()) //ver si actualizar el ultimo cap leido
                     {
-                        if (mangaG.GetActual() >= mangaG.GetUltimoEpisodioLeido() && mangaG.GetUltimoEpisodioLeido() < mangaG.GetEpisodes().Count())
-                        {
-                            mangaG.SetUltimoEpisodioLeido(mangaG.GetActual() + 1);
-                        }
-                        paginas = paginas + flipView.SelectedIndex + 1;
-                        mangaG.SetActual(mangaG.GetActual() + 1);
+                        mangaG.SetUltimoEpisodioLeido(mangaG.GetActual() + 1);
                     }
+                    paginas = paginas + flipView.SelectedIndex + 1;
+                    mangaG.SetActual(mangaG.GetActual() + 1);
                     CargarCapitulo();
+                }
+                else
+                {
+                    await Clases.Functions.CreateMessageAsync("No hay más cápítulos");
                 }
 
             }
-            else
+            else //Llegó al final del capitulo
             {
-                await Clases.Functions.CreateMessageAsync("No hay más cápítulos");
+                if ((mangaG.GetActual() < mangaG.GetEpisodes().Count && mangaG.GetEpisodes().Count > 1))//si hay mas capitulos
+                {
+                    CargarCapitulo();
+                }
+                else
+                {
+                    await Clases.Functions.CreateMessageAsync("No hay más cápítulos");
+                }
             }
             ActualizarInfo();
             CargarCBox();
