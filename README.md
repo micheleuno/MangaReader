@@ -5,7 +5,7 @@ something like Free Manga Downloader) and read it comfortably in your PC or wind
 
 What to expect:  
 -Add multiple Mangas.  
--Set a root folder and add every new manga pressing a button
+-Set a root folder and add every new manga pressing a button.      
 -Continue from previously read episode and page.    
 -Fullscreen mode.  
 -Change reading direction (Left to Right, Right to Left or Top to Bottom).  
