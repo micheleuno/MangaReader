@@ -325,13 +325,12 @@ namespace MangaReader
         }
 
         private async void AgregarManga()
-        {
-            Boolean flag = false;
+        {           
             if (Mangas == null)
             {
                 Mangas = new List<Manga>();
             }
-            Manga Manga1 = new Manga();           
+                 
             var picker = new Windows.Storage.Pickers.FolderPicker()
             {
                 ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
@@ -342,33 +341,12 @@ namespace MangaReader
             Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();             
             if (folder != null)
             {
+                loadingLoadManga.IsActive = true;
                 MangaImages.IsEnabled = false;
-                foreach (Manga value in Mangas)
+                if (RevisarRepetido(folder))
                 {
-                    if (value.GetName().Equals(folder.Name))
-                        flag = true;
-                }               
-                if (!flag)
-                {
-                    loadingLoadManga.IsActive = true;
-                    await Task.Yield();
-                    await Task.Delay(100);
-                    StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);
-                    Manga1 = (Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));
-                    if (Manga1 != null)
+                    if(!await AgregarMangaFolder(folder))
                     {
-                        loadingLoadManga.IsActive = false;
-                        Mangas.Add(Manga1);
-                        GuardarImagen();                                           
-                        await Task.Delay(100);
-                        Mangas = Mangas.OrderBy(o => o.GetName()).ToList();                        
-                        SaveData();
-                        InsertInPosition(folder.Name);
-                        MangaImages.IsEnabled = true;                     
-                    }
-                    else
-                    {
-                        loadingLoadManga.IsActive = false;
                         await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al agregar: " + folder.Name);
                     }
                 }
@@ -380,6 +358,112 @@ namespace MangaReader
             MangaImages.IsEnabled = true;
             loadingLoadManga.IsActive = false;
         }
+
+        private async Task<bool> AgregarMangaFolder(StorageFolder folder)
+        {
+            Manga Manga1 = new Manga();
+           
+            await Task.Yield();
+            await Task.Delay(100);
+            StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);
+            Manga1 = (Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));
+            if (Manga1 != null)
+            {              
+                Mangas.Add(Manga1);
+                GuardarImagen();
+                await Task.Delay(100);
+                Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
+                SaveData();
+                InsertInPosition(folder.Name);               
+                return true;
+            }
+            else
+            {               
+                return false;               
+            }
+          
+        }
+
+        private Boolean RevisarRepetido(StorageFolder folder)
+        {
+            bool flag = true;
+            foreach (Manga value in Mangas)
+            {
+                if (value.GetName().Equals(folder.Name))
+                    flag = false;
+            }
+            return flag; //true: no está False: ya existe
+        }
+
+        private async void DefaultFolderOnClick(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.Storage.Pickers.FolderPicker()
+            {
+                ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
+                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.Downloads,
+                SettingsIdentifier = "asd"
+            };
+            picker.FileTypeFilter.Add("*");
+            Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();
+            if (folder != null)
+            {
+                StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);
+                localSettings.Values["DefaultDireectory"] = folder.Path;
+                await Clases.Functions.CreateMessageAsync("Se registró " + folder.Path + " como directorio raiz");
+            }
+        
+        }
+
+
+        private async void Reload_click(object sender, RoutedEventArgs e)
+        {
+            int error = 0, bien = 0;
+           
+            if (localSettings.Values["DefaultDireectory"] == null)
+            {
+                await Clases.Functions.CreateMessageAsync("Debe ingresar un directorio raiz en las configuraciones");
+                return;
+            }
+            if (await Clases.Functions.SiNoMensaje("Se revisarán todos los mangas en la carpeta raiz, ¿desea continuar?") == 1)
+            {            
+                loadingLoadManga.IsActive = true;
+                MangaImages.IsEnabled = false;
+                try
+                {
+                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(localSettings.Values["DefaultDireectory"].ToString());
+                    IReadOnlyList<StorageFolder> directories = await folder.GetFoldersAsync();
+                    foreach (StorageFolder value in directories)
+                    {
+                        if (RevisarRepetido(value))
+                        {
+                            await Task.Delay(500);
+                            if( await AgregarMangaFolder(value))
+                            {
+                                bien++;
+                            }
+                            else
+                            {
+                               error++;
+                            }
+                        }
+                    }
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    await Clases.Functions.CreateMessageAsync("El directorio raiz no existe");
+                    MangaImages.IsEnabled = true;
+                    loadingLoadManga.IsActive = false;
+                    return;
+                }
+                loadingLoadManga.IsActive = false;
+                await Clases.Functions.CreateMessageAsync("Se agregaron correctamente "+ bien+" mangas\n"+"Hubo errores en "+ error+" carpetas");
+              
+            }
+            MangaImages.IsEnabled = true;
+            loadingLoadManga.IsActive = false;
+        }
+
+
         private int GetPosition(String nombre)
         {
             for(int i = 0; i < Mangas.Count; i++)
@@ -589,6 +673,8 @@ namespace MangaReader
                 localSettings.Values["FullScrenn"] = 1;
             }
         }
+
+       
 
         private  void EstadisticasClick(object sender, RoutedEventArgs e)
         {
