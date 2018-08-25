@@ -5,14 +5,15 @@ something like Free Manga Downloader) and read it comfortably in your PC or wind
 
 What to expect:  
 -Add multiple Mangas.  
--Continue from previously read episode and page.  
+-Set a root folder and add every new manga pressing a button.      
+-Continue from previously read episode and page.    
 -Fullscreen mode.  
--Change reading direction (Left to Right or Right to Left).  
+-Change reading direction (Left to Right, Right to Left or Top to Bottom).  
 -Fit image to Width or Heigth  
 -Double click to zoom in and out.  
 -Some reading statistics (Number of pages, episodes and mangas finished, and time spent reading).  
--Usable UI.  
--Decent performance on Atom-Based devices.  
+-Almost nice UI.  
+-Decent performance even on Atom-Based devices.  
 -Probable Bug and crashes.     
 -Kinda excesive ram usage (Fixed).      
 -Some stutter in larger images.  
