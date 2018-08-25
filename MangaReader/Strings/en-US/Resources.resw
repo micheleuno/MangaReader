@@ -135,4 +135,7 @@
   <data name="BtnEstadisticas.ToolTipService.ToolTip" xml:space="preserve">
     <value>Reading Statistics</value>
   </data>
+  <data name="BtnReaload.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Reload Root Folder</value>
+  </data>
 </root>

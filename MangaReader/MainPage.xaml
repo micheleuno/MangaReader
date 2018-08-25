@@ -99,7 +99,7 @@
                 </Button.Flyout>
             </Button>
             
-            <Button x:Uid="Reaload" Click="Reload_click"  MinWidth="10" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="">
+            <Button x:Uid="BtnReaload" Click="Reload_click"  MinWidth="10" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="">
                 <Viewbox MaxHeight="30" MaxWidth="30">
                     <SymbolIcon Symbol="Refresh" />
                 </Viewbox>

@@ -135,4 +135,7 @@
   <data name="BtnEstadisticas.ToolTipService.ToolTip" xml:space="preserve">
     <value>Estadísticas de lectura</value>
   </data>
+  <data name="BtnReaload.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Recargar Carpeta Raiz</value>
+  </data>
 </root>
