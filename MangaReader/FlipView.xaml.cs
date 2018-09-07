@@ -115,7 +115,8 @@ namespace MangaReader
         private void CargarCBox()
         {
             SelectedPage.Items.Clear();
-            for (int i = 0; i < episodeG.GetPages().Count; i++)
+            int lenght = episodeG.GetPages().Count;
+            for (int i = 0; i < lenght; i++)
             {
                 SelectedPage.Items.Add(i + 1);
             }

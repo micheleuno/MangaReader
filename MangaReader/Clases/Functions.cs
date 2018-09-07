@@ -18,7 +18,7 @@ namespace MangaReader.Clases
         {          
                 string[] folders1 = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);
                 if (folders1.Count() > 0)
-                {
+                {               
                     Manga manga = new Manga();
                     manga.SetDirectory(path);
                     manga.SetName(name);
@@ -26,7 +26,8 @@ namespace MangaReader.Clases
                     manga.SetUltimoEpisodioLeido(result);
                     Int32.TryParse(direccion, out result);
                     manga.SetDirección(result);
-                    for (int i = 0; i < folders1.Count(); i++)
+                    int lenght = folders1.Count();
+                    for (int i = 0; i < lenght; i++)
                     {
                         Episode episode = new Episode();
                         episode.SetDirectory(folders1.ElementAt(i));
@@ -47,7 +48,8 @@ namespace MangaReader.Clases
                 string[] pages = System.IO.Directory.GetFiles(path).Select(Path.GetFullPath).ToArray();
                 string[] extensions = new[] { ".png", ".jpg", ".tiff" };
                 DirectoryInfo dInfo = new DirectoryInfo(path);
-                for (int i = 0; i < pages.Length; i++)
+                int lenght = pages.Length;
+                for (int i = 0; i < lenght; i++)
                 {
                     episode.AddPage(pages[i]);                    
                 }

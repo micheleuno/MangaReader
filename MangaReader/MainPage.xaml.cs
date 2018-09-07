@@ -242,8 +242,9 @@ namespace MangaReader
             items = new ObservableCollection<MenuItem>();
             try
             {
-                items.Add(new MenuItem() { IName = new Uri("ms-appx:///Assets/Agregar.png"),Titulo="Agregar Nuevo" });               
-                for (int i = 0; i < Mangas.Count(); i++)
+                items.Add(new MenuItem() { IName = new Uri("ms-appx:///Assets/Agregar.png"),Titulo="Agregar Nuevo" });
+                int length = Mangas.Count();
+                for (int i = 0; i < length; i++)
                 {
                     if(File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg"))
                     {
@@ -466,7 +467,8 @@ namespace MangaReader
 
         private int GetPosition(String nombre)
         {
-            for(int i = 0; i < Mangas.Count; i++)
+            int length = Mangas.Count;
+            for (int i = 0; i < length; i++)
             {
                 if (Mangas.ElementAt(i).GetName().Equals(nombre)){
                     return i+1;
