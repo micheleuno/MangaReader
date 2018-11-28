@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
+using Windows.Storage.AccessCache;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -14,28 +15,41 @@ namespace MangaReader.Clases
 {
     class Functions
     {
-        public static Manga LoadAll(Windows.Storage.StorageFolder folder, String path, String name, String Actual, String direccion)
-        {          
-                string[] folders1 = System.IO.Directory.GetDirectories(folder.Path, "*", System.IO.SearchOption.AllDirectories);
-                if (folders1.Count() > 0)
-                {               
+        public static async Task<Manga> LoadAllAsync(StorageFolder folder, String path, String name, String Actual, String direccion)
+        {
+            var boolean = StorageApplicationPermissions.FutureAccessList.ContainsItem(folder.Name);
+
+            if (!boolean)
+            {
+                Debug.WriteLine("No tiene acceso");           
+            }
+            try
+            {
+                
+                IReadOnlyList<StorageFolder> fileList = await folder.GetFoldersAsync();
+                if (fileList.Count() > 0)
+                {
                     Manga manga = new Manga();
                     manga.SetDirectory(path);
                     manga.SetName(name);
                     Int32.TryParse(Actual, out int result);
                     manga.SetUltimoEpisodioLeido(result);
                     Int32.TryParse(direccion, out result);
-                    manga.SetDirección(result);
-                    int lenght = folders1.Count();
-                    for (int i = 0; i < lenght; i++)
+                    manga.SetDirección(result);                    
+                    foreach (StorageFolder file in fileList)
                     {
                         Episode episode = new Episode();
-                        episode.SetDirectory(folders1.ElementAt(i));
+                        episode.SetDirectory(file.Path);
                         manga.SetEpisode(episode);
                     }
                     return manga;
-                
 
+
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return null;
             }
             return null;
         }
@@ -44,14 +58,13 @@ namespace MangaReader.Clases
         {
             try
             {
-                Episode episode = new Episode();
-                string[] pages = System.IO.Directory.GetFiles(path).Select(Path.GetFullPath).ToArray();
-                string[] extensions = new[] { ".png", ".jpg", ".tiff" };
-                DirectoryInfo dInfo = new DirectoryInfo(path);
-                int lenght = pages.Length;
-                for (int i = 0; i < lenght; i++)
+                Episode episode = new Episode();              
+
+                StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path);
+                IReadOnlyList<StorageFile> fileList = await folder.GetFilesAsync();
+                foreach (StorageFile file in fileList)
                 {
-                    episode.AddPage(pages[i]);                    
+                    episode.AddPage(file.Path);                    
                 }
                 DirectoryInfo info = new DirectoryInfo(path);
                 episode.SetDirectory(info.Name);

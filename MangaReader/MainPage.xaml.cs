@@ -331,7 +331,7 @@ namespace MangaReader
             {
                 Mangas = new List<Manga>();
             }
-                 
+           
             var picker = new Windows.Storage.Pickers.FolderPicker()
             {
                 ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
@@ -339,14 +339,19 @@ namespace MangaReader
                 SettingsIdentifier = "asd"
             };
             picker.FileTypeFilter.Add("*");
-            Windows.Storage.StorageFolder folder = await picker.PickSingleFolderAsync();             
+            StorageFolder folder = await picker.PickSingleFolderAsync();           
+
+
+               
             if (folder != null)
             {
+                StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);                   
+
                 loadingLoadManga.IsActive = true;
                 MangaImages.IsEnabled = false;
                 if (RevisarRepetido(folder))
                 {
-                    if(!await AgregarMangaFolder(folder))
+                    if (!await AgregarMangaFolder(folder))
                     {
                         await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al agregar: " + folder.Name);
                     }
@@ -357,7 +362,8 @@ namespace MangaReader
                 }
             }
             MangaImages.IsEnabled = true;
-            loadingLoadManga.IsActive = false;
+            loadingLoadManga.IsActive = false;           
+         
         }
 
         private async Task<bool> AgregarMangaFolder(StorageFolder folder)
@@ -366,8 +372,8 @@ namespace MangaReader
            
             await Task.Yield();
             await Task.Delay(100);
-            StorageApplicationPermissions.FutureAccessList.AddOrReplace(folder.Name, folder);
-            Manga1 = (Clases.Functions.LoadAll(folder, folder.Path, folder.Name, "0", "0"));
+          
+            Manga1 = await (Clases.Functions.LoadAllAsync(folder, folder.Path, folder.Name, "0", "0"));
             if (Manga1 != null)
             {              
                 Mangas.Add(Manga1);
@@ -375,7 +381,7 @@ namespace MangaReader
                 await Task.Delay(100);
                 Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
                 SaveData();
-                InsertInPosition(folder.Name);               
+                InsertInPosition(folder.Name);             
                 return true;
             }
             else
@@ -718,17 +724,18 @@ namespace MangaReader
                 await Task.Yield();
                 await Task.Delay(100);
                 try
-                {                      
-                    string[] folders1 = System.IO.Directory.GetDirectories(directorio, "*", System.IO.SearchOption.AllDirectories);
-                    int cantidadActual = Mangas.ElementAt(MangaImages.SelectedIndex-1).GetEpisodes().Count;
-                    int cantidadNueva = folders1.Count();
+                {
+                    StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
+                    IReadOnlyList<StorageFile> fileList = await folder.GetFilesAsync();
+                    int cantidadActual = Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetEpisodes().Count;
+                    int cantidadNueva = fileList.Count();
                     if (cantidadNueva > cantidadActual)
                     {
                         for (int i = cantidadActual; i < cantidadNueva; i++)
                         {
                             Episode episode = new Episode();
-                            episode.SetDirectory(folders1[i]);
-                            Mangas.ElementAt(MangaImages.SelectedIndex-1).SetEpisode(episode);
+                            episode.SetDirectory(fileList.ElementAt(i).Path);
+                            Mangas.ElementAt(MangaImages.SelectedIndex - 1).SetEpisode(episode);
                         }
                         SaveData();
                         MangaImages.IsEnabled = true;
@@ -741,9 +748,7 @@ namespace MangaReader
                         loadingLoadManga.IsActive = false;
                         await Clases.Functions.CreateMessageAsync("No hay nuevos capítulos que agregar");
                     }
-                   
-
-                    }
+                }
                     catch (Exception)
                     {
                         await Clases.Functions.CreateMessageAsync("Ha ocurrido un error al recargar el manga");

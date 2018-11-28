@@ -71,11 +71,12 @@ namespace MangaReader
             loading.IsActive = true;
             mangaG = manga;
             MangasG = Mangas;
-            episodeG = await Clases.Functions.LoadEpisodeAsync(mangaG.GetEpisodes().ElementAt(mangaG.GetActual()).GetDirectory());
-            await Clases.Functions.CheckPagesNumber(episodeG);
+           
 
             try
             {
+                episodeG = await Clases.Functions.LoadEpisodeAsync(mangaG.GetEpisodes().ElementAt(mangaG.GetActual()).GetDirectory());
+                await Clases.Functions.CheckPagesNumber(episodeG);
                 await CargarBitmap(-1, false);
                 LoadFlipView();
                 if (localSettings.Values[mangaG.GetName()] != null && !localSettings.Values[mangaG.GetName()].ToString().Equals("0") && mangaG.GetActual() == mangaG.GetUltimoEpisodioLeido())
