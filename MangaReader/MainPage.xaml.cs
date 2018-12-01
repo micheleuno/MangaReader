@@ -377,8 +377,8 @@ namespace MangaReader
             if (Manga1 != null)
             {              
                 Mangas.Add(Manga1);
-                GuardarImagen();
-                await Task.Delay(100);
+                GuardarImagen(folder.Path, folder.Name);
+                await Task.Delay(150);
                 Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
                 SaveData();
                 InsertInPosition(folder.Name);             
@@ -483,7 +483,7 @@ namespace MangaReader
             return Mangas.Count+1 ;
         }
 
-        private async void GuardarImagen()
+        private async void GuardarImagen(String path, String name)
         {
             List<String> Pages = new List<String>();
             Episode episode = new Episode();
@@ -496,7 +496,7 @@ namespace MangaReader
                 Pages = episode.GetPages();
                 Url = (episode.GetPages().ElementAt(0));
                 StorageFile file = await StorageFile.GetFileFromPathAsync((Url));
-                CopiarImagen(file, Mangas.ElementAt(Mangas.Count - 1).GetName());                              
+                CopiarImagen(file, name);                              
             }  
         }
 
