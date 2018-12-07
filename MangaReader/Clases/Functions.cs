@@ -21,7 +21,7 @@ namespace MangaReader.Clases
 
             if (!boolean)
             {
-                Debug.WriteLine("No tiene acceso");           
+                Debug.WriteLine("No tiene acceso"+ folder.Name);           
             }
             try
             {

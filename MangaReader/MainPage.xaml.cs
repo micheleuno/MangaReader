@@ -371,16 +371,16 @@ namespace MangaReader
             Manga Manga1 = new Manga();
            
             await Task.Yield();
-            await Task.Delay(100);
+            
           
             Manga1 = await (Clases.Functions.LoadAllAsync(folder, folder.Path, folder.Name, "0", "0"));
             if (Manga1 != null)
             {              
                 Mangas.Add(Manga1);
-                GuardarImagen(folder.Path, folder.Name);
-                await Task.Delay(150);
+                GuardarImagen(folder.Path, folder.Name);               
                 Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
                 SaveData();
+                await Task.Delay(1200);
                 InsertInPosition(folder.Name);             
                 return true;
             }
@@ -442,8 +442,7 @@ namespace MangaReader
                     foreach (StorageFolder value in directories)
                     {
                         if (RevisarRepetido(value))
-                        {
-                            await Task.Delay(500);
+                        {                            
                             if( await AgregarMangaFolder(value))
                             {
                                 bien++;
@@ -514,8 +513,8 @@ namespace MangaReader
             {
                 MangaImages.IsEnabled = false;
                 CopiarImagen(file, Mangas.ElementAt(selecteditem).GetName());
-                MangaImages.SelectedIndex = selecteditem;
-                await Task.Delay(500);
+                await Task.Delay(1200);
+                MangaImages.SelectedIndex = selecteditem;                       
                 DeleteGrid(selecteditem+1);
                 InsertInPosition(Mangas.ElementAt(selecteditem).GetName());
                 MangaImages.IsEnabled = true;                          
@@ -535,11 +534,12 @@ namespace MangaReader
                     await OldFile.DeleteAsync();
                 }            
                 await file.CopyAsync(projectFolder,Nombre + ".jpg", NameCollisionOption.ReplaceExisting);
+                
             }
             catch(FileNotFoundException)
             {
                 await Clases.Functions.CreateMessageAsync("Ocurrió un error al cambiar la imagen");
-            }
+            }           
         }
 
         private async void ContinuarLectura()
@@ -726,28 +726,30 @@ namespace MangaReader
                 try
                 {
                     StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
-                    IReadOnlyList<StorageFile> fileList = await folder.GetFilesAsync();
+                    IReadOnlyList<StorageFolder> fileList = await folder.GetFoldersAsync();
                     int cantidadActual = Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetEpisodes().Count;
-                    int cantidadNueva = fileList.Count();
-                    if (cantidadNueva > cantidadActual)
-                    {
-                        for (int i = cantidadActual; i < cantidadNueva; i++)
+                     
+                    int cantidadNueva = fileList.Count;
+                       // Debug.WriteLine("cant actual " + cantidadActual + " cantidad nueva " + fileList.ElementAt(0).Name + " manga actual " + directorio);
+                        if (cantidadNueva > cantidadActual)
                         {
-                            Episode episode = new Episode();
-                            episode.SetDirectory(fileList.ElementAt(i).Path);
-                            Mangas.ElementAt(MangaImages.SelectedIndex - 1).SetEpisode(episode);
+                            for (int i = cantidadActual; i < cantidadNueva; i++)
+                            {
+                                Episode episode = new Episode();
+                                episode.SetDirectory(fileList.ElementAt(i).Path);
+                                Mangas.ElementAt(MangaImages.SelectedIndex - 1).SetEpisode(episode);
+                            }
+                            SaveData();
+                            MangaImages.IsEnabled = true;
+                            loadingLoadManga.IsActive = false;
+                            await Clases.Functions.CreateMessageAsync("Se agregaron " + (cantidadNueva - cantidadActual) + " capítulos nuevos");
                         }
-                        SaveData();
-                        MangaImages.IsEnabled = true;
-                        loadingLoadManga.IsActive = false;
-                        await Clases.Functions.CreateMessageAsync("Se agregaron " + (cantidadNueva - cantidadActual) + " capítulos nuevos");
-                    }
-                    else
-                    {
-                        MangaImages.IsEnabled = true;
-                        loadingLoadManga.IsActive = false;
-                        await Clases.Functions.CreateMessageAsync("No hay nuevos capítulos que agregar");
-                    }
+                        else
+                        {
+                            MangaImages.IsEnabled = true;
+                            loadingLoadManga.IsActive = false;
+                            await Clases.Functions.CreateMessageAsync("No hay nuevos capítulos que agregar");
+                        }
                 }
                     catch (Exception)
                     {
