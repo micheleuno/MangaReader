@@ -35,7 +35,7 @@ namespace MangaReader
     {
         private static List<Manga> Mangas = new List<Manga>();
         ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>();
-        Windows.Storage.ApplicationDataContainer localSettings =
+        ApplicationDataContainer localSettings =
         Windows.Storage.ApplicationData.Current.LocalSettings;
         Windows.Storage.StorageFolder localFolder =
         Windows.Storage.ApplicationData.Current.LocalFolder;

@@ -35,16 +35,16 @@ namespace MangaReader.Clases
 
         public static List<List<String>> ReadJsonData()
         {
-            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + "Datos.json"))
+            if (!File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + "Datos.json"))
             {
-                using (StreamReader r = File.OpenText((ApplicationData.Current.LocalFolder.Path + @"\" + "Datos.json")))
-                {
-                    string json = r.ReadToEnd();
-                    List<List<String>> items = JsonConvert.DeserializeObject<List<List<String>>>(json);
-                    return items;
-                }
+                return null;
             }
-            return null;
+            using (StreamReader r = File.OpenText((ApplicationData.Current.LocalFolder.Path + @"\" + "Datos.json")))
+            {
+                string json = r.ReadToEnd();
+                List<List<String>> items = JsonConvert.DeserializeObject<List<List<String>>>(json);
+                return items;
+            }            
         }
 
         public static async Task WriteJsonStatistics(int paginas, int episodios, Stopwatch sw, int mangasterminados)
@@ -78,16 +78,16 @@ namespace MangaReader.Clases
 
         public static List<String> ReadJsonEstaditicas()
         {
-            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + "estadisticas.json"))
+            if (!File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + "estadisticas.json"))
             {
-                using (StreamReader r = File.OpenText((ApplicationData.Current.LocalFolder.Path + @"\" + "estadisticas.json")))
-                {
-                    string json = r.ReadToEnd();
-                    List<String> items = JsonConvert.DeserializeObject<List<String>>(json);
-                    return items;
-                }
+               return null;
             }
-            return null;
+            using (StreamReader r = File.OpenText((ApplicationData.Current.LocalFolder.Path + @"\" + "estadisticas.json")))
+            {
+                string json = r.ReadToEnd();
+                List<String> items = JsonConvert.DeserializeObject<List<String>>(json);
+                return items;
+            }            
         }
 
         public static async Task WriteJsonEpisodios(List<Manga> Mangas)
@@ -111,16 +111,17 @@ namespace MangaReader.Clases
 
         public static List<List<String>> ReadJsonEpisodios()
         {
-            if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + "prueba.json"))
+            if (!File.Exists(ApplicationData.Current.LocalFolder.Path + @"\" + "prueba.json"))
             {
-                using (StreamReader r = File.OpenText((ApplicationData.Current.LocalFolder.Path + @"\" + "prueba.json")))
-                {
-                    string json = r.ReadToEnd();
-                    List<List<String>> items = JsonConvert.DeserializeObject<List<List<String>>>(json);
-                    return items;
-                }
+                return null;
             }
-            return null;
+            using (StreamReader r = File.OpenText((ApplicationData.Current.LocalFolder.Path + @"\" + "prueba.json")))
+            {
+                string json = r.ReadToEnd();
+                List<List<String>> items = JsonConvert.DeserializeObject<List<List<String>>>(json);
+                return items;
+            }
+           
         }
     }
 }

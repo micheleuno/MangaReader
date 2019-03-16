@@ -116,7 +116,7 @@ namespace MangaReader
         private void CargarCBox()
         {
             SelectedPage.Items.Clear();
-            int lenght = episodeG.GetPages().Count;
+            int lenght = flipView.Items.Count;
             for (int i = 0; i < lenght; i++)
             {
                 SelectedPage.Items.Add(i + 1);
@@ -226,14 +226,22 @@ namespace MangaReader
             {
                 for (int i = selectedindex; i <= pagina; i++)
                 {
-                    flipView.SelectedIndex = i;
+                    if (flipView.Items.Count > i)
+                    {
+                        flipView.SelectedIndex = i;
+                    }
+                    
                 }
             }
             else
             {
                 for (int i = selectedindex; i >= pagina; i--)
                 {
-                    flipView.SelectedIndex = i;
+                    if (flipView.Items.Count > i)
+                    {
+                        flipView.SelectedIndex = i;
+                    }
+                    
                 }
             }
             ActualizarInfo();
@@ -282,6 +290,7 @@ namespace MangaReader
                     }
                     paginas = paginas + flipView.SelectedIndex + 1;
                     mangaG.SetActual(mangaG.GetActual() + 1);
+                    
                     CargarCapitulo();
                 }
                 else
@@ -347,6 +356,7 @@ namespace MangaReader
                     }
                     paginas = paginas + flipView.SelectedIndex + 1;
                     mangaG.SetActual(mangaG.GetActual() - reduccion);
+                   
                     CargarCapitulo();
                 }
             }

@@ -24,8 +24,7 @@ namespace MangaReader.Clases
                 Debug.WriteLine("No tiene acceso"+ folder.Name);           
             }
             try
-            {
-                
+            {                
                 IReadOnlyList<StorageFolder> fileList = await folder.GetFoldersAsync();
                 if (fileList.Count() > 0)
                 {
@@ -43,8 +42,6 @@ namespace MangaReader.Clases
                         manga.SetEpisode(episode);
                     }
                     return manga;
-
-
                 }
             }
             catch (UnauthorizedAccessException)
