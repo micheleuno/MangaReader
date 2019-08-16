@@ -74,6 +74,8 @@ namespace MangaReader.Clases
             }
         }
 
+    
+
         public static List<Manga> CargarDatos()
         {
             List<Manga> Mangas = new List<Manga>();

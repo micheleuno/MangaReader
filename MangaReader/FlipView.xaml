@@ -43,8 +43,9 @@
         <ItemsPanelTemplate  x:Name="vertical">
             <StackPanel Orientation="Vertical"/>           
             </ItemsPanelTemplate>
-  
+   
 
+ 
     </Page.Resources>
 
 
@@ -79,19 +80,41 @@
             <Viewbox MaxHeight="30" MaxWidth="30">
                 <SymbolIcon Symbol="Clear" />
             </Viewbox>
+            <Button.Resources>
+                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Black"/>
+            </Button.Resources>
         </Button>
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left">
-            <Button x:Name="EpisodeConter"  HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" Content="Cargando..."/>
+            <Button x:Name="EpisodeConter"  HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" Content="Cargando..." >
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Black"/>
+                </Button.Resources>
+            </Button>
            
             <ComboBox Height="50" x:Name="SelectedPage" SelectionChanged="SelectedPageChanged" Background="Black" BorderBrush="Black">
-
+                <ComboBox.Resources>
+                    <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="White"/>
+                    <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="Black"/>
+                </ComboBox.Resources>
             </ComboBox>
-            <Button x:Name="ChapterConter" HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" />
+            <Button x:Name="ChapterConter" HorizontalAlignment="Center"  Height="50" VerticalAlignment="Bottom" Background="Black" >
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Black"/>
+                </Button.Resources>
+
+            </Button>
             <Button  x:Name="BtnPrevous" Height="50" Width="50"  HorizontalAlignment="Right" Click="BtnPrevious_Click" Background="Black" >
                 <Viewbox MaxHeight="50" MaxWidth="50" >
                     <SymbolIcon Symbol="Previous" />
                 </Viewbox>
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Black"/>
+                </Button.Resources>
             </Button>
 
            
@@ -99,8 +122,11 @@
                 <Viewbox MaxHeight="50" MaxWidth="50">
                     <SymbolIcon Symbol="Next" />
                 </Viewbox>
-            </Button>
-           
+                <Button.Resources>
+                    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Black"/>
+                </Button.Resources>
+            </Button>          
     
         </StackPanel>
 

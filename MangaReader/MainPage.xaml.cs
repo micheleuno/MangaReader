@@ -5,8 +5,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Devices.Power;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.Storage.Search;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
@@ -98,7 +100,7 @@ namespace MangaReader
             }
         }
 
-        private void ListTapped(object sender, TappedRoutedEventArgs e)
+        private void  ListTapped(object sender, TappedRoutedEventArgs e)
         {
             int numero = MangaImages.SelectedIndex;
             if (numero == 0)
@@ -120,7 +122,29 @@ namespace MangaReader
 
                 NombreManga.Text = Mangas.ElementAt(numero).GetName();
                 FlyoutBase.ShowAttachedFlyout(sender as FrameworkElement);
-            }          
+            }
+            //getNumberOfEpisodes();
+        }
+        
+        private async void getNumberOfEpisodes()
+        {
+            String directorio = Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetDirectory();    
+           StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
+            Debug.WriteLine("Hola"+ directorio);
+            if (folder != null)
+            {
+                var sw = new Stopwatch();
+                sw.Start();
+                var queryOptions = new QueryOptions
+                {
+                    FolderDepth = FolderDepth.Deep,
+                    IndexerOption = IndexerOption.UseIndexerWhenAvailable
+                };
+                var query = folder.CreateFileQueryWithOptions(queryOptions);
+                var allFiles = await query.GetFilesAsync();               
+                sw.Stop();
+                Debug.WriteLine("Ellapsed time:"+sw.ElapsedMilliseconds+ "Archivos"+allFiles.Count);
+            }
         }
 
         private async void FlyoutInfo(object sender, RoutedEventArgs e)
@@ -154,7 +178,32 @@ namespace MangaReader
             });
 
 
-           
+
+            var aggBattery = Battery.AggregateBattery;
+
+            // Get report
+            var report = aggBattery.GetReport();
+            panel.Children.Add(new TextBlock
+            {
+                Text = "Charge rate (mW): " + report.ChargeRateInMilliwatts.ToString(),
+                TextWrapping = TextWrapping.Wrap,
+            });
+            panel.Children.Add(new TextBlock
+            {
+                Text = "Design energy capacity (mWh): " + report.DesignCapacityInMilliwattHours.ToString(),
+                TextWrapping = TextWrapping.Wrap,
+            });
+            panel.Children.Add(new TextBlock
+            {
+                Text = "Fully-charged energy capacity (mWh): " + report.FullChargeCapacityInMilliwattHours.ToString(),
+                TextWrapping = TextWrapping.Wrap,
+            });
+            panel.Children.Add(new TextBlock
+            {
+                Text = "Remaining energy capacity (mWh): " + report.RemainingCapacityInMilliwattHours.ToString(),
+                TextWrapping = TextWrapping.Wrap,
+            });
+
             dialog.SecondaryButtonText = "Abrir directorio";
             dialog.SecondaryButtonClick += async delegate
             {

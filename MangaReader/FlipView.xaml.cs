@@ -115,8 +115,11 @@ namespace MangaReader
 
         private void CargarCBox()
         {
+            List<String> Pages = new List<String>();
+            Pages = episodeG.GetPages();              
+            cantPag = Pages.Count();
             SelectedPage.Items.Clear();
-            int lenght = flipView.Items.Count;
+            int lenght = cantPag;
             for (int i = 0; i < lenght; i++)
             {
                 SelectedPage.Items.Add(i + 1);
@@ -158,6 +161,7 @@ namespace MangaReader
                 {
                     SiguienteEpisodio();
                 }
+                
             }
 
         }
@@ -214,7 +218,7 @@ namespace MangaReader
             loading.IsActive = false;
             contPag = pagina + 1;
             contPagAnt = pagina;
-            MoverPaginaFlipView(pagina);
+            MoverPaginaFlipView(pagina);            
             flipView.IsEnabled = true;
             cargaBitmap = false;
         }
@@ -230,7 +234,6 @@ namespace MangaReader
                     {
                         flipView.SelectedIndex = i;
                     }
-                    
                 }
             }
             else
@@ -241,7 +244,6 @@ namespace MangaReader
                     {
                         flipView.SelectedIndex = i;
                     }
-                    
                 }
             }
             ActualizarInfo();
@@ -282,7 +284,11 @@ namespace MangaReader
 
             if (flagepisodio) //no ha llegado al final
             {
-                if ((mangaG.GetActual() + 1 < mangaG.GetEpisodes().Count) && (!flagepisodio || await Clases.Functions.SiNoMensaje("Aun no termina el capítulo, ¿Desea continuar?") == 1))
+                if ((mangaG.GetActual() + 1 >= mangaG.GetEpisodes().Count))
+                {
+                    await Clases.Functions.CreateMessageAsync("No hay más cápítulos");
+                }
+                else if (!flagepisodio || await Clases.Functions.SiNoMensaje("Aun no termina el capítulo, ¿Desea continuar?") == 1)
                 {
                     if (mangaG.GetActual() >= mangaG.GetUltimoEpisodioLeido() && mangaG.GetUltimoEpisodioLeido() < mangaG.GetEpisodes().Count()) //ver si actualizar el ultimo cap leido
                     {
@@ -290,14 +296,8 @@ namespace MangaReader
                     }
                     paginas = paginas + flipView.SelectedIndex + 1;
                     mangaG.SetActual(mangaG.GetActual() + 1);
-                    
                     CargarCapitulo();
-                }
-                else
-                {
-                    await Clases.Functions.CreateMessageAsync("No hay más cápítulos");
-                }
-
+                } 
             }
             else //Llegó al final del capitulo
             {
@@ -309,9 +309,7 @@ namespace MangaReader
                 {
                     await Clases.Functions.CreateMessageAsync("No hay más cápítulos");
                 }
-            }
-            ActualizarInfo();
-            CargarCBox();
+            }                                  
             BtnNext.IsEnabled = true;
         }
 
@@ -338,12 +336,13 @@ namespace MangaReader
             }
             cargaBitmap = false;
             await Clases.Functions.CheckPagesNumber(episodeG);
+            CargarCBox();
             loading.IsActive = false;
         }
 
         private async void BtnPrevious_Click(object sender, RoutedEventArgs e)
         {
-            BtnPrevous.IsEnabled = true;
+            BtnPrevous.IsEnabled = false;
             int reduccion = 1;
             Debug.WriteLine(mangaG.GetActual());
             if (mangaG.GetActual() >= 1)
@@ -355,8 +354,7 @@ namespace MangaReader
                         reduccion = 2;
                     }
                     paginas = paginas + flipView.SelectedIndex + 1;
-                    mangaG.SetActual(mangaG.GetActual() - reduccion);
-                   
+                    mangaG.SetActual(mangaG.GetActual() - reduccion);                   
                     CargarCapitulo();
                 }
             }
@@ -364,8 +362,7 @@ namespace MangaReader
             {
                 await Clases.Functions.CreateMessageAsync("No hay más cápítulos");
             }
-            ActualizarInfo();
-            CargarCBox();
+            ActualizarInfo();            
             BtnPrevous.IsEnabled = true;
         }
 
@@ -499,7 +496,8 @@ namespace MangaReader
                 EpisodeConter.Content = "Página " + contPag + " de " + cantPag;
             if (!flagepisodio)
                 episodioactual--;
-            ChapterConter.Content = " Capítulo " + (episodioactual + 1).ToString() + " de " + episodios;
+            ChapterConter.Content = " Capítulo " + (episodioactual + 1).ToString() + " de " + episodios;        
+            
 
         }
 
