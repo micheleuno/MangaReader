@@ -138,4 +138,28 @@
   <data name="BtnReaload.ToolTipService.ToolTip" xml:space="preserve">
     <value>Reload Root Folder</value>
   </data>
+  <data name="BtnClose.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="CambiarImagen.Text" xml:space="preserve">
+    <value>Change Image</value>
+  </data>
+  <data name="ContLecturaT.Text" xml:space="preserve">
+    <value>Continue Reading</value>
+  </data>
+  <data name="Eliminar.Text" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Info.Text" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="LeerCapitulo.Text" xml:space="preserve">
+    <value>Read Episode</value>
+  </data>
+  <data name="Recargar.Text" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="SelEpi.Text" xml:space="preserve">
+    <value>Select Episode</value>
+  </data>
 </root>

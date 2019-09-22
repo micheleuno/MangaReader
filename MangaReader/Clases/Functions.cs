@@ -124,7 +124,7 @@ namespace MangaReader.Clases
                                 cont = 0;
                             if (numero != cont)
                             {
-                                Debug.WriteLine("numero " + numero);
+                                //Debug.WriteLine("numero " + numero);
                                 flag = false;
                                 break;
                             }
@@ -135,14 +135,12 @@ namespace MangaReader.Clases
                         {
                             flag = true;
                             break;
-                        }
-                       
+                        }                       
                     }
 
                     if (!flag)
                     {
-                        await CreateMessageAsync("Puede que falten páginas");
-                        
+                        await CreateMessageAsync("Puede que falten páginas");                        
                     }
                 }
             }
@@ -164,7 +162,6 @@ namespace MangaReader.Clases
             {
                 foreach (String value in Completeurl)
                 {
-
                     if (ImageExtensions.Contains(Path.GetExtension(value).ToUpperInvariant()))
                     {                                          
                         StorageFile file = await StorageFile.GetFileFromPathAsync((value));
@@ -179,8 +176,7 @@ namespace MangaReader.Clases
                         var imageUriForlogo = new Uri("ms-appx:///Assets/Imagen.png");
                         image.UriSource = imageUriForlogo;
                         images.Add(image);
-                    }
-                                     
+                    }                                     
                 }
             }
             catch (Exception)
@@ -225,5 +221,4 @@ namespace MangaReader.Clases
             
         }
     }
-
 }

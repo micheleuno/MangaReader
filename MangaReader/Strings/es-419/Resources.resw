@@ -138,4 +138,28 @@
   <data name="BtnReaload.ToolTipService.ToolTip" xml:space="preserve">
     <value>Recargar Carpeta Raiz</value>
   </data>
+  <data name="BtnClose.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="CambiarImagen.Text" xml:space="preserve">
+    <value>Cambiar Imagen</value>
+  </data>
+  <data name="ContLecturaT.Text" xml:space="preserve">
+    <value>Continuar Lectura</value>
+  </data>
+  <data name="Eliminar.Text" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="Info.Text" xml:space="preserve">
+    <value>Información</value>
+  </data>
+  <data name="LeerCapitulo.Text" xml:space="preserve">
+    <value>Leer Capítulo</value>
+  </data>
+  <data name="Recargar.Text" xml:space="preserve">
+    <value>Recargar</value>
+  </data>
+  <data name="SelEpi.Text" xml:space="preserve">
+    <value>Seleccionar Capítulo</value>
+  </data>
 </root>

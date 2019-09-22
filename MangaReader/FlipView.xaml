@@ -23,7 +23,7 @@
                                 />
             </ScrollViewer>
         </DataTemplate>
-    
+
         <DataTemplate x:Name="NoAjustar" >
             <ScrollViewer   MinZoomFactor="0.8" 
                                    DoubleTapped="ScrollViewer_DoubleTapped"
@@ -41,45 +41,33 @@
 
 
         <ItemsPanelTemplate  x:Name="vertical">
-            <StackPanel Orientation="Vertical"/>           
-            </ItemsPanelTemplate>
-   
+            <StackPanel Orientation="Vertical"/>
+        </ItemsPanelTemplate>
 
- 
+
+
     </Page.Resources>
 
 
 
 
 
-    <Grid x:Name="Gridp" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">    
+    <Grid x:Name="Gridp" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
 
-        <FlipView   x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark"  ItemsSource="{Binding BitMapCollection}" >
-
-            <FlipView.ItemTemplate>
-                <DataTemplate x:Name="asd">
-                    <ScrollViewer  MinZoomFactor="0.8" 
-                                   DoubleTapped="ScrollViewer_DoubleTapped"
-                                   x:Name="ScrollViewerMain"                                   
-                                    HorizontalScrollBarVisibility="Auto"
-                                    VerticalScrollBarVisibility="Auto"
-                                    ZoomMode="Enabled"
-                                   AutomationProperties.AccessibilityView="Raw"                
-                                  >
-                        <Image  x:Name="image" 
-                                Source="{Binding}" 
-                                MaxHeight="{Binding Path=ViewportHeight, ElementName=ScrollViewerMain}"                             
-                                />
-                    </ScrollViewer>
-                </DataTemplate>
-
-            </FlipView.ItemTemplate>            
+        <FlipView   x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" >
+           
         </FlipView>
-        
-        <Button x:Name="BtnClose"  Height="50" Width="50"  Background="Black" Click="BtnClose_Click" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+        <Button x:Name="BtnClose"  Height="50" Width="50"  Background="Black" Click="BtnClose_Click" HorizontalAlignment="Right" VerticalAlignment="Top">
             <Viewbox MaxHeight="30" MaxWidth="30">
                 <SymbolIcon Symbol="Clear" />
             </Viewbox>
+            <Button.Resources>
+                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Black"/>
+            </Button.Resources>
+        </Button>
+        <Button  x:Name="BtnPercentage" Height="50" Width="50"  HorizontalAlignment="Left" Background="Black" VerticalAlignment="Top">
             <Button.Resources>
                 <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
                 <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Black"/>
@@ -92,8 +80,7 @@
                     <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Black"/>
                 </Button.Resources>
-            </Button>
-           
+            </Button>           
             <ComboBox Height="50" x:Name="SelectedPage" SelectionChanged="SelectedPageChanged" Background="Black" BorderBrush="Black">
                 <ComboBox.Resources>
                     <SolidColorBrush x:Key="ComboBoxForegroundPointerOver" Color="White"/>
@@ -117,7 +104,7 @@
                 </Button.Resources>
             </Button>
 
-           
+
             <Button  x:Name="BtnNext" Height="50" Width="50"  HorizontalAlignment="Right" Click="BtnNext_Click" Background="Black">
                 <Viewbox MaxHeight="50" MaxWidth="50">
                     <SymbolIcon Symbol="Next" />
@@ -126,13 +113,16 @@
                     <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
                     <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Black"/>
                 </Button.Resources>
-            </Button>          
-    
+            </Button>
+         
+         
+                
+
         </StackPanel>
 
-        
-    
-       
+
+
+
         <!-- <Button x:Name="Battery" HorizontalAlignment="Right"  VerticalAlignment="Top" Background="Black"/>-->
         <ProgressRing x:Name="loading" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="75" Height="75" />
         <ProgressRing x:Name="loadingBackgorund" HorizontalAlignment="Right" VerticalAlignment="Bottom"  Width="40" Height="40" />

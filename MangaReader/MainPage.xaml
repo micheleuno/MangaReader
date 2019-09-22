@@ -19,15 +19,15 @@
             <MenuFlyoutSeparator/>
             <MenuFlyoutItem Name="ContLectura" Text="" Tapped="FlyoutContinuar" HorizontalAlignment="Center" />
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem Text="Leer capitulo" Tapped="FlyoutSeleccionarEpisodio" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem  x:Uid="SelEpi" Text="" Tapped="FlyoutSeleccionarEpisodio" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem Text="Recargar Manga" Tapped="FlyoutRecargar" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem x:Uid="Recargar" Text="" Tapped="FlyoutRecargar" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem Text="Cambiar Imagen" Tapped="FlyoutCambiarImagen" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem  x:Uid="CambiarImagen" Text="" Tapped="FlyoutCambiarImagen" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem Text="Información" Tapped="FlyoutInfo" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem x:Uid="Info" Text="" Tapped="FlyoutInfo" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem Text="Eliminar Manga" Tapped="FlyoutEliminar" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem x:Uid="Eliminar" Text="" Tapped="FlyoutEliminar" HorizontalAlignment="Center"/>
         </MenuFlyout>
 
 
@@ -91,6 +91,12 @@
                                 <ComboBoxItem Name="cbi22">Ajustar al ancho</ComboBoxItem>
                                 <ComboBoxItem Name="cbi33">Ajustar al alto</ComboBoxItem>
                             </ComboBox>
+                            <ComboBox x:Name="AjustarOrden"  Width="auto" Margin="5" Header="Orden pantalla principal" SelectionChanged="AjustarOrden_SelectionChanged">
+                                <ComboBoxItem Name="cbi111">De A a Z</ComboBoxItem>
+                                <ComboBoxItem Name="cbi222">De Z a A</ComboBoxItem>
+                                <ComboBoxItem Name="cbi333">Menor cantidad de capitulos</ComboBoxItem>
+                                <ComboBoxItem Name="cbi444">Mayor cantidad de capitulos</ComboBoxItem>
+                            </ComboBox>
                             <ToggleSwitch x:Name="fullScreen" Grid.Column="2" Header="Pantalla Completa"     OnContent="Si"  OffContent="No"  Margin="5" />
                             <Button x:Name="buttonDefaultFolder" Content="Configurar Carpeta Raiz" Click="DefaultFolderOnClick" />
                            
@@ -101,7 +107,7 @@
             
             <Button x:Uid="BtnReaload" Click="Reload_click"  MinWidth="10" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="">
                 <Viewbox MaxHeight="30" MaxWidth="30">
-                    <SymbolIcon Symbol="Refresh" />
+                    <SymbolIcon Symbol="Refresh" RenderTransformOrigin="0.75,0.75" />
                 </Viewbox>
             </Button>
 
@@ -115,9 +121,6 @@
                     </Flyout>
                 </Button.Flyout>
             </Button>
-
-          
-
 
         </StackPanel>
         <Button x:Name="BtnCloseApp" x:Uid="BtnClose" Click="CloseApp" Grid.Column="1" MinWidth="10" Background="Transparent" BorderBrush="Transparent" ToolTipService.ToolTip="Cerrar" HorizontalAlignment="Right" >

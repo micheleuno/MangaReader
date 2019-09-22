@@ -72,8 +72,7 @@ namespace MangaReader
             var watch = System.Diagnostics.Stopwatch.StartNew();
             if (Mangas.Count == 0)
             {
-                Mangas = Clases.Functions.CargarDatos();           
-               
+                Mangas = Clases.Functions.CargarDatos();  
                 FullScreen_loaded();
                 LoadGrid();
                 UpdateItems();
@@ -84,8 +83,7 @@ namespace MangaReader
         }
 
         private void InicializarConfiguraciones()
-        {
-        
+        {        
             if (localSettings.Values["readingDirection"] == null)
             {
                 localSettings.Values["readingDirection"] = 0;
@@ -97,6 +95,10 @@ namespace MangaReader
             if (localSettings.Values["FullScrenn"] == null)
             {
                 localSettings.Values["FullScrenn"] = 0;
+            }
+            if (localSettings.Values["sortgrid"] == null)
+            {
+                localSettings.Values["sortgrid"] = 0;
             }
         }
 
@@ -175,34 +177,7 @@ namespace MangaReader
             {
                 Text = "Capitulos leídos: " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetUltimoEpisodioLeido(),
                 TextWrapping = TextWrapping.Wrap,
-            });
-
-
-
-            var aggBattery = Battery.AggregateBattery;
-
-            // Get report
-            var report = aggBattery.GetReport();
-            panel.Children.Add(new TextBlock
-            {
-                Text = "Charge rate (mW): " + report.ChargeRateInMilliwatts.ToString(),
-                TextWrapping = TextWrapping.Wrap,
-            });
-            panel.Children.Add(new TextBlock
-            {
-                Text = "Design energy capacity (mWh): " + report.DesignCapacityInMilliwattHours.ToString(),
-                TextWrapping = TextWrapping.Wrap,
-            });
-            panel.Children.Add(new TextBlock
-            {
-                Text = "Fully-charged energy capacity (mWh): " + report.FullChargeCapacityInMilliwattHours.ToString(),
-                TextWrapping = TextWrapping.Wrap,
-            });
-            panel.Children.Add(new TextBlock
-            {
-                Text = "Remaining energy capacity (mWh): " + report.RemainingCapacityInMilliwattHours.ToString(),
-                TextWrapping = TextWrapping.Wrap,
-            });
+            });                
 
             dialog.SecondaryButtonText = "Abrir directorio";
             dialog.SecondaryButtonClick += async delegate
@@ -218,7 +193,6 @@ namespace MangaReader
                    
                 }
             };
-
 
 
             dialog.Content = panel;
@@ -285,7 +259,7 @@ namespace MangaReader
                 return -1;
         }
 
-        private  void  LoadGrid()
+        private void LoadGrid()
         { 
             Episode episode = new Episode();
             items = new ObservableCollection<MenuItem>();
@@ -417,11 +391,8 @@ namespace MangaReader
 
         private async Task<bool> AgregarMangaFolder(StorageFolder folder)
         {
-            Manga Manga1 = new Manga();
-           
-            await Task.Yield();
-            
-          
+            Manga Manga1 = new Manga();           
+            await Task.Yield();     
             Manga1 = await (Clases.Functions.LoadAllAsync(folder, folder.Path, folder.Name, "0", "0"));
             if (Manga1 != null)
             {              
@@ -436,9 +407,10 @@ namespace MangaReader
             else
             {               
                 return false;               
-            }
-          
+            }          
         }
+
+
 
         private Boolean RevisarRepetido(StorageFolder folder)
         {
@@ -469,7 +441,6 @@ namespace MangaReader
             }
         
         }
-
 
         private async void Reload_click(object sender, RoutedEventArgs e)
         {
@@ -652,6 +623,15 @@ namespace MangaReader
             else
             {
                 AjustarImagen.SelectedIndex = 0;
+            }
+
+            if ((localSettings.Values["sortgrid"].ToString().Length > 0))
+            {
+                AjustarOrden.SelectedIndex = Int32.Parse(localSettings.Values["sortgrid"].ToString());
+            }
+            else
+            {
+                AjustarOrden.SelectedIndex = 0;
             }
         }
 
@@ -837,6 +817,39 @@ namespace MangaReader
             {
                 localSettings.Values["readingDirection"] = 0;
             }
+        }
+
+        private void AjustarOrden_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch(AjustarOrden.SelectedIndex)
+            {
+                case 0:
+                    Mangas = Mangas.OrderBy(o => o.GetName()).ToList();                    
+                    break;
+                case 1:
+                    Mangas = Mangas.OrderByDescending(o => o.GetName()).ToList();                  
+                    break;
+                case 2:
+                    Mangas = Mangas.OrderBy(o => o.GetEpisodes().Count()).ToList();
+                    break;
+                case 3:
+                    Mangas = Mangas.OrderByDescending(o => o.GetEpisodes().Count()).ToList();
+                    break;
+                default:
+                    Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
+                    break;
+            }
+            if (AjustarOrden.SelectedIndex != -1)
+            {
+                localSettings.Values["sortgrid"] = AjustarOrden.SelectedIndex;
+            }
+            else
+            {
+                localSettings.Values["sortgrid"] = 0;
+            }
+            SaveData();
+            LoadGrid();
+
         }
     }
 }

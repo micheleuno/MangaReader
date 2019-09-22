@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Devices.Power;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -474,6 +475,19 @@ namespace MangaReader
             BtnNext.Visibility = Visibility.Visible;
             BtnPrevous.Visibility = Visibility.Visible;
             SelectedPage.Visibility = Visibility.Visible;
+            BtnPercentage.Visibility = Visibility.Visible;
+            var aggBattery = Battery.AggregateBattery;
+            var report = aggBattery.GetReport();
+            if (report.FullChargeCapacityInMilliwattHours != null)
+            {
+                var percentage = Math.Round((report.RemainingCapacityInMilliwattHours.Value / (double)report.FullChargeCapacityInMilliwattHours.Value)*100);
+              
+                BtnPercentage.Content = percentage.ToString() + "%";
+            }
+            else
+            {
+                BtnPercentage.Visibility = Visibility.Collapsed;
+            }
             flag = true;
             /* if ((mangaG.GetActual() + 1) <= mangaG.GetEpisodes().Count())
              {
@@ -496,9 +510,8 @@ namespace MangaReader
                 EpisodeConter.Content = "Página " + contPag + " de " + cantPag;
             if (!flagepisodio)
                 episodioactual--;
-            ChapterConter.Content = " Capítulo " + (episodioactual + 1).ToString() + " de " + episodios;        
+            ChapterConter.Content = " Capítulo " + (episodioactual + 1).ToString() + " de " + episodios;         
             
-
         }
 
         private void MakeInvisible()
@@ -509,6 +522,7 @@ namespace MangaReader
             EpisodeConter.Visibility = Visibility.Collapsed;
             ChapterConter.Visibility = Visibility.Collapsed;
             SelectedPage.Visibility = Visibility.Collapsed;
+            BtnPercentage.Visibility = Visibility.Collapsed;
         }
     }
 }
