@@ -31,7 +31,7 @@
         </MenuFlyout>
 
 
-        <DataTemplate x:Key="photos" x:DataType="Image" >            
+        <DataTemplate x:Key="photos" x:DataType="Image" >
             <Grid x:Name="gridMangas" Background="black" FlyoutBase.AttachedFlyout="{StaticResource cmdMenuFlyout}" Tapped="ListTapped">
                 <Grid.RowDefinitions>
                     <RowDefinition />

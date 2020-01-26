@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.Devices.Power;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Search;
@@ -37,11 +36,8 @@ namespace MangaReader
     {
         private static List<Manga> Mangas = new List<Manga>();
         ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>();
-        ApplicationDataContainer localSettings =
-        Windows.Storage.ApplicationData.Current.LocalSettings;
-        Windows.Storage.StorageFolder localFolder =
-        Windows.Storage.ApplicationData.Current.LocalFolder;
-
+        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+        StorageFolder localFolder = ApplicationData.Current.LocalFolder;   
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e != null)
@@ -398,10 +394,12 @@ namespace MangaReader
             {              
                 Mangas.Add(Manga1);
                 GuardarImagen(folder.Path, folder.Name);               
-                Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
+                //Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
                 SaveData();
                 await Task.Delay(1200);
-                InsertInPosition(folder.Name);             
+                AjustarOrdenFunction();
+                InsertInPosition(folder.Name);
+                
                 return true;
             }
             else
@@ -821,13 +819,28 @@ namespace MangaReader
 
         private void AjustarOrden_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            switch(AjustarOrden.SelectedIndex)
+            if (AjustarOrden.SelectedIndex != -1)
+            {
+                localSettings.Values["sortgrid"] = AjustarOrden.SelectedIndex;
+            }
+            else
+            {
+                localSettings.Values["sortgrid"] = 0;
+            }
+            AjustarOrdenFunction();
+            SaveData();
+            LoadGrid();
+        }   
+
+        private void AjustarOrdenFunction()
+        {
+            switch (AjustarOrden.SelectedIndex)
             {
                 case 0:
-                    Mangas = Mangas.OrderBy(o => o.GetName()).ToList();                    
+                    Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
                     break;
                 case 1:
-                    Mangas = Mangas.OrderByDescending(o => o.GetName()).ToList();                  
+                    Mangas = Mangas.OrderByDescending(o => o.GetName()).ToList();
                     break;
                 case 2:
                     Mangas = Mangas.OrderBy(o => o.GetEpisodes().Count()).ToList();
@@ -838,18 +851,8 @@ namespace MangaReader
                 default:
                     Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
                     break;
-            }
-            if (AjustarOrden.SelectedIndex != -1)
-            {
-                localSettings.Values["sortgrid"] = AjustarOrden.SelectedIndex;
-            }
-            else
-            {
-                localSettings.Values["sortgrid"] = 0;
-            }
-            SaveData();
-            LoadGrid();
-
+            }    
         }
     }
+    
 }
