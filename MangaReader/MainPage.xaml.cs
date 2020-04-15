@@ -22,7 +22,7 @@ namespace MangaReader
 
     public class MenuItem
     {
-        public Uri IName
+        public BitmapImage IName
         {
             get; set;
         }
@@ -261,17 +261,17 @@ namespace MangaReader
             items = new ObservableCollection<MenuItem>();
             try
             {
-                items.Add(new MenuItem() { IName = new Uri("ms-appx:///Assets/Agregar.png"),Titulo="Agregar Nuevo" });
+                items.Add(new MenuItem() { IName = new BitmapImage(new Uri("ms-appx:///Assets/Agregar.png")),Titulo="Agregar Nuevo" });
                 int length = Mangas.Count();
                 for (int i = 0; i < length; i++)
                 {
                     if(File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg"))
                     {
-                        items.Add(new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg" + "?cache=" + new Random().Next()), Titulo = Mangas.ElementAt(i).GetName()});
+                        items.Add(new MenuItem() { IName = new BitmapImage(new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + Mangas.ElementAt(i).GetName() + ".jpg" + "?cache=" + new Random().Next())), Titulo = Mangas.ElementAt(i).GetName()});
                     }
                     else
                     {
-                        items.Add(new MenuItem() { IName = new Uri("ms-appx:///Assets/Imagen.png"), Titulo = Mangas.ElementAt(i).GetName() });
+                        items.Add(new MenuItem() { IName =new BitmapImage(new Uri("ms-appx:///Assets/Imagen.png")), Titulo = Mangas.ElementAt(i).GetName() });
                     }
                 }         
             }
@@ -292,11 +292,11 @@ namespace MangaReader
             int i = GetPosition(nombre);
             if (File.Exists(ApplicationData.Current.LocalFolder.Path + @"\Images\" + nombre + ".jpg"))
             {
-                items.Insert(i,new MenuItem() { IName = new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + nombre + ".jpg" + "?cache=" + new Random().Next()), Titulo = nombre });
+                items.Insert(i,new MenuItem() { IName = new BitmapImage(new Uri(ApplicationData.Current.LocalFolder.Path + @"\Images\" + nombre + ".jpg" + "?cache=" + new Random().Next())), Titulo = nombre });
             }
             else
             {
-                items.Insert(i,new MenuItem() { IName = new Uri("ms-appx:///Assets/Imagen.png"), Titulo = nombre });
+                items.Insert(i,new MenuItem() { IName = new BitmapImage( new Uri("ms-appx:///Assets/Imagen.png")), Titulo = nombre });
             }
         }
 

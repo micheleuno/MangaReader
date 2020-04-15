@@ -24,7 +24,7 @@
             </ScrollViewer>
         </DataTemplate>
 
-        <DataTemplate x:Name="NoAjustar" >
+        <DataTemplate x:Name="NoAjustar" x:DataType="ImageSource">
             <ScrollViewer   MinZoomFactor="0.8" 
                                    DoubleTapped="ScrollViewer_DoubleTapped"
                                    x:Name="ScrollViewerMain"                                   
@@ -34,7 +34,7 @@
                                    AutomationProperties.AccessibilityView="Raw"                
                                   >
                 <Image  x:Name="image" 
-                                Source="{Binding}"                                          
+                                Source="{x:Bind}"                                          
                                 />
             </ScrollViewer>
         </DataTemplate>
@@ -54,7 +54,7 @@
 
     <Grid x:Name="Gridp" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
 
-        <FlipView   x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" >
+        <FlipView   x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" AutomationProperties.AccessibilityView = "Raw">
            
         </FlipView>
 
