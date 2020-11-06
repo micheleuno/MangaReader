@@ -36,8 +36,7 @@ namespace MangaReader
     {
         private static List<Manga> Mangas = new List<Manga>();
         ObservableCollection<MenuItem> items = new ObservableCollection<MenuItem>();
-        ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
-        StorageFolder localFolder = ApplicationData.Current.LocalFolder;   
+        readonly ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             if (e != null)
@@ -123,27 +122,6 @@ namespace MangaReader
             }
             //getNumberOfEpisodes();
         }
-        
-        private async void getNumberOfEpisodes()
-        {
-            String directorio = Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetDirectory();    
-           StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(directorio);
-            Debug.WriteLine("Hola"+ directorio);
-            if (folder != null)
-            {
-                var sw = new Stopwatch();
-                sw.Start();
-                var queryOptions = new QueryOptions
-                {
-                    FolderDepth = FolderDepth.Deep,
-                    IndexerOption = IndexerOption.UseIndexerWhenAvailable
-                };
-                var query = folder.CreateFileQueryWithOptions(queryOptions);
-                var allFiles = await query.GetFilesAsync();               
-                sw.Stop();
-                Debug.WriteLine("Ellapsed time:"+sw.ElapsedMilliseconds+ "Archivos"+allFiles.Count);
-            }
-        }
 
         private async void FlyoutInfo(object sender, RoutedEventArgs e)
         {
@@ -200,7 +178,7 @@ namespace MangaReader
            
         }
 
-        private async void FlyoutSeleccionarEpisodio(object sender, TappedRoutedEventArgs e)
+        private async void FlyoutSeleccionarEpisodio(object sender, RoutedEventArgs e)
         {
             int selectedEpi = await InputTextDialogAsync("Seleccionar capitulo de " + Mangas.ElementAt(MangaImages.SelectedIndex - 1).GetName());
             if (selectedEpi!=-1)
@@ -220,7 +198,7 @@ namespace MangaReader
             }
         }
 
-        private void FlyoutContinuar(object sender, TappedRoutedEventArgs e)
+        private void FlyoutContinuar(object sender, RoutedEventArgs e)
         {
             ContinuarLectura();
         }       
@@ -393,7 +371,7 @@ namespace MangaReader
             if (Manga1 != null)
             {              
                 Mangas.Add(Manga1);
-                GuardarImagen(folder.Path, folder.Name);               
+                GuardarImagen(folder.Name);               
                 //Mangas = Mangas.OrderBy(o => o.GetName()).ToList();
                 SaveData();
                 await Task.Delay(1200);
@@ -500,7 +478,7 @@ namespace MangaReader
             return Mangas.Count+1 ;
         }
 
-        private async void GuardarImagen(String path, String name)
+        private async void GuardarImagen( String name)
         {
             List<String> Pages = new List<String>();
             Episode episode = new Episode();
@@ -517,11 +495,13 @@ namespace MangaReader
             }  
         }
 
-        private async void FlyoutCambiarImagen(object sender, TappedRoutedEventArgs e)
+        private async void FlyoutCambiarImagen(object sender, RoutedEventArgs e)
         {
-            var picker = new Windows.Storage.Pickers.FileOpenPicker();
-            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail;
-            picker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary;
+            var picker = new Windows.Storage.Pickers.FileOpenPicker
+            {
+                ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
+                SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary
+            };
             picker.FileTypeFilter.Add(".jpg");
             picker.FileTypeFilter.Add(".jpeg");
             picker.FileTypeFilter.Add(".png");
@@ -639,7 +619,7 @@ namespace MangaReader
          await Clases.XmlIO.WriteJsonData(Mangas);          
         }
 
-        private async void FlyoutEliminar(object sender, TappedRoutedEventArgs e)
+        private async void FlyoutEliminar(object sender, RoutedEventArgs e)
         {
             if (MangaImages.SelectedIndex-1 != -1)
             {
@@ -738,7 +718,7 @@ namespace MangaReader
             }
         }
 
-        private async void FlyoutRecargar(object sender, TappedRoutedEventArgs e)
+        private async void FlyoutRecargar(object sender, RoutedEventArgs e)
         {
             if (MangaImages.SelectedIndex-1 != -1 && Mangas.Count > 0)
             {

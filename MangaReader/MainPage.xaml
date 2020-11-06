@@ -18,17 +18,17 @@
         <MenuFlyout x:Key="cmdMenuFlyout"  Placement="Right">
             <MenuFlyoutItem Name="NombreManga" Text="" HorizontalAlignment="Center" IsTapEnabled="False" IsEnabled="False" />
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem Name="ContLectura" Text="" Tapped="FlyoutContinuar" HorizontalAlignment="Center" />
+            <MenuFlyoutItem Name="ContLectura" Text="" Tapped="FlyoutContinuar" Click="FlyoutContinuar" HorizontalAlignment="Center" />
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem  x:Uid="SelEpi" Text="" Tapped="FlyoutSeleccionarEpisodio" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem  x:Uid="SelEpi" Text="" Tapped="FlyoutSeleccionarEpisodio" Click="FlyoutSeleccionarEpisodio" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="Recargar" Text="" Tapped="FlyoutRecargar" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem x:Uid="Recargar" Text="" Tapped="FlyoutRecargar" Click="FlyoutRecargar" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem  x:Uid="CambiarImagen" Text="" Tapped="FlyoutCambiarImagen" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem  x:Uid="CambiarImagen" Text="" Tapped="FlyoutCambiarImagen" Click="FlyoutCambiarImagen" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="Info" Text="" Tapped="FlyoutInfo" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem x:Uid="Info" Text="" Tapped="FlyoutInfo" Click="FlyoutInfo" HorizontalAlignment="Center"/>
             <MenuFlyoutSeparator/>
-            <MenuFlyoutItem x:Uid="Eliminar" Text="" Tapped="FlyoutEliminar" HorizontalAlignment="Center"/>
+            <MenuFlyoutItem x:Uid="Eliminar" Text="" Tapped="FlyoutEliminar" Click="FlyoutEliminar" HorizontalAlignment="Center"/>
         </MenuFlyout>
 
 

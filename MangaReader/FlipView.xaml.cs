@@ -31,14 +31,12 @@ namespace MangaReader
 
     public sealed partial class FlipView : Page
     {
-        Windows.Storage.ApplicationDataContainer localSettings =
+        readonly Windows.Storage.ApplicationDataContainer localSettings =
         Windows.Storage.ApplicationData.Current.LocalSettings;
-        Windows.Storage.StorageFolder localFolder =
-        Windows.Storage.ApplicationData.Current.LocalFolder;
         List<Manga> MangasG = new List<Manga>();
         Manga mangaG;
         Boolean flag = false, flagepisodio = true, cargaBitmap = false;
-        Stopwatch sw = new Stopwatch();
+        readonly Stopwatch sw = new Stopwatch();
         List<BitmapImage> episodeIm;
         Episode episodeG;
         int paginasaux = 0, paginas = 0, episodios = 0, mangasterminados = 0, contPag = 1, contPagAnt = 0, cantPag = 0;
@@ -172,7 +170,7 @@ namespace MangaReader
             MakeVisible();
             if (flagepisodio) //si llegó al final del capitulo actualizar datos y mostrar botones
             {
-                paginas = paginas + paginasaux;
+                paginas += paginasaux;
                 episodios++;
 
                 if (mangaG.GetActual() < mangaG.GetEpisodes().Count() && mangaG.GetActual() >= mangaG.GetUltimoEpisodioLeido() && mangaG.GetUltimoEpisodioLeido() < mangaG.GetEpisodes().Count())
