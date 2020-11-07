@@ -8,37 +8,52 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <DataTemplate x:Name="AjustarAncho" >
+        <DataTemplate x:Name="AjustarAncho" x:DataType="ImageSource">
             <ScrollViewer   MinZoomFactor="0.8" 
-                                   DoubleTapped="ScrollViewer_DoubleTapped"
-                                   x:Name="ScrollViewerMain"                                   
-                                    HorizontalScrollBarVisibility="Auto"
-                                    VerticalScrollBarVisibility="Auto"
-                                    ZoomMode="Enabled"
-                                   AutomationProperties.AccessibilityView="Raw"                
-                                  >
+                            DoubleTapped="ScrollViewer_DoubleTapped"
+                            x:Name="ScrollViewerMain"                                   
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Auto"
+                            ZoomMode="Enabled"
+                            AutomationProperties.AccessibilityView="Raw">
                 <Image  x:Name="image" 
-                                Source="{Binding}" 
-                             MaxWidth="{Binding Path=ViewportWidth, ElementName=ScrollViewerMain}"              
-                                />
+                        Source="{x:Bind}" 
+                        MaxWidth="{Binding Path=ViewportWidth, ElementName=ScrollViewerMain}"              
+                 />
             </ScrollViewer>
         </DataTemplate>
 
         <DataTemplate x:Name="NoAjustar" x:DataType="ImageSource">
             <ScrollViewer   MinZoomFactor="0.8" 
-                                   DoubleTapped="ScrollViewer_DoubleTapped"
-                                   x:Name="ScrollViewerMain"                                   
-                                    HorizontalScrollBarVisibility="Auto"
-                                    VerticalScrollBarVisibility="Auto"
-                                    ZoomMode="Enabled"
-                                   AutomationProperties.AccessibilityView="Raw"                
-                                  >
+                            DoubleTapped="ScrollViewer_DoubleTapped"
+                            x:Name="ScrollViewerMain"                                   
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Auto"
+                            ZoomMode="Enabled"
+                            AutomationProperties.AccessibilityView="Raw">
                 <Image  x:Name="image" 
-                                Source="{x:Bind}"                                          
-                                />
-            </ScrollViewer>
+                        Source="{x:Bind}"                                    
+                 />
+            </ScrollViewer>            
         </DataTemplate>
 
+        <DataTemplate x:Name="AjustarAlto" x:DataType="ImageSource" >
+            <ScrollViewer   MinZoomFactor="0.8" 
+                            DoubleTapped="ScrollViewer_DoubleTapped"
+                            x:Name="ScrollViewerMain"                                   
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Auto"
+                            ZoomMode="Enabled"
+                            AutomationProperties.AccessibilityView="Raw"                            
+                            >
+                
+                <Image                          
+                    x:Name="image"
+                    Source="{x:Bind}"  
+                    MaxHeight="{Binding Path=ViewportHeight, ElementName=ScrollViewerMain}"              
+                 />
+            </ScrollViewer>
+        </DataTemplate>
 
         <ItemsPanelTemplate  x:Name="vertical">
             <StackPanel Orientation="Vertical"/>
@@ -54,7 +69,7 @@
 
     <Grid x:Name="Gridp" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" RequestedTheme="Dark">
 
-        <FlipView   x:Name="flipView"  SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" AutomationProperties.AccessibilityView = "Raw">
+        <FlipView   x:Name="flipView" SelectionChanged="FlipView_SelectionChanged" Tapped="FlipView_SingleTapped" FlowDirection="RightToLeft" RequestedTheme="Dark" AutomationProperties.AccessibilityView = "Raw">
            
         </FlipView>
 

@@ -83,15 +83,19 @@ namespace MangaReader
                     MoverPagina();
                 }
 
-                if (localSettings.Values["AjusteImagen"].ToString() == "1")
+                switch (localSettings.Values["AjusteImagen"].ToString())
                 {
-                    flipView.ItemTemplate = Resources["AjustarAncho"] as DataTemplate;
-                }
-
-                if (localSettings.Values["AjusteImagen"].ToString() == "0")
-                {
-                    flipView.ItemTemplate = Resources["NoAjustar"] as DataTemplate;
-                }
+                    case "1":
+                        flipView.ItemTemplate = Resources["AjustarAncho"] as DataTemplate;
+                        break;
+                    case "2":
+                        flipView.ItemTemplate = Resources["AjustarAlto"] as DataTemplate;
+                        break;                   
+                    default:
+                        //opcion es 0
+                        flipView.ItemTemplate = Resources["NoAjustar"] as DataTemplate;
+                        break;
+                }            
                 ActualizarInfo();
                 CargarCBox();
                 loading.IsActive = false;
