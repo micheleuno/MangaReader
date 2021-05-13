@@ -7,7 +7,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.Storage.Search;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
